@@ -18,6 +18,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 48px;height:72px;d
 .nav-links{display:flex;gap:36px;list-style:none}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;transition:color .2s}
 .nav-links a:hover{color:var(--text)}
+.nav-links a.nav-tournament{color:var(--pink);font-weight:700}
+.nav-links a.nav-tournament:hover{color:#ff66aa;text-shadow:0 0 12px rgba(255,0,102,.5)}
 .nav-reserve{background:var(--pink);color:#fff;padding:10px 24px;font-family:'Outfit',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
 .nav-reserve:hover{background:#cc0044}
 
@@ -428,6 +430,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
     <li><a href="#bachata">Tardeo</a></li>
     <li><a href="#cumpleanos">Cumpleaños</a></li>
     <li><a href="#ubicacion">¿Dónde estamos?</a></li>
+    <li><a href="juego.html" class="nav-tournament">🏆 Torneo</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:12px">
     <a href="#reservados" class="nav-reserve">Reservar Mesa</a>
@@ -444,6 +447,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   <a href="#bachata" onclick="closeMobileMenu()">Tardeo</a>
   <a href="#cumpleanos" onclick="closeMobileMenu()">Cumpleaños</a>
   <a href="#ubicacion" onclick="closeMobileMenu()">¿Dónde estamos?</a>
+  <a href="juego.html" style="color:var(--pink);font-weight:700">🏆 Torneo</a>
   <a href="#reservados" class="reserve-mobile" onclick="closeMobileMenu()">Reservar Mesa</a>
 </div>
 
@@ -859,8 +863,40 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="shaona-config.js"></script>
 <script>
 const WEBHOOK_URL = 'https://hook.eu1.make.com/25v6mep1t54p8aa06uj33ci2sdygy4kv';
+
+// Supabase: guarda cada reserva en la base de datos además del webhook.
+// Si las claves no están configuradas, simplemente se omite (no rompe el envío).
+const SB_CFG = window.SHAONA_CONFIG || {};
+const sbClient = (window.supabase && SB_CFG.supabaseUrl && SB_CFG.supabaseAnonKey)
+  ? window.supabase.createClient(SB_CFG.supabaseUrl, SB_CFG.supabaseAnonKey)
+  : null;
+
+async function saveReservaToSupabase(payload){
+  if (!sbClient) return;
+  try {
+    await sbClient.from('reservations').insert({
+      type:        payload.tipo || 'reservado',
+      event_name:  payload.evento || null,
+      event_date:  payload.fecha_evento || null,
+      name:        payload.nombre || null,
+      phone:       payload.telefono || null,
+      email:       payload.email && payload.email !== '—' ? payload.email : null,
+      people:      payload.personas ? parseInt(payload.personas, 10) || null : null,
+      bottles:     payload.botellas || null,
+      hookahs:     payload.cachimbas || null,
+      mixers:      payload.botella_pref || null,
+      total:       payload.total || null,
+      promo:       payload.promo && payload.promo !== '—' ? payload.promo : null,
+      comments:    payload.comentarios && payload.comentarios !== '—' ? payload.comentarios : null,
+      raw:         payload
+    });
+  } catch(e){ /* swallow — el webhook ya cubre la notificación */ }
+}
+
 let currentEvento = '—';
 let currentPrecio = '—';
 
@@ -1316,11 +1352,14 @@ async function submitReserva(){
   });
 
   try {
-    await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
+    await Promise.all([
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      }),
+      saveReservaToSupabase(payload)
+    ]);
   } catch(e){}
 
   document.getElementById('modalContent').innerHTML=`
@@ -1410,11 +1449,14 @@ async function submitReservado(){
   });
 
   try {
-    await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
+    await Promise.all([
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      }),
+      saveReservaToSupabase(payload)
+    ]);
   } catch(e){}
 
   formEl.style.display='none';
