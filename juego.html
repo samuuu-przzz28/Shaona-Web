@@ -357,7 +357,7 @@ function initGame(player){
     distance: 0,
     diamonds: 0,
     score: 0,
-    panther: { x:90, y:GROUND, vy:0, w:50, h:46, jumps:0 },
+    panther: { x:90, y:GROUND, vy:0, w:44, h:80, jumps:0 },
     obstacles: [],
     gems: [],
     bgStars: [],
@@ -385,7 +385,7 @@ function initGame(player){
     state.distance = 0;
     state.diamonds = 0;
     state.score = 0;
-    state.panther = { x:90, y:GROUND, vy:0, w:50, h:46, jumps:0 };
+    state.panther = { x:90, y:GROUND, vy:0, w:44, h:80, jumps:0 };
     state.obstacles = [];
     state.gems = [];
     state.t = 0;
@@ -469,105 +469,200 @@ function initGame(player){
   function drawPanther(){
     const p = state.panther;
     const isJumping = p.y < GROUND - 2;
+    const cx = p.w / 2;       // eje central X relativo
+    const altitude = GROUND - p.y;
+    // Ciclo de carrera (sólo cuando toca suelo)
+    const run = isJumping ? 0 : Math.sin(state.t / 3);
+    const runFast = isJumping ? 0 : Math.sin(state.t / 3 + Math.PI);
+
     ctx.save();
     ctx.translate(p.x, p.y);
 
-    // shadow on ground (smaller as it jumps higher)
-    const altitude = (GROUND - p.y);
-    const sw = Math.max(p.w*0.5 - altitude*0.15, 10);
-    ctx.fillStyle = `rgba(0,0,0,${0.4 - altitude*0.003})`;
+    // === SOMBRA en el suelo (se reduce al saltar) ===
+    const sw = Math.max(18 - altitude * 0.06, 6);
+    ctx.fillStyle = `rgba(0,0,0,${Math.max(0.45 - altitude * 0.003, 0.06)})`;
     ctx.beginPath();
-    ctx.ellipse(p.w/2, GROUND - p.y + 14, sw, 3.5, 0, 0, Math.PI*2);
+    ctx.ellipse(cx, altitude + 2, sw, 3, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // tail — característica pantera
-    const tailWag = Math.sin(state.t/4)*5;
+    // === COLA larga y curva, característica de la pantera ===
+    const wag = Math.sin(state.t / 4) * 5;
     ctx.strokeStyle = '#ff0066';
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 7;
     ctx.lineCap = 'round';
     ctx.beginPath();
-    ctx.moveTo(-2, -14);
-    ctx.quadraticCurveTo(-26, -22 + tailWag, -16, -44 + tailWag);
+    ctx.moveTo(cx - 6, -28);
+    ctx.bezierCurveTo(cx - 26, -28 + wag * 0.3, cx - 32, -58 + wag, cx - 14, -72 + wag * 0.5);
     ctx.stroke();
-    // tail tip ball
+    // bola en la punta
     ctx.fillStyle = '#ff0066';
     ctx.beginPath();
-    ctx.arc(-16, -44 + tailWag, 5, 0, Math.PI*2);
+    ctx.arc(cx - 14, -72 + wag * 0.5, 5, 0, Math.PI * 2);
     ctx.fill();
 
-    // body — elipse alargada
+    // === PIERNAS bípedas (alternan al correr, se recogen al saltar) ===
+    const lLegLift = isJumping ? 10 : Math.max(0, run * 6);
+    const rLegLift = isJumping ? 10 : Math.max(0, runFast * 6);
     ctx.fillStyle = '#ff0066';
-    ctx.beginPath();
-    ctx.ellipse(p.w/2, -12, p.w/2 - 2, 17, 0, 0, Math.PI*2);
-    ctx.fill();
-
-    // legs (animadas si corre)
-    const legCycle = isJumping ? -4 : Math.sin(state.t/2.5)*6;
-    ctx.fillStyle = '#ff0066';
-    ctx.fillRect(p.w/2-14, -2, 6, isJumping ? 8 : 14 + legCycle);
-    ctx.fillRect(p.w/2+8, -2, 6, isJumping ? 8 : 14 - legCycle);
-    // feet pads
+    // pierna izquierda
+    ctx.fillRect(cx - 10, -22, 7, 22 - lLegLift);
+    // pierna derecha
+    ctx.fillRect(cx + 3, -22, 7, 22 - rLegLift);
+    // pies (más oscuros)
     ctx.fillStyle = '#cc0044';
-    ctx.fillRect(p.w/2-15, isJumping ? 6 : 12 + legCycle, 8, 2);
-    ctx.fillRect(p.w/2+7, isJumping ? 6 : 12 - legCycle, 8, 2);
-
-    // head
-    ctx.fillStyle = '#ff0066';
     ctx.beginPath();
-    ctx.arc(p.w-2, -26, 15, 0, Math.PI*2);
+    ctx.ellipse(cx - 6, -lLegLift, 7, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + 6, -rLegLift, 7, 3, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // ears
+    // === CUERPO/TORSO ===
+    ctx.fillStyle = '#ff0066';
     ctx.beginPath();
-    ctx.moveTo(p.w-12, -38);
-    ctx.lineTo(p.w-8, -48);
-    ctx.lineTo(p.w-2, -36);
+    ctx.ellipse(cx, -36, 13, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // === CAMISETA del Shaona (negra con logo) ===
+    ctx.fillStyle = '#0a0008';
+    // cuerpo de la camiseta (trapecio)
+    ctx.beginPath();
+    ctx.moveTo(cx - 13, -44);
+    ctx.lineTo(cx + 13, -44);
+    ctx.lineTo(cx + 15, -22);
+    ctx.lineTo(cx - 15, -22);
+    ctx.closePath();
+    ctx.fill();
+    // cuello en V (deja ver un poco de rosa)
+    ctx.fillStyle = '#ff0066';
+    ctx.beginPath();
+    ctx.moveTo(cx - 4, -44);
+    ctx.lineTo(cx + 4, -44);
+    ctx.lineTo(cx, -38);
+    ctx.closePath();
+    ctx.fill();
+    // borde sutil del cuello
+    ctx.strokeStyle = '#1a0010';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(cx - 4, -44);
+    ctx.lineTo(cx, -38);
+    ctx.lineTo(cx + 4, -44);
+    ctx.stroke();
+    // logo SHAONA en rosa
+    ctx.fillStyle = '#ff0066';
+    ctx.font = 'bold 6px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('SHAONA', cx, -32);
+    // puntito final (.) del logo
+    ctx.fillStyle = '#00e0ff';
+    ctx.fillRect(cx + 14, -30, 1.5, 1.5);
+
+    // === BRAZOS (oscilan al correr / arriba al saltar) ===
+    const armSwing = isJumping ? -1.1 : run * 0.55;
+    ctx.fillStyle = '#ff0066';
+    // brazo izquierdo
+    ctx.save();
+    ctx.translate(cx - 14, -42);
+    ctx.rotate(-armSwing);
+    ctx.fillRect(-3, 0, 6, 18);
+    ctx.beginPath();
+    ctx.arc(0, 20, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // brazo derecho
+    ctx.save();
+    ctx.translate(cx + 14, -42);
+    ctx.rotate(armSwing);
+    ctx.fillRect(-3, 0, 6, 18);
+    ctx.beginPath();
+    ctx.arc(0, 20, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // === CABEZA (ovalada, ligeramente alargada) ===
+    ctx.fillStyle = '#ff0066';
+    ctx.beginPath();
+    ctx.ellipse(cx + 1, -58, 14, 13, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // hocico hacia delante
+    ctx.beginPath();
+    ctx.ellipse(cx + 10, -54, 7, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // === OREJAS largas y puntiagudas ===
+    ctx.fillStyle = '#ff0066';
+    // oreja izquierda
+    ctx.beginPath();
+    ctx.moveTo(cx - 10, -65);
+    ctx.lineTo(cx - 12, -80);
+    ctx.lineTo(cx - 4, -68);
+    ctx.closePath();
+    ctx.fill();
+    // oreja derecha
+    ctx.beginPath();
+    ctx.moveTo(cx + 5, -67);
+    ctx.lineTo(cx + 10, -80);
+    ctx.lineTo(cx + 13, -64);
+    ctx.closePath();
+    ctx.fill();
+    // interior de las orejas
+    ctx.fillStyle = '#cc0044';
+    ctx.beginPath();
+    ctx.moveTo(cx - 9, -68);
+    ctx.lineTo(cx - 10, -76);
+    ctx.lineTo(cx - 6, -69);
     ctx.closePath();
     ctx.fill();
     ctx.beginPath();
-    ctx.moveTo(p.w+4, -36);
-    ctx.lineTo(p.w+8, -48);
-    ctx.lineTo(p.w+12, -32);
-    ctx.closePath();
-    ctx.fill();
-    // ear inner
-    ctx.fillStyle = '#cc0044';
-    ctx.beginPath();
-    ctx.moveTo(p.w-10, -40);
-    ctx.lineTo(p.w-7, -44);
-    ctx.lineTo(p.w-4, -38);
+    ctx.moveTo(cx + 7, -68);
+    ctx.lineTo(cx + 9, -76);
+    ctx.lineTo(cx + 11, -66);
     ctx.closePath();
     ctx.fill();
 
-    // snout
-    ctx.fillStyle = '#cc0044';
+    // === NARIZ pequeña al final del hocico ===
+    ctx.fillStyle = '#330011';
     ctx.beginPath();
-    ctx.ellipse(p.w+6, -22, 6, 5, 0, 0, Math.PI*2);
+    ctx.arc(cx + 15, -55, 2.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // eyes (cool sunglasses)
+    // === OJOS amarillos en almendra (estilo pantera) ===
+    // blanco/amarillo claro
+    ctx.fillStyle = '#fff4c2';
+    ctx.beginPath();
+    ctx.ellipse(cx - 1, -60, 3.6, 4.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + 7, -60, 3.6, 4.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // pupila vertical (felina)
     ctx.fillStyle = '#000';
-    ctx.fillRect(p.w-10, -30, 18, 5);
-    // glasses bridge
-    ctx.fillRect(p.w-1, -28, 2, 2);
-    // shine on glasses
-    ctx.fillStyle = 'rgba(0,224,255,0.7)';
-    ctx.fillRect(p.w-8, -29, 3, 1);
-    ctx.fillRect(p.w+2, -29, 3, 1);
-
-    // smile
-    ctx.strokeStyle = '#660020';
-    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.arc(p.w+5, -19, 3, 0.1, Math.PI - 0.1);
+    ctx.ellipse(cx, -60, 1.2, 3.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(cx + 8, -60, 1.2, 3.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // brillo
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(cx + 0.5, -62, 1, 1);
+    ctx.fillRect(cx + 8.5, -62, 1, 1);
+
+    // === BOCA (sonrisa pícara) ===
+    ctx.strokeStyle = '#660020';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(cx + 12, -52, 2.5, 0, Math.PI);
     ctx.stroke();
 
-    // whiskers
-    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-    ctx.lineWidth = 1;
+    // === BIGOTES ===
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)';
+    ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.moveTo(p.w-2, -20); ctx.lineTo(p.w-10, -22);
-    ctx.moveTo(p.w-2, -19); ctx.lineTo(p.w-10, -18);
+    ctx.moveTo(cx + 10, -54); ctx.lineTo(cx + 20, -56);
+    ctx.moveTo(cx + 10, -53); ctx.lineTo(cx + 20, -52);
     ctx.stroke();
 
     ctx.restore();
@@ -691,18 +786,19 @@ function initGame(player){
 
     spawn();
 
-    // collisions
-    const px = p.x + 12, py = p.y - 42, pw = p.w - 18, ph = 48;
+    // collisions — caja ajustada al cuerpo (bípedo, ~70px alto / ~26 ancho)
+    const px = p.x + p.w/2 - 13, py = p.y - 72, pw = 26, ph = 72;
     for (const o of state.obstacles){
       const ox = o.x - 10, oy = GROUND - o.h, ow = 20, oh = o.h;
       if (px < ox + ow && px + pw > ox && py < oy + oh && py + ph > oy){
         return gameOver();
       }
     }
+    // recogida de diamantes — centrada en el pecho (camiseta)
     for (const g of state.gems){
       const dx = (p.x + p.w/2) - g.x;
-      const dy = (p.y - 22) - g.y;
-      if (Math.sqrt(dx*dx + dy*dy) < 30){
+      const dy = (p.y - 36) - g.y;
+      if (Math.sqrt(dx*dx + dy*dy) < 32){
         g.collected = true;
         state.diamonds++;
       }
