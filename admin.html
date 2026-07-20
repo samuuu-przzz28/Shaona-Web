@@ -7,567 +7,1319 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+/* ============================================================
+   DESIGN SYSTEM
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#08060a;
-  --bg-2:#15000d;
-  --pink:#ff0066;
-  --cyan:#00e0ff;
-  --text:#fff;
-  --muted:#888;
-  --border:rgba(255,255,255,.08);
-  --row-hover:rgba(255,0,102,.05);
+  --bg:            #08060a;
+  --bg-1:          #0f0a12;
+  --bg-2:          #150c18;
+  --bg-3:          #1c1121;
+  --border:        rgba(255,255,255,.07);
+  --border-hi:     rgba(255,255,255,.14);
+
+  --text:          #f5f0f2;
+  --text-2:        #b8b0b6;
+  --muted:         #7a7080;
+  --muted-2:       #55505a;
+
+  --pink:          #ff0066;
+  --pink-2:        #ff3388;
+  --pink-soft:     rgba(255,0,102,.14);
+  --cyan:          #00e0ff;
+  --cyan-soft:     rgba(0,224,255,.14);
+  --gold:          #ffc828;
+  --gold-soft:     rgba(255,200,40,.14);
+  --silver:        #dcdcef;
+  --silver-soft:   rgba(220,220,239,.10);
+  --bronze:        #ff7e3a;
+  --bronze-soft:   rgba(255,126,58,.14);
+  --green:         #4ade80;
+  --green-soft:    rgba(74,222,128,.14);
+  --red:           #ff5577;
+  --red-soft:      rgba(255,85,119,.14);
+
+  --shadow-sm:     0 2px 6px rgba(0,0,0,.35);
+  --shadow-md:     0 8px 24px rgba(0,0,0,.4);
+  --shadow-lg:     0 24px 60px -12px rgba(0,0,0,.6);
+  --shadow-pink:   0 20px 60px -20px rgba(255,0,102,.5);
+
+  --radius:        4px;
+  --radius-lg:     8px;
+  --sidebar:       220px;
+  --header-h:      64px;
 }
-html,body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+html,body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-button{font-family:inherit}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select,textarea{font-family:inherit;color:inherit}
+::selection{background:var(--pink);color:#fff}
 
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 32px;border-bottom:1px solid var(--border);background:rgba(8,6,10,.94);backdrop-filter:blur(14px);position:sticky;top:0;z-index:30}
-.logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;letter-spacing:1px}
-.logo em{color:var(--pink);font-style:normal}
-.logo .tag{margin-left:14px;font-family:'Outfit',sans-serif;font-size:.66rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;border:1px solid var(--cyan);padding:3px 10px;border-radius:99px;vertical-align:middle}
-.top-actions{display:flex;gap:10px;align-items:center}
-.user-chip{font-size:.78rem;color:var(--muted)}
-.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 16px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{border-color:var(--pink);color:var(--pink)}
+/* Scrollbar */
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px}
+*::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.16)}
 
-/* Login */
-.login-wrap{display:flex;justify-content:center;align-items:center;min-height:calc(100vh - 70px);padding:24px}
-.login-card{width:100%;max-width:400px;background:linear-gradient(160deg,var(--bg-2),rgba(0,0,0,.6));border:1px solid var(--border);padding:40px 32px}
-.login-card h1{font-family:'Cormorant Garamond',serif;font-size:1.9rem;margin-bottom:6px}
-.login-card .sub{color:var(--muted);font-size:.86rem;margin-bottom:26px}
-.input-row{margin-bottom:16px}
-.input-row label{display:block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.input-row input{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--border);color:var(--text);padding:13px 14px;font-size:.92rem;font-family:inherit;border-radius:0;transition:border-color .2s}
-.input-row input:focus{outline:none;border-color:var(--pink)}
-.btn-primary{display:block;width:100%;background:var(--pink);color:#fff;border:none;padding:14px;font-size:.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:6px}
-.btn-primary:hover{background:#cc0044}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed}
-.error-msg{color:#ff5577;font-size:.82rem;margin-top:12px;min-height:1.2em}
+/* ============================================================
+   LAYOUT — App shell
+   ============================================================ */
+.app{display:grid;grid-template-columns:var(--sidebar) 1fr;grid-template-rows:var(--header-h) 1fr;grid-template-areas:"header header" "sidebar main";min-height:100vh}
+
+.app-header{
+  grid-area:header;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  background:rgba(8,6,10,.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:40;
+  height:var(--header-h);
+}
+.app-header .brand{display:flex;align-items:center;gap:14px}
+.app-header .brand-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;letter-spacing:.5px}
+.app-header .brand-logo em{color:var(--pink);font-style:normal}
+.app-header .brand-tag{font-size:.62rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;border:1px solid var(--cyan);padding:3px 10px;border-radius:99px}
+.app-header .header-right{display:flex;align-items:center;gap:14px}
+.app-header .live-dot{display:inline-flex;align-items:center;gap:8px;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.app-header .live-dot::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted);transition:background .3s ease,box-shadow .3s ease}
+.app-header .live-dot.on{color:var(--green)}
+.app-header .live-dot.on::before{background:var(--green);box-shadow:0 0 12px rgba(74,222,128,.6);animation:pulseGreen 2s infinite}
+@keyframes pulseGreen{0%,100%{box-shadow:0 0 12px rgba(74,222,128,.6)}50%{box-shadow:0 0 24px rgba(74,222,128,.9)}}
+.app-header .user-chip{font-size:.78rem;color:var(--text-2);display:flex;align-items:center;gap:8px}
+.app-header .user-chip .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--cyan));display:grid;place-items:center;color:#fff;font-weight:700;font-size:.72rem;text-transform:uppercase}
+.hamburger{display:none;width:36px;height:36px;place-items:center;background:transparent;border:1px solid var(--border);border-radius:var(--radius)}
+.hamburger svg{width:18px;height:18px;stroke:var(--text);fill:none;stroke-width:2}
+
+/* Sidebar */
+.sidebar{
+  grid-area:sidebar;
+  background:var(--bg-1);
+  border-right:1px solid var(--border);
+  padding:20px 12px;
+  overflow-y:auto;
+  position:sticky;
+  top:var(--header-h);
+  height:calc(100vh - var(--header-h));
+}
+.side-nav{display:flex;flex-direction:column;gap:2px}
+.side-nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-radius:var(--radius);
+  color:var(--text-2);font-size:.85rem;font-weight:500;
+  cursor:pointer;transition:all .15s ease;
+  border-left:2px solid transparent;
+}
+.side-nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.side-nav-item.active{background:var(--pink-soft);color:var(--pink);border-left-color:var(--pink)}
+.side-nav-item .icon{width:20px;height:20px;display:grid;place-items:center;flex-shrink:0}
+.side-nav-item .icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.side-section{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted-2);padding:20px 14px 8px}
 
 /* Main */
-.main{padding:24px 32px 80px}
-.tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border)}
-.tab{background:transparent;border:none;color:var(--muted);font-size:.78rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:14px 22px;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;margin-bottom:-1px}
-.tab.active{color:var(--pink);border-bottom-color:var(--pink)}
-.tab:hover:not(.active){color:var(--text)}
+.main{grid-area:main;padding:28px 32px 60px;overflow-x:hidden;min-width:0}
+.view-title{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.view-title h1{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;line-height:1}
+.view-title h1 em{color:var(--pink);font-style:italic}
+.view-title .subtitle{font-size:.82rem;color:var(--muted);margin-top:4px;letter-spacing:.5px}
 
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
-.toolbar select,.toolbar input{background:rgba(0,0,0,.4);border:1px solid var(--border);color:var(--text);padding:10px 12px;font-size:.85rem;font-family:inherit;border-radius:0;transition:border-color .2s}
-.toolbar select:focus,.toolbar input:focus{outline:none;border-color:var(--pink)}
-.toolbar .grow{flex:1}
-.toolbar .stat{font-size:.78rem;color:var(--muted);letter-spacing:1px}
-.toolbar .stat strong{color:var(--text);font-weight:600;margin-right:4px}
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;font-size:.76rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--text);transition:all .15s ease}
+.btn:hover{border-color:var(--border-hi);background:rgba(255,255,255,.03)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn.primary:hover{background:var(--pink-2);border-color:var(--pink-2)}
+.btn.ghost{background:transparent;border-color:var(--border)}
+.btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn.danger:hover{border-color:var(--red);color:var(--red)}
+.btn.icon-only{padding:9px;width:36px;height:36px;justify-content:center}
+.btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn.sm{padding:6px 12px;font-size:.68rem}
 
-/* Stats cards */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:22px}
-.stat-card{background:linear-gradient(160deg,var(--bg-2),rgba(0,0,0,.5));border:1px solid var(--border);padding:18px 20px}
-.stat-card .label{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.stat-card .value{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;line-height:1;color:var(--text)}
-.stat-card .value.pink{color:var(--pink)}
-.stat-card .value.cyan{color:var(--cyan)}
+/* Pills */
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.66rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.pill::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.pill.pink{color:var(--pink);background:var(--pink-soft)}
+.pill.cyan{color:var(--cyan);background:var(--cyan-soft)}
+.pill.gold{color:var(--gold);background:var(--gold-soft)}
+.pill.silver{color:var(--silver);background:var(--silver-soft)}
+.pill.bronze{color:var(--bronze);background:var(--bronze-soft)}
+.pill.green{color:var(--green);background:var(--green-soft)}
+.pill.red{color:var(--red);background:var(--red-soft)}
+.pill.muted{color:var(--muted);background:rgba(122,112,128,.14)}
+
+/* Cards */
+.card{background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px}
+.card.hoverable{transition:all .2s ease}
+.card.hoverable:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+
+/* Stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.stat{padding:20px 22px;background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);position:relative;overflow:hidden}
+.stat .label{font-size:.66rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.stat .value{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;line-height:1;color:var(--text)}
+.stat .value.pink{color:var(--pink)}
+.stat .value.cyan{color:var(--cyan)}
+.stat .value.gold{color:var(--gold)}
+.stat .value.green{color:var(--green)}
+.stat .foot{font-size:.75rem;color:var(--muted);margin-top:10px}
+.stat .icon-bg{position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:60px;height:60px;opacity:.06}
+.stat .icon-bg svg{width:100%;height:100%;stroke:var(--text);fill:none;stroke-width:1}
 
 /* Table */
-.table-wrap{background:linear-gradient(160deg,var(--bg-2),rgba(0,0,0,.4));border:1px solid var(--border);overflow:hidden}
-.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
-.tbl thead{background:rgba(0,0,0,.4)}
-.tbl th{text-align:left;padding:14px 16px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap}
-.tbl td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
-.tbl tr:last-child td{border-bottom:none}
-.tbl tbody tr{cursor:pointer;transition:background .15s}
-.tbl tbody tr:hover{background:var(--row-hover)}
-.tbl tbody tr.expanded{background:rgba(255,0,102,.04)}
+.table-card{background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+.tbl thead{background:rgba(0,0,0,.35)}
+.tbl th{text-align:left;padding:14px 18px;font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none}
+.tbl th.sortable{cursor:pointer;transition:color .15s ease}
+.tbl th.sortable:hover{color:var(--text)}
+.tbl th.sortable .arrow{opacity:.4;margin-left:4px;font-size:.7rem}
+.tbl th.sortable.active .arrow{opacity:1;color:var(--pink)}
+.tbl td{padding:14px 18px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text)}
+.tbl tbody tr{transition:background .12s ease}
+.tbl tbody tr:hover{background:rgba(255,0,102,.03)}
+.tbl tbody tr:last-child td{border-bottom:none}
 .tbl .muted{color:var(--muted)}
-.tbl .num{font-variant-numeric:tabular-nums;color:var(--cyan);font-weight:600}
-.tbl .pill{display:inline-block;font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:99px;font-weight:600}
-.pill-reservado{background:rgba(255,0,102,.18);color:var(--pink)}
-.pill-evento{background:rgba(0,224,255,.18);color:var(--cyan)}
-.pill-cumpleanos{background:rgba(255,200,40,.18);color:#ffc828}
-.pill-mesa{background:rgba(160,160,160,.15);color:#bbb}
+.tbl .num{font-variant-numeric:tabular-nums;font-weight:600}
+.tbl .name-cell strong{display:block;font-size:.94rem;font-weight:600}
+.tbl .name-cell small{display:block;color:var(--muted);font-size:.74rem;margin-top:2px}
+.tbl .actions{display:flex;gap:4px;justify-content:flex-end}
+.tbl .actions .btn{padding:6px;width:30px;height:30px;justify-content:center}
+.tbl tr.row-btn{cursor:pointer}
 
-.expand-row td{background:rgba(0,0,0,.3);padding:18px 22px}
-.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.kv-item{font-size:.85rem}
+/* Toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.toolbar .search{flex:1;min-width:200px;position:relative}
+.toolbar .search input{width:100%;background:var(--bg-1);border:1px solid var(--border);color:var(--text);padding:10px 14px 10px 38px;font-size:.86rem;border-radius:var(--radius);transition:border-color .15s ease}
+.toolbar .search input:focus{outline:none;border-color:var(--pink)}
+.toolbar .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2}
+.toolbar select,.toolbar input[type="date"]{background:var(--bg-1);border:1px solid var(--border);color:var(--text);padding:10px 12px;font-size:.85rem;border-radius:var(--radius);transition:border-color .15s ease}
+.toolbar select:focus,.toolbar input[type="date"]:focus{outline:none;border-color:var(--pink)}
+.toolbar input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) hue-rotate(180deg);opacity:.6}
+
+/* Filter chips */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:7px 14px;font-size:.75rem;font-weight:500;background:var(--bg-1);border:1px solid var(--border);border-radius:99px;cursor:pointer;transition:all .15s ease;color:var(--text-2);display:inline-flex;align-items:center;gap:8px}
+.chip:hover{border-color:var(--border-hi);color:var(--text)}
+.chip.active{background:var(--pink);border-color:var(--pink);color:#fff}
+.chip .count{opacity:.7;font-size:.72rem;font-variant-numeric:tabular-nums}
+
+/* Empty / loading states */
+.empty,.loading{padding:60px 24px;text-align:center;color:var(--muted)}
+.empty .icon,.loading .icon{width:48px;height:48px;margin:0 auto 16px;opacity:.3}
+.empty .icon svg,.loading .icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.5}
+.empty h3{color:var(--text-2);font-size:1rem;font-weight:500;margin-bottom:6px}
+.empty p{font-size:.85rem;line-height:1.5;max-width:340px;margin:0 auto}
+.loading .spinner{width:24px;height:24px;margin:0 auto 12px;border:2px solid var(--border);border-top-color:var(--pink);border-radius:50%;animation:spin 1s linear infinite}
+.loading p{font-size:.82rem;letter-spacing:1px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:100;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--bg-2);border:1px solid var(--border-hi);border-left:3px solid var(--pink);padding:14px 20px;border-radius:var(--radius);box-shadow:var(--shadow-md);max-width:360px;font-size:.87rem;pointer-events:auto;animation:toastIn .3s ease}
+.toast.success{border-left-color:var(--green)}
+.toast.error{border-left-color:var(--red)}
+.toast.info{border-left-color:var(--cyan)}
+.toast .t-title{font-weight:600;margin-bottom:2px}
+.toast .t-msg{color:var(--text-2);font-size:.82rem;line-height:1.4}
+@keyframes toastIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:80;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+.modal-overlay.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{width:100%;max-width:640px;max-height:90vh;overflow:auto;background:var(--bg-1);border:1px solid var(--border-hi);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);animation:modalIn .25s ease}
+.modal.sm{max-width:440px}
+@keyframes modalIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:22px 26px 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:1px solid var(--border)}
+.modal-head .title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;line-height:1.15;font-weight:600}
+.modal-head .title em{color:var(--pink);font-style:italic}
+.modal-head .subtitle{font-size:.78rem;color:var(--muted);margin-top:4px;letter-spacing:.5px}
+.modal-close{width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--border);border-radius:50%;flex-shrink:0;transition:all .15s ease}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:22px 26px}
+.modal-foot{padding:16px 26px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border)}
+
+/* Form inputs (modal) */
+.form-row{margin-bottom:16px}
+.form-row label{display:block;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.form-row input,.form-row select,.form-row textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:11px 14px;font-size:.9rem;border-radius:var(--radius);transition:border-color .15s ease}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:var(--pink)}
+.form-row textarea{resize:vertical;min-height:80px;font-family:inherit}
+.form-error{color:var(--red);font-size:.82rem;margin-top:10px;min-height:1.2em}
+
+/* Key-value grid */
+.kv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 22px}
 .kv-item .k{display:block;font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.kv-item .v{color:var(--text);word-break:break-word}
+.kv-item .v{color:var(--text);font-size:.9rem;word-break:break-word;line-height:1.4}
+.kv-item .v.big{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600}
+.kv-item .v a{color:var(--cyan);border-bottom:1px dashed var(--cyan);padding-bottom:1px}
 
-.empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:.92rem}
-.loading{padding:50px 20px;text-align:center;color:var(--muted);font-size:.85rem;letter-spacing:1.5px}
+/* Section header */
+.section-h{display:flex;align-items:center;justify-content:space-between;margin:28px 0 12px;gap:12px;flex-wrap:wrap}
+.section-h h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;line-height:1}
+.section-h h2 em{color:var(--pink);font-style:italic}
+.section-h .side{font-size:.76rem;color:var(--muted)}
 
-.action-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.action-row button{background:transparent;border:1px solid var(--border);color:var(--text);padding:9px 18px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:all .2s}
-.action-row button:hover{border-color:var(--cyan);color:var(--cyan)}
-.action-row button.danger:hover{border-color:#ff3366;color:#ff5577}
+/* Podium (torneo) */
+.podium{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:14px;margin:20px 0;align-items:end}
+.step{background:linear-gradient(160deg,var(--bg-1),rgba(0,0,0,.5));border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 20px;text-align:center;position:relative;overflow:hidden;transition:transform .2s ease}
+.step:hover{transform:translateY(-4px)}
+.step .medal{font-size:2.4rem;line-height:1;margin-bottom:10px}
+.step .pos{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:700;line-height:1;margin-bottom:6px}
+.step .name{font-size:1.05rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;word-break:break-word}
+.step .phone{font-size:.75rem;color:var(--muted);margin-bottom:12px;font-variant-numeric:tabular-nums}
+.step .score{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--cyan);font-weight:600;margin-bottom:14px}
+.step .prize{font-size:.78rem;color:var(--text-2);line-height:1.4;padding:10px 8px;background:rgba(0,0,0,.35);border-radius:var(--radius);margin-bottom:14px;min-height:2.4em}
+.step.p1{background:linear-gradient(160deg,rgba(255,200,40,.14),rgba(0,0,0,.6));border-color:rgba(255,200,40,.35);padding:32px 20px}
+.step.p1 .pos{color:var(--gold);font-size:3.4rem}
+.step.p2{background:linear-gradient(160deg,rgba(220,220,239,.10),rgba(0,0,0,.6));border-color:rgba(220,220,239,.28)}
+.step.p2 .pos{color:var(--silver)}
+.step.p3{background:linear-gradient(160deg,rgba(255,126,58,.14),rgba(0,0,0,.6));border-color:rgba(255,126,58,.32)}
+.step.p3 .pos{color:var(--bronze)}
+.step .delivered-badge{display:inline-flex;align-items:center;gap:6px;font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-top:6px}
+.step.empty-slot{opacity:.35;background:linear-gradient(160deg,var(--bg-1),rgba(0,0,0,.4));border-style:dashed}
+.step.empty-slot .name{color:var(--muted)}
 
-.no-config{max-width:560px;margin:80px auto;padding:0 24px;text-align:center}
+/* Login */
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;position:relative;overflow:hidden}
+.login-wrap::before{content:"";position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(circle,rgba(255,0,102,.14) 0%,transparent 60%);pointer-events:none;z-index:0}
+.login-card{position:relative;z-index:1;width:100%;max-width:420px;background:linear-gradient(160deg,var(--bg-1),rgba(0,0,0,.6));border:1px solid var(--border);border-radius:var(--radius-lg);padding:44px 36px;box-shadow:var(--shadow-lg)}
+.login-card .brand{margin-bottom:22px;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;letter-spacing:.5px}
+.login-card .brand em{color:var(--pink);font-style:normal}
+.login-card h1{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;line-height:1.1;margin-bottom:6px}
+.login-card h1 em{color:var(--pink);font-style:italic}
+.login-card .sub{color:var(--muted);font-size:.86rem;margin-bottom:26px}
+
+/* No-config state */
+.no-config{max-width:520px;margin:80px auto;text-align:center}
 .no-config h2{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--pink);margin-bottom:14px}
-.no-config p{color:var(--muted);font-size:.95rem;line-height:1.6;margin-bottom:14px}
-.no-config code{background:rgba(255,0,102,.1);color:var(--pink);padding:2px 8px;font-family:monospace;font-size:.85rem}
+.no-config p{color:var(--muted);font-size:.92rem;line-height:1.6;margin-bottom:12px}
+.no-config code{background:var(--bg-1);color:var(--pink);padding:2px 8px;font-family:'SF Mono',Menlo,monospace;font-size:.82rem;border-radius:4px}
 
-@media (max-width:760px){
-  .topbar{padding:14px 18px}
+/* Utilities */
+.hidden{display:none !important}
+.flex{display:flex}
+.gap-6{gap:6px}.gap-8{gap:8px}.gap-12{gap:12px}
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}
+.text-c{text-align:center}
+.grow{flex:1}
+
+/* Responsive */
+@media (max-width:960px){
+  :root{--sidebar:0px}
+  .app{grid-template-columns:1fr;grid-template-areas:"header" "main"}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;z-index:60;transform:translateX(-100%);transition:transform .25s ease;padding-top:calc(var(--header-h) + 12px)}
+  .sidebar.open{transform:translateX(0);box-shadow:var(--shadow-lg)}
+  .sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:55;display:none}
+  .sidebar-backdrop.open{display:block}
+  .hamburger{display:grid}
   .main{padding:20px 16px 60px}
-  .tabs{overflow-x:auto;white-space:nowrap}
-  .tbl{font-size:.8rem}
-  .tbl th,.tbl td{padding:10px 12px}
-  .hide-sm{display:none}
+  .app-header{padding:0 16px}
+  .app-header .live-dot{display:none}
+  .podium{grid-template-columns:1fr;gap:10px}
+  .podium .step.p1{order:-1}
+  .step.p1{padding:24px 20px}
+  .hide-sm{display:none !important}
+  .tbl th,.tbl td{padding:12px 14px;font-size:.82rem}
+  .view-title h1{font-size:1.7rem}
+  .modal{max-height:100vh}
+  .toast-wrap{right:12px;left:12px;bottom:12px}
+  .toast{max-width:none}
 }
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="logo">Shaona<em>.</em><span class="tag">Admin</span></a>
-  <div class="top-actions" id="topActions"></div>
-</header>
+<div id="app-root"></div>
 
-<main id="main"></main>
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="modal-overlay" id="modalOverlay"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
 <script src="shaona-config.js"></script>
 <script>
 /* ============================================================
-   ADMIN PANEL — Shaona
+   ADMIN — Shaona
+   SPA con dashboard, reservas, torneo. Auth via Supabase.
    ============================================================ */
-const CFG = window.SHAONA_CONFIG || {};
-const main = document.getElementById('main');
-const topActions = document.getElementById('topActions');
 
-let supa = null;
-if (window.supabase && CFG.supabaseUrl && CFG.supabaseAnonKey){
-  supa = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey, {
-    auth: { persistSession: true, autoRefreshToken: true }
+// ---------- Supabase ----------
+const CFG = window.SHAONA_CONFIG || {};
+const supa = (window.supabase && CFG.supabaseUrl && CFG.supabaseAnonKey)
+  ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey, {
+      auth: { persistSession: true, autoRefreshToken: true }
+    })
+  : null;
+
+// ---------- State ----------
+const state = {
+  session:      null,
+  view:         'dashboard',       // dashboard | reservas | torneo
+  reservations: [],
+  scores:       [],
+  events:       [],
+  currentEventId: null,
+  quickFilter:  'todas',           // hoy | semana | mes | pendientes | todas
+  filters: {
+    type: 'all', status: 'all', from: '', to: '', text: ''
+  },
+  sort: { key: 'created_at', dir: 'desc' },
+  realtimeOn:   false,
+  sidebarOpen:  false
+};
+
+// ---------- SVG icons ----------
+const ICONS = {
+  dashboard: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="10" width="8" height="11" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/></svg>',
+  book:      '<svg viewBox="0 0 24 24"><path d="M4 5v14a2 2 0 002 2h13V3H6a2 2 0 00-2 2z"/><path d="M9 8h7M9 12h7M9 16h4"/></svg>',
+  trophy:    '<svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M6 4h12v5a6 6 0 01-12 0V4z"/><path d="M6 5H4a2 2 0 000 4h2M18 5h2a2 2 0 010 4h-2"/></svg>',
+  search:    '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>',
+  users:     '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13A4 4 0 0116 11"/></svg>',
+  calendar:  '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  clock:     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+  gift:      '<svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>',
+  x:         '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  check:     '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+  edit:      '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  trash:     '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6M10 11v6M14 11v6"/></svg>',
+  eye:       '<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  phone:     '<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13 1 .37 1.96.72 2.88a2 2 0 01-.45 2.11L8.09 10.09a16 16 0 006 6l1.38-1.38a2 2 0 012.11-.45c.92.35 1.88.59 2.88.72A2 2 0 0122 16.92z"/></svg>',
+  download:  '<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+  refresh:   '<svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>',
+  logout:    '<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+  bell:      '<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>',
+  empty:     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>',
+  menu:      '<svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  chevron:   '<svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>',
+  crown:     '<svg viewBox="0 0 24 24"><path d="M2 20h20l-2-12-5 4-5-8-5 8-5-4z"/></svg>',
+  bar:       '<svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>'
+};
+
+// ---------- Helpers ----------
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isoDate = d => new Date(d).toISOString().slice(0,10);
+const startOfDay = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+const endOfDay   = d => { const x = new Date(d); x.setHours(23,59,59,999); return x; };
+const fmtDate = d => new Date(d).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'});
+const fmtDateTime = d => {
+  const dt = new Date(d);
+  return dt.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' +
+         dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+};
+const fmtRelative = d => {
+  const diff = (Date.now() - new Date(d).getTime()) / 1000;
+  if (diff < 60) return 'ahora mismo';
+  if (diff < 3600) return `hace ${Math.floor(diff/60)} min`;
+  if (diff < 86400) return `hace ${Math.floor(diff/3600)} h`;
+  if (diff < 604800) return `hace ${Math.floor(diff/86400)} d`;
+  return fmtDate(d);
+};
+const phoneClean = p => (p||'').replace(/[^0-9+]/g,'');
+const waLink = p => `https://wa.me/${phoneClean(p).replace(/^\+?/, '34').replace(/^3434/, '34')}`;
+
+// ---------- Toasts ----------
+function toast(title, msg='', kind='info', timeout=3800){
+  const el = document.createElement('div');
+  el.className = `toast ${kind}`;
+  el.innerHTML = `<div class="t-title">${esc(title)}</div>${msg?`<div class="t-msg">${esc(msg)}</div>`:''}`;
+  $('#toastWrap').appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity .3s ease, transform .3s ease';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(20px)';
+    setTimeout(() => el.remove(), 320);
+  }, timeout);
+}
+
+// ---------- Modal ----------
+function modal({ title, subtitle='', body='', size='', actions=[], onClose }={}){
+  const overlay = $('#modalOverlay');
+  overlay.innerHTML = `
+    <div class="modal ${size}">
+      <div class="modal-head">
+        <div>
+          <div class="title">${title}</div>
+          ${subtitle?`<div class="subtitle">${subtitle}</div>`:''}
+        </div>
+        <button class="modal-close" data-close aria-label="Cerrar">${ICONS.x}</button>
+      </div>
+      <div class="modal-body">${body}</div>
+      ${actions.length?`<div class="modal-foot">${actions.map((a,i)=>`<button class="btn ${a.cls||''}" data-action="${i}">${a.icon?a.icon:''}${esc(a.label)}</button>`).join('')}</div>`:''}
+    </div>`;
+  overlay.classList.add('open');
+  const close = () => {
+    overlay.classList.remove('open');
+    overlay.innerHTML = '';
+    document.removeEventListener('keydown', onKey);
+    if (onClose) onClose();
+  };
+  const onKey = e => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  overlay.querySelector('[data-close]').addEventListener('click', close);
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  actions.forEach((a,i) => {
+    const btn = overlay.querySelector(`[data-action="${i}"]`);
+    if (btn) btn.addEventListener('click', () => a.onClick && a.onClick(close));
+  });
+  return close;
+}
+
+function confirmModal({ title, message, danger=false, confirmLabel='Confirmar', onConfirm }){
+  modal({
+    title, size:'sm',
+    body: `<p style="color:var(--text-2);line-height:1.55;font-size:.95rem">${message}</p>`,
+    actions: [
+      { label:'Cancelar', cls:'ghost', onClick: close => close() },
+      { label: confirmLabel, cls: danger ? 'primary danger' : 'primary',
+        onClick: async close => { await onConfirm(); close(); } }
+    ]
   });
 }
 
-let session = null;
-let currentTab = 'reservas';
-let reservations = [];
-let scores = [];
-let availableEvents = [];
-let currentEventId = null;
-let filterType = 'all';
-let filterText = '';
-let filterFrom = '';
-let filterTo = '';
-
-/* === Boot === */
+/* ============================================================
+   BOOT
+   ============================================================ */
 async function boot(){
   if (!supa){
     renderNoConfig();
     return;
   }
   const { data } = await supa.auth.getSession();
-  session = data.session;
-  if (!session){
-    renderLogin();
-  } else {
-    renderAdmin();
-  }
+  state.session = data.session;
+  if (!state.session) return renderLogin();
+  renderApp();
   supa.auth.onAuthStateChange((_evt, sess) => {
-    session = sess;
-    if (!session) renderLogin();
+    state.session = sess;
+    if (!sess) renderLogin();
   });
 }
 
 function renderNoConfig(){
-  main.innerHTML = `
+  $('#app-root').innerHTML = `
     <div class="no-config">
       <h2>Falta configurar Supabase</h2>
-      <p>Edita <code>shaona-config.js</code> y rellena <code>supabaseUrl</code> y <code>supabaseAnonKey</code>.</p>
+      <p>Rellena <code>supabaseUrl</code> y <code>supabaseAnonKey</code> en <code>shaona-config.js</code>.</p>
       <p>Los encuentras en tu proyecto de Supabase → Project Settings → API.</p>
     </div>`;
 }
 
-/* === Login === */
+/* ============================================================
+   LOGIN
+   ============================================================ */
 function renderLogin(){
-  topActions.innerHTML = '';
-  main.innerHTML = `
+  $('#app-root').innerHTML = `
     <div class="login-wrap">
       <div class="login-card">
-        <h1>Panel <em style="color:var(--pink);font-style:italic">Shaona</em></h1>
-        <p class="sub">Acceso restringido. Inicia sesión con tu cuenta de administrador.</p>
+        <div class="brand">Shaona<em style="color:var(--pink)">.</em> · <span style="color:var(--cyan);font-size:.72rem;letter-spacing:2px;text-transform:uppercase;font-family:Outfit,sans-serif">Admin</span></div>
+        <h1>Iniciar <em>sesión</em></h1>
+        <p class="sub">Acceso restringido al personal del Shaona.</p>
         <form id="loginForm">
-          <div class="input-row">
+          <div class="form-row">
             <label>Email</label>
-            <input type="email" id="loginEmail" required autocomplete="email">
+            <input type="email" id="lEmail" autocomplete="email" required>
           </div>
-          <div class="input-row">
+          <div class="form-row">
             <label>Contraseña</label>
-            <input type="password" id="loginPass" required autocomplete="current-password">
+            <input type="password" id="lPass" autocomplete="current-password" required>
           </div>
-          <button class="btn-primary" type="submit" id="loginBtn">Entrar</button>
-          <p class="error-msg" id="loginError"></p>
+          <button class="btn primary" style="width:100%;justify-content:center;padding:14px" type="submit" id="lBtn">Entrar</button>
+          <p class="form-error" id="lErr"></p>
         </form>
       </div>
     </div>`;
-  document.getElementById('loginForm').addEventListener('submit', async e => {
+
+  $('#loginForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPass').value;
-    const err = document.getElementById('loginError');
-    const btn = document.getElementById('loginBtn');
+    const email = $('#lEmail').value.trim();
+    const password = $('#lPass').value;
+    const err = $('#lErr');
+    const btn = $('#lBtn');
     err.textContent = '';
     btn.disabled = true;
     btn.textContent = 'Entrando…';
     const { data, error } = await supa.auth.signInWithPassword({ email, password });
     if (error){
-      err.textContent = error.message || 'No se pudo iniciar sesión.';
+      err.textContent = error.message === 'Invalid login credentials'
+        ? 'Email o contraseña incorrectos.'
+        : (error.message || 'Error al iniciar sesión.');
       btn.disabled = false;
       btn.textContent = 'Entrar';
       return;
     }
-    session = data.session;
-    renderAdmin();
+    state.session = data.session;
+    renderApp();
   });
 }
 
-/* === Admin === */
-async function renderAdmin(){
-  topActions.innerHTML = `
-    <span class="user-chip">${escapeHtml(session?.user?.email || '')}</span>
-    <button class="btn-ghost" id="logoutBtn">Cerrar sesión</button>
-  `;
-  document.getElementById('logoutBtn').addEventListener('click', async () => {
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+function renderApp(){
+  const email = state.session?.user?.email || '';
+  const initial = email.charAt(0).toUpperCase() || 'A';
+  $('#app-root').innerHTML = `
+    <div class="app">
+      <header class="app-header">
+        <div class="brand" style="display:flex;align-items:center;gap:12px">
+          <button class="hamburger" id="hamburgerBtn" aria-label="Menú">${ICONS.menu}</button>
+          <a href="index.html" class="brand-logo">Shaona<em>.</em></a>
+          <span class="brand-tag">Admin</span>
+        </div>
+        <div class="header-right">
+          <span class="live-dot" id="liveDot" title="Actualizaciones en vivo">Live</span>
+          <span class="user-chip"><span class="avatar">${esc(initial)}</span><span class="hide-sm">${esc(email)}</span></span>
+          <button class="btn ghost sm" id="logoutBtn" title="Cerrar sesión">${ICONS.logout}<span class="hide-sm">Salir</span></button>
+        </div>
+      </header>
+      <aside class="sidebar" id="sidebar">
+        <nav class="side-nav">
+          <div class="side-nav-item ${state.view==='dashboard'?'active':''}" data-nav="dashboard">
+            <span class="icon">${ICONS.dashboard}</span>Dashboard
+          </div>
+          <div class="side-nav-item ${state.view==='reservas'?'active':''}" data-nav="reservas">
+            <span class="icon">${ICONS.book}</span>Reservas
+          </div>
+          <div class="side-nav-item ${state.view==='torneo'?'active':''}" data-nav="torneo">
+            <span class="icon">${ICONS.trophy}</span>Torneo
+          </div>
+          <div class="side-section">Enlaces</div>
+          <a class="side-nav-item" href="index.html" target="_blank" rel="noopener">
+            <span class="icon">${ICONS.eye}</span>Ver la web
+          </a>
+          <a class="side-nav-item" href="juego.html" target="_blank" rel="noopener">
+            <span class="icon">${ICONS.trophy}</span>Ver el juego
+          </a>
+        </nav>
+      </aside>
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+      <main class="main" id="mainView"></main>
+    </div>`;
+
+  // Header actions
+  $('#logoutBtn').addEventListener('click', async () => {
     await supa.auth.signOut();
-    session = null;
+    state.session = null;
     renderLogin();
   });
+  $('#hamburgerBtn').addEventListener('click', () => toggleSidebar());
+  $('#sidebarBackdrop').addEventListener('click', () => toggleSidebar(false));
 
-  main.innerHTML = `
-    <div class="main">
-      <div class="tabs">
-        <button class="tab ${currentTab==='reservas'?'active':''}" data-tab="reservas">Reservas</button>
-        <button class="tab ${currentTab==='torneo'?'active':''}" data-tab="torneo">Torneo</button>
-      </div>
-      <div id="tabContent"></div>
-    </div>`;
-  document.querySelectorAll('.tab').forEach(t => {
-    t.addEventListener('click', () => { currentTab = t.dataset.tab; renderAdmin(); });
-  });
-  if (currentTab === 'reservas') await renderReservas();
-  else await renderTorneo();
+  // Nav
+  $$('[data-nav]').forEach(el => el.addEventListener('click', () => {
+    state.view = el.dataset.nav;
+    toggleSidebar(false);
+    renderApp();
+  }));
+
+  // Render current view
+  routeToView();
+
+  // Initial data + realtime
+  ensureData().then(() => routeToView());
+  ensureRealtime();
 }
 
-/* === RESERVAS === */
-async function renderReservas(){
-  const content = document.getElementById('tabContent');
-  content.innerHTML = `
+function toggleSidebar(open){
+  const sb = $('#sidebar'), bd = $('#sidebarBackdrop');
+  const shouldOpen = open === undefined ? !sb.classList.contains('open') : open;
+  sb.classList.toggle('open', shouldOpen);
+  bd.classList.toggle('open', shouldOpen);
+}
+
+function routeToView(){
+  if (state.view === 'dashboard') renderDashboard();
+  else if (state.view === 'reservas') renderReservas();
+  else if (state.view === 'torneo') renderTorneo();
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
+let dataLoaded = false;
+async function ensureData(force=false){
+  if (dataLoaded && !force) return;
+  const [rRes, rSco] = await Promise.all([
+    supa.from('reservations').select('*').order('created_at',{ascending:false}).limit(3000),
+    supa.from('tournament_scores').select('*').order('created_at',{ascending:false}).limit(5000)
+  ]);
+  if (rRes.error){ toast('Error cargando reservas', rRes.error.message, 'error'); return; }
+  if (rSco.error){ toast('Error cargando puntuaciones', rSco.error.message, 'error'); return; }
+  state.reservations = rRes.data || [];
+  state.scores = rSco.data || [];
+  state.events = [...new Set(state.scores.map(s => s.event_id))];
+  if (!state.currentEventId || !state.events.includes(state.currentEventId)){
+    state.currentEventId = state.events[0] || null;
+  }
+  dataLoaded = true;
+}
+
+function ensureRealtime(){
+  if (state.realtimeOn || !supa) return;
+  const channel = supa.channel('admin-live')
+    .on('postgres_changes', { event:'*', schema:'public', table:'reservations' }, payload => {
+      handleRealtime('reservations', payload);
+    })
+    .on('postgres_changes', { event:'*', schema:'public', table:'tournament_scores' }, payload => {
+      handleRealtime('tournament_scores', payload);
+    })
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED'){
+        state.realtimeOn = true;
+        const dot = $('#liveDot');
+        if (dot) dot.classList.add('on');
+      }
+    });
+}
+
+function handleRealtime(table, payload){
+  const arr = table === 'reservations' ? state.reservations : state.scores;
+  const key = 'id';
+  if (payload.eventType === 'INSERT'){
+    arr.unshift(payload.new);
+    if (table === 'reservations'){
+      toast('Nueva reserva', `${payload.new.name || 'Sin nombre'} — ${payload.new.type || 'mesa'}`, 'success', 5000);
+    } else {
+      toast('Nueva partida', `${payload.new.name} · ${payload.new.score} pts`, 'info', 3000);
+      if (!state.events.includes(payload.new.event_id)){
+        state.events.push(payload.new.event_id);
+      }
+    }
+  } else if (payload.eventType === 'UPDATE'){
+    const idx = arr.findIndex(x => x[key] === payload.new[key]);
+    if (idx >= 0) arr[idx] = payload.new;
+  } else if (payload.eventType === 'DELETE'){
+    const idx = arr.findIndex(x => x[key] === payload.old[key]);
+    if (idx >= 0) arr.splice(idx, 1);
+  }
+  routeToView();
+}
+
+/* ============================================================
+   VIEW: DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  const now = new Date();
+  const today = startOfDay(now);
+  const weekEnd = endOfDay(new Date(now.getTime() + 6*86400000));
+
+  const todayRes = state.reservations.filter(r => {
+    const d = new Date(r.created_at);
+    return d >= today && d <= endOfDay(now);
+  });
+  const upcomingRes = state.reservations.filter(r => {
+    const d = new Date(r.created_at);
+    return d >= today && d <= weekEnd;
+  });
+  const pending = state.reservations.filter(r => r.status === 'pendiente');
+  const activeEvents = state.events.length;
+  const totalPlayers = new Set(state.scores.map(s => s.phone)).size;
+
+  const podium = state.currentEventId ? topPodium(state.currentEventId) : [];
+
+  $('#mainView').innerHTML = `
+    <div class="view-title">
+      <div>
+        <h1>Buen día en el <em>Shaona</em></h1>
+        <div class="subtitle">Resumen general · ${fmtDate(now)}</div>
+      </div>
+      <button class="btn ghost sm" id="refreshBtn">${ICONS.refresh} Recargar</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="label">Hoy <span class="icon-bg">${ICONS.calendar}</span></div>
+        <div class="value pink">${todayRes.length}</div>
+        <div class="foot">reservas recibidas hoy</div>
+      </div>
+      <div class="stat">
+        <div class="label">Próximos 7 días <span class="icon-bg">${ICONS.clock}</span></div>
+        <div class="value cyan">${upcomingRes.length}</div>
+        <div class="foot">reservas en la semana</div>
+      </div>
+      <div class="stat">
+        <div class="label">Pendientes <span class="icon-bg">${ICONS.bell}</span></div>
+        <div class="value gold">${pending.length}</div>
+        <div class="foot">esperan confirmación</div>
+      </div>
+      <div class="stat">
+        <div class="label">Torneo · jugadores <span class="icon-bg">${ICONS.trophy}</span></div>
+        <div class="value">${totalPlayers}</div>
+        <div class="foot">${activeEvents} evento${activeEvents===1?'':'s'} con partidas</div>
+      </div>
+    </div>
+
+    <div class="section-h">
+      <h2>Últimas <em>reservas</em></h2>
+      <a class="side" href="#" data-goto="reservas">Ver todas →</a>
+    </div>
+    <div class="table-card" id="latestRes"></div>
+
+    <div class="section-h">
+      <h2>Podio del <em>torneo actual</em></h2>
+      <span class="side">${state.currentEventId ? esc(state.currentEventId) : 'sin evento activo'}</span>
+    </div>
+    ${podium.length
+      ? renderPodium(podium)
+      : `<div class="table-card"><div class="empty"><div class="icon">${ICONS.empty}</div><h3>Todavía no hay partidas</h3><p>Cuando arranques el torneo desde <code>juego.html</code>, aquí verás el podio en directo.</p></div></div>`}
+  `;
+
+  $('#refreshBtn').addEventListener('click', async () => {
+    await ensureData(true);
+    routeToView();
+    toast('Datos recargados', '', 'success', 1500);
+  });
+  $$('[data-goto]').forEach(el => el.addEventListener('click', e => {
+    e.preventDefault();
+    state.view = el.dataset.goto;
+    renderApp();
+  }));
+
+  paintLatestReservationsMini();
+}
+
+function paintLatestReservationsMini(){
+  const el = $('#latestRes');
+  const list = state.reservations.slice(0, 6);
+  if (!list.length){
+    el.innerHTML = `<div class="empty"><div class="icon">${ICONS.book}</div><h3>Sin reservas todavía</h3><p>Cuando alguien envíe el formulario de la web, aparecerá aquí.</p></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <table class="tbl">
+      <thead><tr>
+        <th>Cuándo</th><th>Cliente</th><th>Tipo</th><th>Estado</th><th class="hide-sm">Detalle</th><th></th>
+      </tr></thead>
+      <tbody>
+        ${list.map(r => `
+          <tr class="row-btn" data-id="${r.id}">
+            <td class="muted">${fmtRelative(r.created_at)}</td>
+            <td class="name-cell"><strong>${esc(r.name)}</strong><small>${esc(r.phone)}</small></td>
+            <td>${typePill(r.type)}</td>
+            <td>${statusPill(r.status)}</td>
+            <td class="hide-sm">${esc(r.event_name || '—')}</td>
+            <td class="actions">
+              <button class="btn icon-only ghost" title="Ver">${ICONS.eye}</button>
+            </td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+  $$('tr.row-btn', el).forEach(tr => tr.addEventListener('click', () => openReservationModal(tr.dataset.id)));
+}
+
+/* ============================================================
+   VIEW: RESERVAS
+   ============================================================ */
+function renderReservas(){
+  const list = filteredReservations();
+  $('#mainView').innerHTML = `
+    <div class="view-title">
+      <div>
+        <h1>Reservas <em>del Shaona</em></h1>
+        <div class="subtitle">${state.reservations.length} totales · ${list.length} en vista actual</div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn ghost sm" id="refreshBtn">${ICONS.refresh} Recargar</button>
+        <button class="btn ghost sm" id="exportBtn">${ICONS.download} Exportar CSV</button>
+      </div>
+    </div>
+
+    <div class="chips" id="quickChips">
+      ${quickChip('todas','Todas')}
+      ${quickChip('hoy','Hoy')}
+      ${quickChip('semana','Esta semana')}
+      ${quickChip('mes','Este mes')}
+      ${quickChip('pendientes','Pendientes')}
+    </div>
+
     <div class="toolbar">
+      <div class="search">
+        ${ICONS.search}
+        <input id="fText" placeholder="Buscar nombre, teléfono, email…" value="${esc(state.filters.text)}">
+      </div>
       <select id="fType">
         <option value="all">Todos los tipos</option>
         <option value="reservado">Reservados</option>
         <option value="evento">Eventos</option>
         <option value="cumpleanos">Cumpleaños</option>
         <option value="mesa">Mesas</option>
+        <option value="otro">Otros</option>
       </select>
-      <input type="date" id="fFrom" title="Desde">
-      <input type="date" id="fTo" title="Hasta">
-      <input type="search" id="fText" placeholder="Buscar nombre, teléfono…" class="grow">
-      <button class="btn-ghost" id="refreshRes">↻ Recargar</button>
-      <button class="btn-ghost" id="exportRes">Exportar CSV</button>
+      <select id="fStatus">
+        <option value="all">Cualquier estado</option>
+        <option value="pendiente">Pendientes</option>
+        <option value="confirmada">Confirmadas</option>
+        <option value="realizada">Realizadas</option>
+        <option value="cancelada">Canceladas</option>
+        <option value="no-show">No-show</option>
+      </select>
+      <input type="date" id="fFrom" value="${state.filters.from}" title="Desde">
+      <input type="date" id="fTo" value="${state.filters.to}" title="Hasta">
     </div>
-    <div id="resStats"></div>
-    <div class="table-wrap">
-      <div class="loading">Cargando reservas…</div>
-    </div>`;
 
-  document.getElementById('fType').value = filterType;
-  document.getElementById('fFrom').value = filterFrom;
-  document.getElementById('fTo').value = filterTo;
-  document.getElementById('fText').value = filterText;
+    <div class="table-card" id="resTable"></div>`;
 
-  ['fType','fFrom','fTo','fText'].forEach(id => {
-    document.getElementById(id).addEventListener('input', () => {
-      filterType = document.getElementById('fType').value;
-      filterFrom = document.getElementById('fFrom').value;
-      filterTo = document.getElementById('fTo').value;
-      filterText = document.getElementById('fText').value;
-      paintReservasTable();
+  $('#fType').value = state.filters.type;
+  $('#fStatus').value = state.filters.status;
+  ['fText','fType','fStatus','fFrom','fTo'].forEach(id => {
+    $('#'+id).addEventListener('input', () => {
+      state.filters.text   = $('#fText').value;
+      state.filters.type   = $('#fType').value;
+      state.filters.status = $('#fStatus').value;
+      state.filters.from   = $('#fFrom').value;
+      state.filters.to     = $('#fTo').value;
+      paintReservationsTable();
     });
   });
-  document.getElementById('refreshRes').addEventListener('click', loadReservas);
-  document.getElementById('exportRes').addEventListener('click', exportReservasCSV);
+  $$('.chip[data-q]').forEach(c => c.addEventListener('click', () => {
+    state.quickFilter = c.dataset.q;
+    renderReservas();
+  }));
+  $('#refreshBtn').addEventListener('click', async () => {
+    await ensureData(true); routeToView(); toast('Datos recargados','','success',1500);
+  });
+  $('#exportBtn').addEventListener('click', () => exportCSV(filteredReservations(),
+    ['created_at','type','status','event_name','event_date','name','phone','email','people','bottles','hookahs','mixers','total','promo','comments','internal_notes'],
+    'reservas-shaona'));
 
-  await loadReservas();
+  paintReservationsTable();
 }
 
-async function loadReservas(){
-  const { data, error } = await supa.from('reservations')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(2000);
-  if (error){
-    document.querySelector('.table-wrap').innerHTML = `<div class="empty">Error: ${escapeHtml(error.message)}</div>`;
-    return;
-  }
-  reservations = data || [];
-  paintReservasTable();
+function quickChip(id, label){
+  const list = filteredReservationsForChip(id);
+  return `<div class="chip ${state.quickFilter===id?'active':''}" data-q="${id}">${label} <span class="count">${list.length}</span></div>`;
 }
 
-function filteredReservas(){
-  return reservations.filter(r => {
-    if (filterType !== 'all' && r.type !== filterType) return false;
-    if (filterFrom){
-      const f = new Date(filterFrom + 'T00:00:00');
-      if (new Date(r.created_at) < f) return false;
-    }
-    if (filterTo){
-      const t = new Date(filterTo + 'T23:59:59');
-      if (new Date(r.created_at) > t) return false;
-    }
-    if (filterText){
-      const q = filterText.toLowerCase();
-      const hay = (r.name||'') + ' ' + (r.phone||'') + ' ' + (r.email||'') + ' ' + (r.event_name||'');
-      if (!hay.toLowerCase().includes(q)) return false;
-    }
+function filteredReservationsForChip(chip){
+  const now = new Date();
+  const startToday = startOfDay(now), endToday = endOfDay(now);
+  const startWeek  = startOfDay(new Date(now.getTime() - 6*86400000));
+  const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  return state.reservations.filter(r => {
+    const d = new Date(r.created_at);
+    if (chip === 'hoy')        return d >= startToday && d <= endToday;
+    if (chip === 'semana')     return d >= startWeek  && d <= endToday;
+    if (chip === 'mes')        return d >= startMonth && d <= endToday;
+    if (chip === 'pendientes') return r.status === 'pendiente';
     return true;
   });
 }
 
-function paintReservasTable(){
-  const list = filteredReservas();
-  document.getElementById('resStats').innerHTML = `
-    <div class="stats">
-      <div class="stat-card"><div class="label">Total filtrado</div><div class="value pink">${list.length}</div></div>
-      <div class="stat-card"><div class="label">Reservados</div><div class="value">${list.filter(r=>r.type==='reservado').length}</div></div>
-      <div class="stat-card"><div class="label">Eventos</div><div class="value">${list.filter(r=>r.type==='evento').length}</div></div>
-      <div class="stat-card"><div class="label">Cumpleaños</div><div class="value">${list.filter(r=>r.type==='cumpleanos').length}</div></div>
-    </div>`;
-  const wrap = document.querySelector('.table-wrap');
+function filteredReservations(){
+  let list = filteredReservationsForChip(state.quickFilter);
+  const f = state.filters;
+  if (f.type !== 'all')   list = list.filter(r => r.type === f.type);
+  if (f.status !== 'all') list = list.filter(r => r.status === f.status);
+  if (f.from){
+    const from = startOfDay(f.from);
+    list = list.filter(r => new Date(r.created_at) >= from);
+  }
+  if (f.to){
+    const to = endOfDay(f.to);
+    list = list.filter(r => new Date(r.created_at) <= to);
+  }
+  if (f.text){
+    const q = f.text.toLowerCase();
+    list = list.filter(r => {
+      const hay = (r.name||'') + ' ' + (r.phone||'') + ' ' + (r.email||'') + ' ' + (r.event_name||'') + ' ' + (r.comments||'');
+      return hay.toLowerCase().includes(q);
+    });
+  }
+  // sort
+  const { key, dir } = state.sort;
+  list = [...list].sort((a,b) => {
+    const av = a[key], bv = b[key];
+    if (av == null) return 1; if (bv == null) return -1;
+    const cmp = av > bv ? 1 : av < bv ? -1 : 0;
+    return dir === 'asc' ? cmp : -cmp;
+  });
+  return list;
+}
+
+function paintReservationsTable(){
+  const list = filteredReservations();
+  const el = $('#resTable');
   if (!list.length){
-    wrap.innerHTML = `<div class="empty">Ninguna reserva coincide con los filtros.</div>`;
+    el.innerHTML = `<div class="empty"><div class="icon">${ICONS.empty}</div><h3>Nada por aquí</h3><p>Ajusta los filtros o revisa el chip "Todas" para ver todas las reservas.</p></div>`;
     return;
   }
-  wrap.innerHTML = `
+  const th = (k, label, klass='') => {
+    const isActive = state.sort.key === k;
+    const arrow = isActive ? (state.sort.dir === 'desc' ? '↓' : '↑') : '↕';
+    return `<th class="sortable ${isActive?'active':''} ${klass}" data-sort="${k}">${label} <span class="arrow">${arrow}</span></th>`;
+  };
+  el.innerHTML = `
     <table class="tbl">
-      <thead>
-        <tr>
-          <th>Fecha</th>
-          <th>Tipo</th>
-          <th>Evento</th>
-          <th>Nombre</th>
-          <th>Teléfono</th>
-          <th class="hide-sm">Personas</th>
-          <th class="hide-sm">Total</th>
-        </tr>
-      </thead>
+      <thead><tr>
+        ${th('created_at','Cuándo')}
+        <th>Cliente</th>
+        ${th('type','Tipo')}
+        ${th('status','Estado')}
+        <th class="hide-sm">Evento / detalle</th>
+        <th class="hide-sm">Personas</th>
+        <th>Total</th>
+        <th></th>
+      </tr></thead>
       <tbody>
-        ${list.map(r => rowHtml(r)).join('')}
+        ${list.map(r => `
+          <tr class="row-btn" data-id="${r.id}">
+            <td class="muted">${fmtRelative(r.created_at)}<br><small style="font-size:.7rem;opacity:.6">${fmtDateTime(r.created_at)}</small></td>
+            <td class="name-cell"><strong>${esc(r.name)}</strong><small>${esc(r.phone)}${r.email?' · '+esc(r.email):''}</small></td>
+            <td>${typePill(r.type)}</td>
+            <td>${statusPill(r.status)}</td>
+            <td class="hide-sm">${esc(r.event_name || '—')}${r.event_date?` <small style="color:var(--muted)">· ${esc(r.event_date)}</small>`:''}</td>
+            <td class="hide-sm">${r.people ?? '—'}</td>
+            <td class="num">${esc(r.total || '—')}</td>
+            <td class="actions" onclick="event.stopPropagation()">
+              ${r.phone?`<a class="btn icon-only ghost" href="${waLink(r.phone)}" target="_blank" rel="noopener" title="WhatsApp">${ICONS.phone}</a>`:''}
+              <button class="btn icon-only ghost" data-view="${r.id}" title="Ver detalle">${ICONS.eye}</button>
+            </td>
+          </tr>`).join('')}
       </tbody>
     </table>`;
-  // Click to expand
-  wrap.querySelectorAll('tbody tr.data-row').forEach(tr => {
-    tr.addEventListener('click', () => {
-      const id = tr.dataset.id;
-      const exp = wrap.querySelector(`tr.expand-row[data-id="${id}"]`);
-      if (exp){
-        const isOpen = !exp.classList.contains('hidden');
-        wrap.querySelectorAll('.expand-row').forEach(e => e.classList.add('hidden'));
-        wrap.querySelectorAll('tr.data-row').forEach(e => e.classList.remove('expanded'));
-        if (!isOpen){
-          exp.classList.remove('hidden');
-          tr.classList.add('expanded');
-        }
+  // Row click => open modal
+  $$('tr.row-btn', el).forEach(tr => tr.addEventListener('click', () => openReservationModal(tr.dataset.id)));
+  // View button (same)
+  $$('button[data-view]', el).forEach(btn => btn.addEventListener('click', e => {
+    e.stopPropagation();
+    openReservationModal(btn.dataset.view);
+  }));
+  // Sort
+  $$('th.sortable', el).forEach(h => h.addEventListener('click', () => {
+    const k = h.dataset.sort;
+    if (state.sort.key === k) state.sort.dir = state.sort.dir === 'asc' ? 'desc' : 'asc';
+    else { state.sort.key = k; state.sort.dir = 'desc'; }
+    paintReservationsTable();
+  }));
+}
+
+function typePill(type){
+  const t = (type||'mesa').toLowerCase();
+  const map = { reservado:'pink', evento:'cyan', cumpleanos:'gold', mesa:'muted', otro:'muted' };
+  const label = { reservado:'Reservado', evento:'Evento', cumpleanos:'Cumpleaños', mesa:'Mesa', otro:'Otro' };
+  return `<span class="pill ${map[t]||'muted'}">${esc(label[t]||t)}</span>`;
+}
+function statusPill(status){
+  const s = (status||'pendiente').toLowerCase();
+  const map = { pendiente:'gold', confirmada:'cyan', realizada:'green', cancelada:'muted', 'no-show':'red' };
+  const label = { pendiente:'Pendiente', confirmada:'Confirmada', realizada:'Realizada', cancelada:'Cancelada', 'no-show':'No-show' };
+  return `<span class="pill ${map[s]||'muted'}">${esc(label[s]||s)}</span>`;
+}
+
+/* ---- Reservation detail modal ---- */
+function openReservationModal(id){
+  const r = state.reservations.find(x => x.id === id);
+  if (!r) return;
+  const body = `
+    <div class="flex gap-8" style="margin-bottom:18px;flex-wrap:wrap">
+      ${typePill(r.type)} ${statusPill(r.status)}
+      <span class="pill muted">${fmtDateTime(r.created_at)}</span>
+    </div>
+    <div class="kv-grid">
+      ${kv('Cliente', esc(r.name), true)}
+      ${kv('Teléfono', r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a> · <a href="${waLink(r.phone)}" target="_blank" rel="noopener">WhatsApp</a>` : '—')}
+      ${r.email ? kv('Email', `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>`) : ''}
+      ${r.event_name ? kv('Evento', esc(r.event_name)) : ''}
+      ${r.event_date ? kv('Fecha', esc(r.event_date)) : ''}
+      ${r.people ? kv('Personas', esc(r.people)) : ''}
+      ${r.total ? kv('Total', esc(r.total)) : ''}
+      ${r.bottles ? kv('Botellas', esc(r.bottles)) : ''}
+      ${r.hookahs ? kv('Cachimbas', esc(r.hookahs)) : ''}
+      ${r.mixers ? kv('Mezclas', esc(r.mixers)) : ''}
+      ${r.promo ? kv('Promo', esc(r.promo)) : ''}
+    </div>
+    ${r.comments ? `<div style="margin-top:20px"><div style="font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Comentarios del cliente</div><div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:.9rem;line-height:1.5">${esc(r.comments)}</div></div>` : ''}
+    <div class="form-row" style="margin-top:22px">
+      <label>Estado</label>
+      <select id="rStatus">
+        <option value="pendiente">Pendiente</option>
+        <option value="confirmada">Confirmada</option>
+        <option value="realizada">Realizada</option>
+        <option value="cancelada">Cancelada</option>
+        <option value="no-show">No-show</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Notas internas (no las ve el cliente)</label>
+      <textarea id="rNotes" placeholder="Ej: la mesa 3 la quieren en la zona del sofá">${esc(r.internal_notes || '')}</textarea>
+    </div>`;
+  modal({
+    title: `<span style="text-transform:uppercase;letter-spacing:1px;font-family:Outfit,sans-serif;font-size:1rem;font-weight:600">${esc(r.name)}</span>`,
+    subtitle: `${r.type || 'mesa'} · ${fmtDateTime(r.created_at)}`,
+    body,
+    actions: [
+      { label:'Eliminar', cls:'ghost danger', icon: ICONS.trash, onClick: close => {
+        close();
+        confirmModal({
+          title:'Eliminar reserva', danger:true,
+          message:`¿Seguro que quieres eliminar la reserva de <strong>${esc(r.name)}</strong>? Esta acción no se puede deshacer.`,
+          confirmLabel:'Eliminar',
+          onConfirm: async () => {
+            const { error } = await supa.from('reservations').delete().eq('id', r.id);
+            if (error) return toast('Error', error.message, 'error');
+            state.reservations = state.reservations.filter(x => x.id !== r.id);
+            toast('Reserva eliminada','','success');
+            routeToView();
+          }
+        });
+      }},
+      { label:'Cancelar', cls:'ghost', onClick: close => close() },
+      { label:'Guardar cambios', cls:'primary', icon: ICONS.check, onClick: async close => {
+        const status = $('#rStatus').value;
+        const internal_notes = $('#rNotes').value.trim() || null;
+        const { error } = await supa.from('reservations').update({ status, internal_notes }).eq('id', r.id);
+        if (error) return toast('Error', error.message, 'error');
+        const idx = state.reservations.findIndex(x => x.id === r.id);
+        if (idx >= 0) state.reservations[idx] = { ...r, status, internal_notes };
+        toast('Cambios guardados','','success');
+        close();
+        routeToView();
+      }}
+    ]
+  });
+  $('#rStatus').value = r.status || 'pendiente';
+}
+
+function kv(k,v,big=false){
+  return `<div class="kv-item"><span class="k">${esc(k)}</span><span class="v ${big?'big':''}">${v}</span></div>`;
+}
+
+/* ============================================================
+   VIEW: TORNEO
+   ============================================================ */
+function renderTorneo(){
+  const podium = state.currentEventId ? topPodium(state.currentEventId) : [];
+  const full   = state.currentEventId ? bestPerPlayer(state.currentEventId) : [];
+  const filtered = state.currentEventId ? state.scores.filter(s => s.event_id === state.currentEventId) : [];
+  const totalGames = filtered.length;
+  const uniquePlayers = new Set(filtered.map(s => s.phone)).size;
+
+  $('#mainView').innerHTML = `
+    <div class="view-title">
+      <div>
+        <h1>Torneo <em>Pink Runner</em></h1>
+        <div class="subtitle">${state.events.length} evento${state.events.length===1?'':'s'} con partidas · Ranking = mejor puntuación por jugador</div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn ghost sm" id="refreshBtn">${ICONS.refresh} Recargar</button>
+        ${state.currentEventId?`<button class="btn ghost sm" id="exportBtn">${ICONS.download} Exportar CSV</button>`:''}
+      </div>
+    </div>
+
+    ${state.events.length ? `
+      <div class="chips" id="eventChips">
+        ${state.events.map(id => `<div class="chip ${id===state.currentEventId?'active':''}" data-event="${esc(id)}">${esc(id)} <span class="count">${state.scores.filter(s=>s.event_id===id).length}</span></div>`).join('')}
+      </div>
+    ` : ''}
+
+    ${state.currentEventId ? `
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="label">Jugadores únicos <span class="icon-bg">${ICONS.users}</span></div>
+          <div class="value pink">${uniquePlayers}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Partidas totales <span class="icon-bg">${ICONS.bar}</span></div>
+          <div class="value">${totalGames}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Top score <span class="icon-bg">${ICONS.crown}</span></div>
+          <div class="value cyan">${full[0]?.score || 0}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Premios entregados <span class="icon-bg">${ICONS.gift}</span></div>
+          <div class="value green">${podium.filter(p => p.prize_delivered_at).length}<small style="font-size:.85rem;color:var(--muted);font-family:Outfit,sans-serif;font-weight:500"> / ${podium.length}</small></div>
+        </div>
+      </div>
+
+      <div class="section-h">
+        <h2>El <em>podio</em></h2>
+        <span class="side">Los tres mejores del evento</span>
+      </div>
+      ${renderPodium(podium, true)}
+
+      <div class="section-h">
+        <h2>Ranking <em>completo</em></h2>
+        <span class="side">${full.length} jugador${full.length===1?'':'es'}</span>
+      </div>
+      <div class="table-card" id="rankTable"></div>
+
+      <div class="section-h">
+        <h2>Zona <em>peligrosa</em></h2>
+      </div>
+      <div class="card" style="border-color:rgba(255,85,119,.3)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <div style="font-weight:600;margin-bottom:4px">Borrar puntuaciones del evento</div>
+            <div style="font-size:.83rem;color:var(--muted)">Borra todas las partidas de <strong>${esc(state.currentEventId)}</strong>. Los datos no se pueden recuperar.</div>
+          </div>
+          <button class="btn ghost danger" id="clearBtn">${ICONS.trash} Borrar evento</button>
+        </div>
+      </div>
+    ` : `
+      <div class="table-card"><div class="empty"><div class="icon">${ICONS.trophy}</div><h3>No hay partidas todavía</h3><p>Cuando alguien juegue en <code>juego.html</code>, el ranking aparecerá aquí.</p></div></div>
+    `}
+  `;
+
+  $$('.chip[data-event]').forEach(c => c.addEventListener('click', () => {
+    state.currentEventId = c.dataset.event;
+    renderTorneo();
+  }));
+  $('#refreshBtn').addEventListener('click', async () => {
+    await ensureData(true); routeToView(); toast('Datos recargados','','success',1500);
+  });
+  const exp = $('#exportBtn');
+  if (exp) exp.addEventListener('click', () => {
+    const list = bestPerPlayer(state.currentEventId).map((r,i) => ({
+      position: i+1, name: r.name, phone: r.phone, score: r.score,
+      last_played: r.created_at, prize_delivered_at: r.prize_delivered_at || ''
+    }));
+    exportCSV(list, ['position','name','phone','score','last_played','prize_delivered_at'], `torneo-${state.currentEventId}`);
+  });
+  const clr = $('#clearBtn');
+  if (clr) clr.addEventListener('click', () => {
+    confirmModal({
+      title:'Borrar puntuaciones del evento', danger:true,
+      message:`Vas a borrar TODAS las partidas del evento <strong>${esc(state.currentEventId)}</strong>. Esta acción no se puede deshacer.`,
+      confirmLabel:'Sí, borrar todo',
+      onConfirm: async () => {
+        const eid = state.currentEventId;
+        const { error } = await supa.from('tournament_scores').delete().eq('event_id', eid);
+        if (error) return toast('Error', error.message, 'error');
+        state.scores = state.scores.filter(s => s.event_id !== eid);
+        state.events = state.events.filter(id => id !== eid);
+        state.currentEventId = state.events[0] || null;
+        toast('Evento borrado','','success');
+        renderTorneo();
       }
     });
   });
+
+  if (state.currentEventId) paintRankTable(full);
 }
 
-function rowHtml(r){
-  const date = new Date(r.created_at);
-  const dateStr = date.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' + date.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-  const type = r.type || 'mesa';
-  const pillCls = 'pill-' + (type === 'cumpleanos' || type === 'cumpleaños' ? 'cumpleanos' : type);
-  return `
-    <tr class="data-row" data-id="${r.id}">
-      <td class="muted">${dateStr}</td>
-      <td><span class="pill ${pillCls}">${escapeHtml(type)}</span></td>
-      <td>${escapeHtml(r.event_name || '—')}</td>
-      <td><strong>${escapeHtml(r.name || '—')}</strong></td>
-      <td><a href="tel:${escapeHtml(r.phone||'')}">${escapeHtml(r.phone || '—')}</a></td>
-      <td class="hide-sm">${r.people ?? '—'}</td>
-      <td class="hide-sm num">${escapeHtml(r.total || '—')}</td>
-    </tr>
-    <tr class="expand-row hidden" data-id="${r.id}">
-      <td colspan="7">
-        <div class="kv">
-          ${kv('Email', r.email)}
-          ${kv('Fecha evento', r.event_date)}
-          ${kv('Botellas', r.bottles)}
-          ${kv('Cachimbas', r.hookahs)}
-          ${kv('Mezclas', r.mixers)}
-          ${kv('Promo', r.promo)}
-          ${kv('Comentarios', r.comments)}
-        </div>
-      </td>
-    </tr>`;
-}
-
-function kv(k,v){
-  if (!v) return '';
-  return `<div class="kv-item"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(v)}</span></div>`;
-}
-
-function exportReservasCSV(){
-  const list = filteredReservas();
-  const cols = ['created_at','type','event_name','event_date','name','phone','email','people','bottles','hookahs','mixers','total','promo','comments'];
-  const csv = [cols.join(',')].concat(
-    list.map(r => cols.map(c => csvCell(r[c])).join(','))
-  ).join('\n');
-  download(`reservas-shaona-${ymd()}.csv`, csv);
-}
-
-/* === TORNEO === */
-async function renderTorneo(){
-  const content = document.getElementById('tabContent');
-  content.innerHTML = `
-    <div class="toolbar">
-      <select id="fEvent"></select>
-      <button class="btn-ghost" id="refreshSc">↻ Recargar</button>
-      <button class="btn-ghost" id="exportSc">Exportar CSV</button>
-      <button class="btn-ghost danger" id="clearEvt">Borrar puntuaciones de este evento</button>
-    </div>
-    <div id="scStats"></div>
-    <div class="table-wrap">
-      <div class="loading">Cargando puntuaciones…</div>
-    </div>`;
-  document.getElementById('refreshSc').addEventListener('click', loadScores);
-  document.getElementById('exportSc').addEventListener('click', exportScoresCSV);
-  document.getElementById('clearEvt').addEventListener('click', clearEventScores);
-  document.getElementById('fEvent').addEventListener('change', e => {
-    currentEventId = e.target.value;
-    paintScoresTable();
-  });
-  await loadScores();
-}
-
-async function loadScores(){
-  const { data, error } = await supa.from('tournament_scores')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(5000);
-  if (error){
-    document.querySelector('.table-wrap').innerHTML = `<div class="empty">Error: ${escapeHtml(error.message)}</div>`;
+function paintRankTable(list){
+  const el = $('#rankTable');
+  if (!list.length){
+    el.innerHTML = `<div class="empty"><div class="icon">${ICONS.empty}</div><h3>Sin partidas</h3></div>`;
     return;
   }
-  scores = data || [];
-  availableEvents = [...new Set(scores.map(s => s.event_id))];
-  if (!currentEventId || !availableEvents.includes(currentEventId)){
-    currentEventId = availableEvents[0] || null;
-  }
-  const sel = document.getElementById('fEvent');
-  sel.innerHTML = availableEvents.length
-    ? availableEvents.map(id => `<option value="${escapeHtml(id)}" ${id===currentEventId?'selected':''}>${escapeHtml(id)}</option>`).join('')
-    : `<option value="">— ningún evento con partidas —</option>`;
-  paintScoresTable();
+  el.innerHTML = `
+    <table class="tbl">
+      <thead><tr>
+        <th>Pos.</th><th>Jugador</th><th>Teléfono</th><th>Puntuación</th><th class="hide-sm">Última partida</th><th></th>
+      </tr></thead>
+      <tbody>
+        ${list.map((r,i) => `
+          <tr>
+            <td><strong style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:${i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--text)'}">${i+1}º</strong></td>
+            <td class="name-cell"><strong>${esc(r.name)}</strong>${r.prize_delivered_at?`<small style="color:var(--green)">✓ premio entregado</small>`:''}</td>
+            <td><a href="tel:${esc(r.phone)}" style="color:var(--cyan)">${esc(r.phone)}</a></td>
+            <td class="num" style="color:var(--cyan);font-size:1.05rem">${r.score}</td>
+            <td class="hide-sm muted">${fmtDateTime(r.created_at)}</td>
+            <td class="actions">
+              <a class="btn icon-only ghost" href="${waLink(r.phone)}" target="_blank" rel="noopener" title="WhatsApp">${ICONS.phone}</a>
+              ${i<3?`<button class="btn icon-only ${r.prize_delivered_at?'':'ghost'}" data-prize="${r.id}" title="${r.prize_delivered_at?'Marcar como no entregado':'Marcar premio entregado'}">${r.prize_delivered_at?ICONS.check:ICONS.gift}</button>`:''}
+            </td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+  $$('button[data-prize]', el).forEach(btn => btn.addEventListener('click', () => togglePrize(btn.dataset.prize)));
 }
 
-function bestPerPlayer(rows){
+async function togglePrize(scoreId){
+  const s = state.scores.find(x => x.id === scoreId);
+  if (!s) return;
+  const newVal = s.prize_delivered_at ? null : new Date().toISOString();
+  const { error } = await supa.from('tournament_scores')
+    .update({ prize_delivered_at: newVal })
+    .eq('id', scoreId);
+  if (error) return toast('Error', error.message, 'error');
+  s.prize_delivered_at = newVal;
+  toast(newVal ? 'Premio marcado como entregado' : 'Premio desmarcado','','success', 2000);
+  renderTorneo();
+}
+
+function bestPerPlayer(eventId){
+  const filtered = state.scores.filter(s => s.event_id === eventId);
   const best = new Map();
-  for (const r of rows){
-    const existing = best.get(r.phone);
-    if (!existing || r.score > existing.score) best.set(r.phone, r);
+  for (const r of filtered){
+    const cur = best.get(r.phone);
+    if (!cur || r.score > cur.score) best.set(r.phone, r);
   }
   return [...best.values()].sort((a,b) => b.score - a.score);
 }
+function topPodium(eventId){ return bestPerPlayer(eventId).slice(0,3); }
 
-function paintScoresTable(){
-  const filtered = currentEventId ? scores.filter(s => s.event_id === currentEventId) : [];
-  const best = bestPerPlayer(filtered);
-  const totalGames = filtered.length;
-  const uniquePlayers = new Set(filtered.map(s => s.phone)).size;
-  const topScore = best[0]?.score || 0;
-
-  document.getElementById('scStats').innerHTML = `
-    <div class="stats">
-      <div class="stat-card"><div class="label">Jugadores únicos</div><div class="value pink">${uniquePlayers}</div></div>
-      <div class="stat-card"><div class="label">Partidas totales</div><div class="value">${totalGames}</div></div>
-      <div class="stat-card"><div class="label">Mejor puntuación</div><div class="value cyan">${topScore}</div></div>
-      <div class="stat-card"><div class="label">Evento</div><div class="value" style="font-size:1rem;line-height:1.3;padding-top:6px">${escapeHtml(currentEventId || '—')}</div></div>
+function renderPodium(podium, showActions=false){
+  const rewards = [
+    '65% descuento reservado + camiseta',
+    '5 copas gratis + pegatinas',
+    '3 copas gratis + pegatinas'
+  ];
+  const cells = [1,0,2].map(i => {  // orden visual: 2º, 1º, 3º
+    const p = podium[i];
+    const cls = i === 0 ? 'p1' : i === 1 ? 'p2' : 'p3';
+    const medal = ['🥇','🥈','🥉'][i];
+    if (!p){
+      return `<div class="step ${cls} empty-slot">
+        <div class="medal">${medal}</div>
+        <div class="pos">${i+1}º</div>
+        <div class="name">Sin jugador</div>
+        <div class="prize">${rewards[i]}</div>
+      </div>`;
+    }
+    return `<div class="step ${cls}">
+      <div class="medal">${medal}</div>
+      <div class="pos">${i+1}º</div>
+      <div class="name">${esc(p.name)}</div>
+      <div class="phone">${esc(p.phone)}</div>
+      <div class="score">${p.score} pts</div>
+      <div class="prize">${rewards[i]}</div>
+      ${showActions ? `
+        <div class="flex gap-6" style="justify-content:center">
+          <a class="btn sm ghost" href="${waLink(p.phone)}" target="_blank" rel="noopener">${ICONS.phone} WhatsApp</a>
+          <button class="btn sm ${p.prize_delivered_at?'primary':'ghost'}" onclick="window.__togglePrize('${p.id}')">${p.prize_delivered_at?ICONS.check+' Entregado':ICONS.gift+' Marcar'}</button>
+        </div>` : ''}
+      ${p.prize_delivered_at ? `<div class="delivered-badge">${ICONS.check} Entregado</div>` : ''}
     </div>`;
-
-  const wrap = document.querySelector('.table-wrap');
-  if (!best.length){
-    wrap.innerHTML = `<div class="empty">Sin partidas para este evento.</div>`;
-    return;
-  }
-  wrap.innerHTML = `
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Posición</th>
-          <th>Jugador</th>
-          <th>Teléfono</th>
-          <th>Mejor puntuación</th>
-          <th class="hide-sm">Última partida</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${best.map((r,i) => {
-          const date = new Date(r.created_at);
-          const dateStr = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-          const medal = ['🥇','🥈','🥉'][i] || '';
-          return `<tr>
-            <td><strong style="font-family:'Cormorant Garamond',serif;font-size:1.3rem">${i+1}${medal?' '+medal:''}</strong></td>
-            <td>${escapeHtml(r.name)}</td>
-            <td><a href="tel:${escapeHtml(r.phone)}">${escapeHtml(r.phone)}</a></td>
-            <td class="num">${r.score}</td>
-            <td class="hide-sm muted">${dateStr}</td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>`;
+  });
+  return `<div class="podium">${cells.join('')}</div>`;
 }
+window.__togglePrize = togglePrize;
 
-function exportScoresCSV(){
-  const filtered = currentEventId ? scores.filter(s => s.event_id === currentEventId) : scores;
-  const best = bestPerPlayer(filtered);
-  const cols = ['position','name','phone','best_score','last_played'];
+/* ============================================================
+   CSV Export
+   ============================================================ */
+function exportCSV(list, cols, base){
   const csv = [cols.join(',')].concat(
-    best.map((r,i) => [i+1, csvCell(r.name), csvCell(r.phone), r.score, csvCell(r.created_at)].join(','))
+    list.map(r => cols.map(c => csvCell(r[c])).join(','))
   ).join('\n');
-  download(`torneo-${(currentEventId||'sin-evento')}-${ymd()}.csv`, csv);
-}
-
-async function clearEventScores(){
-  if (!currentEventId) return;
-  if (!confirm(`¿Borrar TODAS las puntuaciones del evento "${currentEventId}"?\n\nEsta acción no se puede deshacer.`)) return;
-  const txt = prompt('Escribe BORRAR para confirmar:');
-  if (txt !== 'BORRAR') return;
-  const { error } = await supa.from('tournament_scores').delete().eq('event_id', currentEventId);
-  if (error){
-    alert('Error: ' + error.message);
-    return;
-  }
-  alert('Borrado correctamente.');
-  await loadScores();
-}
-
-/* === Utils === */
-function escapeHtml(s){
-  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const blob = new Blob(['﻿' + csv], { type:'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${base}-${isoDate(new Date())}.csv`;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+  toast('Descargando CSV', `${list.length} filas`, 'success', 2500);
 }
 function csvCell(v){
   if (v == null) return '';
   const s = String(v).replace(/"/g,'""');
   return /[",\n]/.test(s) ? `"${s}"` : s;
 }
-function ymd(){
-  const d = new Date();
-  return d.toISOString().slice(0,10);
-}
-function download(filename, text){
-  const blob = new Blob([text], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click();
-  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
-}
 
+// ---------- Boot ----------
 boot();
 </script>
 </body>
