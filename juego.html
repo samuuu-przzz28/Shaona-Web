@@ -75,6 +75,11 @@ canvas{display:block;width:100%;height:auto;background:transparent;touch-action:
 .hud{position:absolute;top:14px;left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:none;font-family:'Outfit',sans-serif;font-weight:700;letter-spacing:2px}
 .hud .score{color:var(--cyan);font-size:1.2rem;text-shadow:0 0 12px rgba(0,224,255,.5)}
 .hud .player-name{color:var(--text);font-size:.82rem;opacity:.7;text-transform:uppercase}
+.sound-toggle{background:rgba(0,0,0,.4);backdrop-filter:blur(6px);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:.95rem;display:grid;place-items:center;pointer-events:auto;transition:all .15s ease}
+.sound-toggle:hover{border-color:var(--pink);transform:scale(1.05)}
+.sound-toggle .sound-off{display:none}
+.sound-toggle.muted .sound-on{display:none}
+.sound-toggle.muted .sound-off{display:block;opacity:.5}
 .game-overlay{position:absolute;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(4px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;z-index:5}
 .game-overlay h3{font-family:'Cormorant Garamond',serif;font-size:2.2rem;margin-bottom:12px;line-height:1.1}
 .game-overlay h3 em{color:var(--pink);font-style:italic}
@@ -264,7 +269,13 @@ function gameView(player){
         <canvas id="game" width="900" height="320"></canvas>
         <div class="hud">
           <div class="player-name">${escapeHtml(player.name)}</div>
-          <div class="score" id="hudScore">0</div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button class="sound-toggle" id="soundToggle" aria-label="Sonido" title="Activar/desactivar sonido">
+              <span class="sound-on">🔊</span>
+              <span class="sound-off">🔇</span>
+            </button>
+            <div class="score" id="hudScore">0</div>
+          </div>
         </div>
         <div class="game-overlay" id="startOverlay">
           <h3>¿Listo, <em>${escapeHtml(player.name)}</em>?</h3>
@@ -357,14 +368,21 @@ function initGame(player){
     distance: 0,
     diamonds: 0,
     score: 0,
+    combo: 0,
+    bestCombo: 0,
+    lastGemT: -999,
+    shake: 0,
     panther: { x:90, y:GROUND, vy:0, w:44, h:80, jumps:0 },
     obstacles: [],
     gems: [],
+    particles: [],
+    trail: [],
     bgStars: [],
     groundX: 0,
     t: 0,
     spawnTimer: 80,
-    keyDown: false
+    keyDown: false,
+    sound: (localStorage.getItem('shaona_sound') !== '0')
   };
 
   // Generar estrellas / luces de fondo
@@ -385,13 +403,88 @@ function initGame(player){
     state.distance = 0;
     state.diamonds = 0;
     state.score = 0;
+    state.combo = 0;
+    state.bestCombo = 0;
+    state.lastGemT = -999;
+    state.shake = 0;
     state.panther = { x:90, y:GROUND, vy:0, w:44, h:80, jumps:0 };
     state.obstacles = [];
     state.gems = [];
+    state.particles = [];
+    state.trail = [];
     state.t = 0;
     state.spawnTimer = 80;
     startOverlay.classList.add('hidden');
     endOverlay.classList.add('hidden');
+  }
+
+  /* ---- Partículas ---- */
+  function spawnParticles(x, y, color, count){
+    for (let i=0;i<count;i++){
+      const a = Math.random() * Math.PI * 2;
+      const s = 1 + Math.random() * 4;
+      state.particles.push({
+        x, y,
+        vx: Math.cos(a) * s,
+        vy: Math.sin(a) * s - 1,
+        life: 1,
+        decay: 0.02 + Math.random() * 0.02,
+        r: 1 + Math.random() * 2.5,
+        color
+      });
+    }
+  }
+  function updateParticles(){
+    for (let i = state.particles.length - 1; i >= 0; i--){
+      const p = state.particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.15;
+      p.life -= p.decay;
+      if (p.life <= 0) state.particles.splice(i, 1);
+    }
+  }
+  function drawParticles(){
+    for (const p of state.particles){
+      ctx.globalAlpha = Math.max(p.life, 0);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ---- Sonido (Web Audio, lo mínimo imprescindible) ---- */
+  let AC = null;
+  function ac(){
+    if (!AC){
+      try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+    }
+    return AC;
+  }
+  function beep(freq, duration=0.08, type='sine', vol=0.08){
+    if (!state.sound) return;
+    const c = ac(); if (!c) return;
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.value = vol;
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + duration);
+    o.connect(g).connect(c.destination);
+    o.start();
+    o.stop(c.currentTime + duration);
+  }
+  function sfxJump(){ beep(520, 0.08, 'square', 0.05); }
+  function sfxGem(combo){
+    const base = 660 + Math.min(combo, 8) * 45;
+    beep(base, 0.09, 'triangle', 0.08);
+    setTimeout(() => beep(base * 1.5, 0.06, 'triangle', 0.05), 60);
+  }
+  function sfxDead(){
+    beep(220, 0.14, 'sawtooth', 0.09);
+    setTimeout(() => beep(120, 0.25, 'sawtooth', 0.08), 100);
   }
 
   function jump(){
@@ -399,6 +492,9 @@ function initGame(player){
     if (state.panther.jumps < 2){
       state.panther.vy = state.panther.jumps === 0 ? -13 : -10.5;
       state.panther.jumps++;
+      sfxJump();
+      // pequeña ráfaga de partículas rosas bajo los pies
+      spawnParticles(state.panther.x + state.panther.w/2, state.panther.y, 'rgba(255,0,102,0.9)', 6);
     }
   }
 
@@ -417,6 +513,18 @@ function initGame(player){
 
   startBtn.addEventListener('click', () => { reset(); requestAnimationFrame(loop); });
   againBtn.addEventListener('click', () => { reset(); requestAnimationFrame(loop); });
+
+  // Sound toggle
+  const soundToggle = document.getElementById('soundToggle');
+  const syncSoundBtn = () => soundToggle.classList.toggle('muted', !state.sound);
+  syncSoundBtn();
+  soundToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    state.sound = !state.sound;
+    localStorage.setItem('shaona_sound', state.sound ? '1' : '0');
+    syncSoundBtn();
+    if (state.sound) beep(880, 0.05, 'sine', 0.05);
+  });
 
   /* ====== Render ====== */
   function drawBg(){
@@ -801,37 +909,106 @@ function initGame(player){
       if (Math.sqrt(dx*dx + dy*dy) < 32){
         g.collected = true;
         state.diamonds++;
+        // combo: si otro gem hace poco, sube; si no, resetea
+        if (state.t - state.lastGemT < 90) state.combo++;
+        else state.combo = 1;
+        state.lastGemT = state.t;
+        if (state.combo > state.bestCombo) state.bestCombo = state.combo;
+        // burst de partículas rosas
+        spawnParticles(g.x, g.y, '#ff66cc', 14);
+        spawnParticles(g.x, g.y, '#ff99dd', 6);
+        sfxGem(state.combo);
       }
     }
 
-    state.score = Math.floor(state.distance / 8) + state.diamonds * 50;
+    updateParticles();
+    // trail al saltar
+    if (state.panther.y < GROUND - 4){
+      state.trail.unshift({ x: state.panther.x + state.panther.w/2, y: state.panther.y - 30, life: 1 });
+      if (state.trail.length > 12) state.trail.pop();
+    }
+    for (let i = state.trail.length - 1; i >= 0; i--){
+      state.trail[i].life -= 0.08;
+      if (state.trail[i].life <= 0) state.trail.splice(i, 1);
+    }
+
+    // Score: distancia + gems * (50 + bonus por combo)
+    const gemBonus = state.combo > 1 ? state.combo * 10 : 0;
+    state.score = Math.floor(state.distance / 8) + state.diamonds * 50 + state.bestCombo * gemBonus;
     hud.textContent = state.score;
+
+    // decae shake
+    if (state.shake > 0) state.shake *= 0.85;
   }
 
   function loop(){
-    if (!state.running) return;
-    update();
+    // seguimos animando mientras haya shake residual o partículas
+    if (!state.running && state.particles.length === 0 && state.shake < 0.4) return;
+    if (state.running) update();
+    else { state.shake *= 0.9; updateParticles(); state.t++; }
+    ctx.save();
+    // Screen shake para hits fuertes
+    if (state.shake > 0.4){
+      const dx = (Math.random() - 0.5) * state.shake;
+      const dy = (Math.random() - 0.5) * state.shake;
+      ctx.translate(dx, dy);
+    }
     drawBg();
+    // trail (líneas rosas suaves siguiendo al saltador)
+    for (let i = 0; i < state.trail.length - 1; i++){
+      const t = state.trail[i], n = state.trail[i+1];
+      ctx.globalAlpha = t.life * 0.35;
+      ctx.strokeStyle = '#ff0066';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(t.x, t.y);
+      ctx.lineTo(n.x, n.y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     state.gems.forEach(drawGem);
     state.obstacles.forEach(drawObstacle);
     drawPanther();
-    if (state.running) requestAnimationFrame(loop);
+    drawParticles();
+    // combo indicator flotante
+    if (state.running && state.combo >= 2 && state.t - state.lastGemT < 40){
+      const age = state.t - state.lastGemT;
+      ctx.globalAlpha = Math.max(0, 1 - age / 40);
+      ctx.fillStyle = '#ff66cc';
+      ctx.font = 'bold 26px Cormorant Garamond, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('x' + state.combo, W/2, 90 - age);
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+    requestAnimationFrame(loop);
   }
 
   function gameOver(){
     state.running = false;
+    state.shake = 16;
+    sfxDead();
+    // explosión de partículas en la posición del jugador
+    spawnParticles(state.panther.x + state.panther.w/2, state.panther.y - 30, '#ff0066', 26);
+    spawnParticles(state.panther.x + state.panther.w/2, state.panther.y - 30, '#ff66cc', 18);
     document.getElementById('finalScore').textContent = state.score;
     endOverlay.classList.remove('hidden');
     const rankMsg = document.getElementById('rankMsg');
+    // Stats de la partida
+    const dia = state.diamonds;
+    const bc = state.bestCombo;
+    const statsLine = `<span style="display:inline-flex;gap:14px;justify-content:center;font-size:.85rem;color:var(--muted);margin-top:8px">
+      <span>💎 <strong style="color:var(--text)">${dia}</strong> diamantes</span>
+      ${bc > 1 ? `<span>🔥 combo x<strong style="color:var(--pink)">${bc}</strong></span>` : ''}
+    </span>`;
     submitScore(player, state.score).then(res => {
       if (res.ok){
-        const dia = state.diamonds;
         if (res.position && res.position <= 3){
-          rankMsg.innerHTML = `¡Estás en el puesto <strong style="color:var(--pink)">#${res.position}</strong> del ranking! ${dia} diamantes recogidos.`;
+          rankMsg.innerHTML = `¡Estás en el <strong style="color:var(--pink)">puesto #${res.position}</strong> del ranking!<br>${statsLine}`;
         } else if (res.position){
-          rankMsg.innerHTML = `Vas en el puesto <strong style="color:var(--pink)">#${res.position}</strong> con ${dia} diamantes. Sigue intentando.`;
+          rankMsg.innerHTML = `Vas en el puesto <strong style="color:var(--pink)">#${res.position}</strong>. Sigue intentando.<br>${statsLine}`;
         } else {
-          rankMsg.textContent = `Puntuación guardada. ${dia} diamantes.`;
+          rankMsg.innerHTML = `Puntuación guardada.<br>${statsLine}`;
         }
       } else {
         rankMsg.textContent = res.message || 'No se pudo guardar tu puntuación.';
