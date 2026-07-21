@@ -364,7 +364,7 @@ function initGame(player){
 
   const state = {
     running: false,
-    speed: 5,
+    speed: 4,
     distance: 0,
     diamonds: 0,
     score: 0,
@@ -399,7 +399,7 @@ function initGame(player){
 
   function reset(){
     state.running = true;
-    state.speed = 5;
+    state.speed = 4;
     state.distance = 0;
     state.diamonds = 0;
     state.score = 0;
@@ -434,13 +434,13 @@ function initGame(player){
       });
     }
   }
-  function updateParticles(){
+  function updateParticles(dt){
     for (let i = state.particles.length - 1; i >= 0; i--){
       const p = state.particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.15;
-      p.life -= p.decay;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 0.15 * dt;
+      p.life -= p.decay * dt;
       if (p.life <= 0) state.particles.splice(i, 1);
     }
   }
@@ -511,8 +511,8 @@ function initGame(player){
   canvas.addEventListener('mousedown', jump);
   canvas.addEventListener('touchstart', e => { e.preventDefault(); jump(); }, { passive:false });
 
-  startBtn.addEventListener('click', () => { reset(); requestAnimationFrame(loop); });
-  againBtn.addEventListener('click', () => { reset(); requestAnimationFrame(loop); });
+  startBtn.addEventListener('click', () => { reset(); lastTime = 0; requestAnimationFrame(loop); });
+  againBtn.addEventListener('click', () => { reset(); lastTime = 0; requestAnimationFrame(loop); });
 
   // Sound toggle
   const soundToggle = document.getElementById('soundToggle');
@@ -541,8 +541,9 @@ function initGame(player){
     ctx.fillRect(0, GROUND-80, W, 80);
 
     // stars / luces
+    const bgDt = state.currentDt || 1;
     for (const s of state.bgStars){
-      s.x -= s.speed * (state.running ? state.speed * 0.15 : 0.3);
+      s.x -= s.speed * (state.running ? state.speed * 0.15 : 0.3) * bgDt;
       if (s.x < -4) s.x = W + 4;
       const a = 0.4 + Math.sin(state.t/22 + s.tw) * 0.4;
       ctx.fillStyle = s.color === 'pink' ? `rgba(255,0,170,${a})` : `rgba(0,224,255,${a*0.7})`;
@@ -560,7 +561,7 @@ function initGame(player){
     ctx.stroke();
 
     // ground texture (perspective dashes)
-    if (state.running) state.groundX = (state.groundX - state.speed) % 60;
+    if (state.running) state.groundX = (state.groundX - state.speed * bgDt) % 60;
     for (let i=-1;i<20;i++){
       const x = i*60 + state.groundX;
       ctx.strokeStyle = 'rgba(255,0,102,0.18)';
@@ -856,8 +857,8 @@ function initGame(player){
     ctx.restore();
   }
 
-  function spawn(){
-    state.spawnTimer--;
+  function spawn(dt){
+    state.spawnTimer -= dt;
     if (state.spawnTimer <= 0){
       const r = Math.random();
       if (r < 0.7){
@@ -873,26 +874,29 @@ function initGame(player){
     }
   }
 
-  function update(){
-    state.t++;
-    state.distance += state.speed;
-    state.speed = Math.min(5 + state.distance/2500, 13);
+  function update(dt){
+    state.t += dt;
+    // Distancia recorrida en "pixel-frames". Aumenta con dt.
+    state.distance += state.speed * dt;
+    // Curva estilo T-Rex: arranque suave, aceleración gradual, cap alto.
+    // Con 4 iniciales y crecimiento suave la primera curva es agradable.
+    state.speed = Math.min(4 + state.distance/3200, 12);
 
-    // physics
+    // physics — todo escalado por dt
     const p = state.panther;
-    p.vy += 0.72;
-    p.y += p.vy;
+    p.vy += 0.72 * dt;
+    p.y += p.vy * dt;
     if (p.y >= GROUND){
       p.y = GROUND;
       p.vy = 0;
       p.jumps = 0;
     }
 
-    // move + cleanup
-    state.obstacles = state.obstacles.filter(o => { o.x -= state.speed; return o.x > -40; });
-    state.gems = state.gems.filter(g => { g.x -= state.speed; return g.x > -30 && !g.collected; });
+    // move + cleanup — obstáculos y gemas viajan a state.speed*dt px/frame
+    state.obstacles = state.obstacles.filter(o => { o.x -= state.speed * dt; return o.x > -40; });
+    state.gems = state.gems.filter(g => { g.x -= state.speed * dt; return g.x > -30 && !g.collected; });
 
-    spawn();
+    spawn(dt);
 
     // collisions — caja ajustada al cuerpo (bípedo, ~70px alto / ~26 ancho)
     const px = p.x + p.w/2 - 13, py = p.y - 72, pw = 26, ph = 72;
@@ -921,14 +925,14 @@ function initGame(player){
       }
     }
 
-    updateParticles();
+    updateParticles(dt);
     // trail al saltar
     if (state.panther.y < GROUND - 4){
       state.trail.unshift({ x: state.panther.x + state.panther.w/2, y: state.panther.y - 30, life: 1 });
       if (state.trail.length > 12) state.trail.pop();
     }
     for (let i = state.trail.length - 1; i >= 0; i--){
-      state.trail[i].life -= 0.08;
+      state.trail[i].life -= 0.08 * dt;
       if (state.trail[i].life <= 0) state.trail.splice(i, 1);
     }
 
@@ -937,15 +941,28 @@ function initGame(player){
     state.score = Math.floor(state.distance / 8) + state.diamonds * 50 + state.bestCombo * gemBonus;
     hud.textContent = state.score;
 
-    // decae shake
-    if (state.shake > 0) state.shake *= 0.85;
+    // decae shake — misma velocidad de decay en cualquier framerate
+    if (state.shake > 0) state.shake *= Math.pow(0.85, dt);
   }
 
-  function loop(){
+  // Delta-time — 1.0 = un frame a 60fps (16.6667 ms).
+  // Con esto el juego va IGUAL de rápido en móvil, portátil o pantalla 120Hz.
+  let lastTime = 0;
+  function loop(now){
     // seguimos animando mientras haya shake residual o partículas
-    if (!state.running && state.particles.length === 0 && state.shake < 0.4) return;
-    if (state.running) update();
-    else { state.shake *= 0.9; updateParticles(); state.t++; }
+    if (!state.running && state.particles.length === 0 && state.shake < 0.4){
+      lastTime = 0;
+      return;
+    }
+    // dt normalizado (cap a 2.5 frames para evitar saltos gigantes si el
+    // usuario cambia de pestaña o el móvil hipo-frameó)
+    const rawDt = lastTime ? (now - lastTime) / 16.6667 : 1;
+    const dt = Math.min(rawDt, 2.5);
+    lastTime = now;
+    state.currentDt = dt;
+
+    if (state.running) update(dt);
+    else { state.shake *= Math.pow(0.9, dt); updateParticles(dt); state.t += dt; }
     ctx.save();
     // Screen shake para hits fuertes
     if (state.shake > 0.4){
