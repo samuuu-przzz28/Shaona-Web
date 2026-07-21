@@ -364,7 +364,7 @@ function initGame(player){
 
   const state = {
     running: false,
-    speed: 4,
+    speed: 4.8,
     distance: 0,
     diamonds: 0,
     score: 0,
@@ -399,7 +399,7 @@ function initGame(player){
 
   function reset(){
     state.running = true;
-    state.speed = 4;
+    state.speed = 4.8;
     state.distance = 0;
     state.diamonds = 0;
     state.score = 0;
@@ -878,9 +878,8 @@ function initGame(player){
     state.t += dt;
     // Distancia recorrida en "pixel-frames". Aumenta con dt.
     state.distance += state.speed * dt;
-    // Curva estilo T-Rex: arranque suave, aceleración gradual, cap alto.
-    // Con 4 iniciales y crecimiento suave la primera curva es agradable.
-    state.speed = Math.min(4 + state.distance/3200, 12);
+    // Curva estilo T-Rex: arranque manejable, aceleración gradual, cap desafiante.
+    state.speed = Math.min(4.8 + state.distance/2700, 13);
 
     // physics — todo escalado por dt
     const p = state.panther;
