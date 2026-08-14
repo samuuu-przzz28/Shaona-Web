@@ -407,6 +407,31 @@ input,select,textarea{font-family:inherit;color:inherit}
 }
 
 /* ============================================================
+   EVENTOS — cards de gestión de capacidad
+   ============================================================ */
+.event-mgmt-card{background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:12px;transition:border-color .2s ease}
+.event-mgmt-card.almost-full{border-color:rgba(255,200,40,.4)}
+.event-mgmt-card.sold-out{border-color:rgba(255,85,119,.5);background:linear-gradient(160deg,rgba(255,85,119,.08),rgba(0,0,0,.4))}
+.emc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.emc-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;line-height:1.15;margin-bottom:4px}
+.emc-date{font-size:.78rem;color:var(--muted)}
+.emc-date code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:3px;font-family:'SF Mono',Menlo,monospace;font-size:.7rem;color:var(--cyan)}
+.emc-progress{background:rgba(255,255,255,.05);height:8px;border-radius:99px;overflow:hidden;margin-bottom:8px}
+.emc-progress-bar{height:100%;border-radius:99px;transition:width .5s ease}
+.emc-numbers{font-size:.85rem;color:var(--text-2);margin-bottom:14px}
+.emc-numbers strong{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);font-variant-numeric:tabular-nums}
+.emc-actions{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap}
+.emc-toggle{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--text-2);cursor:pointer;user-select:none}
+.emc-toggle input{width:18px;height:18px;accent-color:var(--pink)}
+.emc-toggle strong{color:var(--red);letter-spacing:1px;font-weight:800}
+@media (max-width:640px){
+  .event-mgmt-card{padding:16px 18px}
+  .emc-actions{flex-direction:column;align-items:stretch;gap:12px}
+  .emc-actions .flex{width:100%}
+  .emc-actions .flex .btn{flex:1;justify-content:center}
+}
+
+/* ============================================================
    ESTADÍSTICAS — gráficos SVG
    ============================================================ */
 .stats-view .period-chips{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
@@ -569,7 +594,8 @@ const state = {
   sort: { key: 'created_at', dir: 'desc' },
   realtimeOn:   false,
   sidebarOpen:  false,
-  statsPeriod:  '30d'          // 7d | 30d | 12m | year
+  statsPeriod:  '30d',         // 7d | 30d | 12m | year
+  eventSettings: []            // capacidad + sold_out por evento
 };
 
 // ---------- SVG icons ----------
@@ -812,6 +838,9 @@ function renderApp(){
           <div class="side-nav-item ${state.view==='stats'?'active':''}" data-nav="stats">
             <span class="icon">${ICONS.bar}</span>Estadísticas
           </div>
+          <div class="side-nav-item ${state.view==='eventos'?'active':''}" data-nav="eventos">
+            <span class="icon">${ICONS.calendar}</span>Eventos
+          </div>
           <div class="side-section">Enlaces</div>
           <a class="side-nav-item" href="index.html" target="_blank" rel="noopener">
             <span class="icon">${ICONS.eye}</span>Ver la web
@@ -861,6 +890,7 @@ function routeToView(){
   else if (state.view === 'reservas') renderReservas();
   else if (state.view === 'torneo') renderTorneo();
   else if (state.view === 'stats') renderStats();
+  else if (state.view === 'eventos') renderEventos();
 }
 
 /* ============================================================
@@ -869,14 +899,17 @@ function routeToView(){
 let dataLoaded = false;
 async function ensureData(force=false){
   if (dataLoaded && !force) return;
-  const [rRes, rSco] = await Promise.all([
+  const [rRes, rSco, rEvt] = await Promise.all([
     supa.from('reservations').select('*').order('created_at',{ascending:false}).limit(3000),
-    supa.from('tournament_scores').select('*').order('created_at',{ascending:false}).limit(5000)
+    supa.from('tournament_scores').select('*').order('created_at',{ascending:false}).limit(5000),
+    supa.from('event_settings').select('*').order('event_date',{ascending:true}).limit(500)
   ]);
   if (rRes.error){ toast('Error cargando reservas', rRes.error.message, 'error'); return; }
   if (rSco.error){ toast('Error cargando puntuaciones', rSco.error.message, 'error'); return; }
   state.reservations = rRes.data || [];
   state.scores = rSco.data || [];
+  // event_settings puede no existir todavía (si el usuario no ha corrido la migración)
+  state.eventSettings = (rEvt && !rEvt.error) ? (rEvt.data || []) : [];
   state.events = [...new Set(state.scores.map(s => s.event_id))];
   if (!state.currentEventId || !state.events.includes(state.currentEventId)){
     state.currentEventId = state.events[0] || null;
@@ -1566,6 +1599,189 @@ function fmtOrder(label, raw, color='pink'){
 /* ============================================================
    VIEW: TORNEO
    ============================================================ */
+/* ============================================================
+   VIEW: EVENTOS (capacidad y sold-out)
+   ============================================================ */
+function renderEventos(){
+  const tableAvailable = state.eventSettings != null && !(state.eventSettings.__missing);
+  const events = state.eventSettings || [];
+
+  $('#mainView').innerHTML = `
+    <div class="view-title">
+      <div>
+        <h1>Eventos y <em>capacidad</em></h1>
+        <div class="subtitle">Controla plazas, marca eventos como agotados y bloquea nuevas reservas desde la web.</div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn ghost sm" id="refreshBtn">${ICONS.refresh} Recargar</button>
+        <button class="btn primary sm" id="newEventBtn">+ Nuevo evento</button>
+      </div>
+    </div>
+
+    ${events.length === 0 ? `
+      <div class="card" style="border-color:rgba(255,200,40,.35);background:linear-gradient(160deg,rgba(255,200,40,.06),rgba(0,0,0,.4))">
+        <h3 style="font-family:'Cormorant Garamond',serif;margin-bottom:8px">Falta la tabla en la base de datos</h3>
+        <p style="color:var(--text-2);font-size:.9rem;line-height:1.55;margin-bottom:14px">
+          Para gestionar capacidades hay que crear la tabla <code>event_settings</code> en Supabase.
+          Copia y pega el SQL que te di en el chat en <strong>Supabase → SQL Editor → New query</strong> y ejecútalo.
+          Cuando termines, recarga esta página.
+        </p>
+        <p style="color:var(--muted);font-size:.82rem">Es una operación de una sola vez y no afecta a nada existente.</p>
+      </div>
+    ` : `
+      <div id="eventsList"></div>
+    `}
+  `;
+
+  $('#refreshBtn').addEventListener('click', async () => {
+    await ensureData(true); routeToView(); toast('Datos recargados','','success',1500);
+  });
+  const nb = $('#newEventBtn');
+  if (nb) nb.addEventListener('click', () => openEventModal(null));
+  if (events.length) paintEventsList();
+}
+
+function paintEventsList(){
+  const el = $('#eventsList');
+  if (!el) return;
+  // Contar confirmadas/realizadas por (event_name+event_date)
+  const counts = new Map();
+  for (const r of state.reservations){
+    if (r.status !== 'confirmada' && r.status !== 'realizada') continue;
+    const key = (r.event_name || '') + '|' + (r.event_date || '');
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  const cards = state.eventSettings.map(ev => {
+    const k = (ev.event_name || '') + '|' + (ev.event_date || '');
+    const confirmed = counts.get(k) || 0;
+    const pct = ev.capacity > 0 ? Math.min(100, (confirmed / ev.capacity) * 100) : 0;
+    const almostFull = pct >= 80 && pct < 100;
+    const full = pct >= 100 || ev.sold_out;
+    return `<div class="event-mgmt-card ${full?'sold-out':almostFull?'almost-full':''}">
+      <div class="emc-head">
+        <div>
+          <div class="emc-name">${esc(ev.event_name)}</div>
+          <div class="emc-date">${esc(ev.event_date || '—')} · <code>${esc(ev.event_key)}</code></div>
+        </div>
+        <div class="emc-status">
+          ${ev.sold_out ? '<span class="pill red">Agotado manual</span>' : full ? '<span class="pill red">Aforo completo</span>' : almostFull ? '<span class="pill gold">Casi lleno</span>' : '<span class="pill green">Disponible</span>'}
+        </div>
+      </div>
+      <div class="emc-progress">
+        <div class="emc-progress-bar" style="width:${pct}%;background:${full?'var(--red)':almostFull?'var(--gold)':'var(--pink)'}"></div>
+      </div>
+      <div class="emc-numbers">
+        <span><strong>${confirmed}</strong> / ${ev.capacity} plazas confirmadas <small style="color:var(--muted)">(${pct.toFixed(0)}%)</small></span>
+      </div>
+      <div class="emc-actions">
+        <label class="emc-toggle">
+          <input type="checkbox" data-toggle-soldout="${ev.id}" ${ev.sold_out?'checked':''}>
+          <span>Marcar como <strong>SOLD OUT</strong> en la web</span>
+        </label>
+        <div class="flex gap-6">
+          <button class="btn ghost sm" data-edit="${ev.id}">${ICONS.edit} Editar</button>
+          <button class="btn ghost sm danger" data-delete="${ev.id}">${ICONS.trash} Borrar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  el.innerHTML = cards || `<div class="empty"><div class="icon">${ICONS.calendar}</div><h3>Sin eventos configurados</h3><p>Añade tu primer evento con el botón "Nuevo evento".</p></div>`;
+
+  $$('[data-toggle-soldout]').forEach(cb => cb.addEventListener('change', async e => {
+    const id = cb.dataset.toggleSoldout;
+    const soldOut = cb.checked;
+    const { error } = await supa.from('event_settings').update({ sold_out: soldOut }).eq('id', id);
+    if (error){ toast('Error', error.message, 'error'); cb.checked = !soldOut; return; }
+    const ev = state.eventSettings.find(x => x.id === id);
+    if (ev) ev.sold_out = soldOut;
+    toast(soldOut?'Evento marcado como agotado':'Evento reabierto','','success',2000);
+    paintEventsList();
+  }));
+  $$('[data-edit]').forEach(b => b.addEventListener('click', () => openEventModal(state.eventSettings.find(x=>x.id===b.dataset.edit))));
+  $$('[data-delete]').forEach(b => b.addEventListener('click', () => {
+    const ev = state.eventSettings.find(x=>x.id===b.dataset.delete);
+    if (!ev) return;
+    confirmModal({
+      title:'Borrar evento', danger:true,
+      message:`¿Borrar la configuración de <strong>${esc(ev.event_name)}</strong>? Las reservas no se ven afectadas — solo se elimina el control de capacidad.`,
+      confirmLabel:'Borrar',
+      onConfirm: async () => {
+        const { error } = await supa.from('event_settings').delete().eq('id', ev.id);
+        if (error) return toast('Error', error.message, 'error');
+        state.eventSettings = state.eventSettings.filter(x => x.id !== ev.id);
+        toast('Evento borrado','','success');
+        paintEventsList();
+      }
+    });
+  }));
+}
+
+function openEventModal(ev){
+  const isNew = !ev;
+  const suggested = isNew ? '' : ev.event_key;
+  const body = `
+    <div class="form-row">
+      <label>Nombre del evento</label>
+      <input type="text" id="evName" value="${esc(ev?.event_name || '')}" placeholder="Ej: Petit Suisse Party">
+    </div>
+    <div class="form-row">
+      <label>Fecha visible (como aparece en la web)</label>
+      <input type="text" id="evDate" value="${esc(ev?.event_date || '')}" placeholder="Ej: Sáb 26 Abr · 23:59">
+    </div>
+    <div class="form-row">
+      <label>Clave única del evento (event_key) <small style="color:var(--muted);text-transform:none;letter-spacing:0">— debe coincidir con la del código de la web</small></label>
+      <input type="text" id="evKey" value="${esc(suggested)}" placeholder="Ej: petit-suisse-party-2026-04" ${isNew?'':'readonly'}>
+    </div>
+    <div class="form-row">
+      <label>Capacidad total</label>
+      <input type="number" id="evCap" min="1" value="${ev?.capacity ?? 50}">
+    </div>
+    <div class="form-row">
+      <label class="consent" style="flex-direction:row;align-items:center;color:var(--text-2);font-size:.85rem">
+        <input type="checkbox" id="evSoldOut" ${ev?.sold_out?'checked':''}>
+        <span>Marcar como agotado ahora mismo</span>
+      </label>
+    </div>
+  `;
+  modal({
+    title: isNew ? 'Nuevo evento' : `Editar: ${esc(ev.event_name)}`,
+    subtitle: isNew ? 'Añade capacidad y control de agotado' : 'Ajusta la capacidad y estado',
+    body,
+    actions: [
+      { label:'Cancelar', cls:'ghost', onClick: c => c() },
+      { label: isNew?'Crear evento':'Guardar', cls:'primary', icon: ICONS.check, onClick: async close => {
+        const payload = {
+          event_name: $('#evName').value.trim(),
+          event_date: $('#evDate').value.trim(),
+          event_key:  $('#evKey').value.trim(),
+          capacity:   parseInt($('#evCap').value, 10) || 50,
+          sold_out:   $('#evSoldOut').checked
+        };
+        if (!payload.event_name || !payload.event_key){
+          return toast('Faltan datos','Nombre y clave son obligatorios','error');
+        }
+        let error;
+        if (isNew){
+          const r = await supa.from('event_settings').insert(payload).select().single();
+          error = r.error;
+          if (!error) state.eventSettings.push(r.data);
+        } else {
+          const r = await supa.from('event_settings').update(payload).eq('id', ev.id).select().single();
+          error = r.error;
+          if (!error){
+            const idx = state.eventSettings.findIndex(x => x.id === ev.id);
+            if (idx >= 0) state.eventSettings[idx] = r.data;
+          }
+        }
+        if (error) return toast('Error', error.message, 'error');
+        toast(isNew?'Evento creado':'Cambios guardados','','success');
+        close();
+        paintEventsList();
+      }}
+    ]
+  });
+}
+
 /* ============================================================
    VIEW: ESTADÍSTICAS
    ============================================================ */

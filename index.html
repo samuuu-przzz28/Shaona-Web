@@ -663,6 +663,30 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
 /* Modernizar event-tag */
 .event-tag{border-radius:6px;transition:all .2s ease;backdrop-filter:blur(6px);background:rgba(0,0,0,.35)}
 
+/* SOLD OUT — badge + estado agotado en tarjetas de evento */
+.event-card.sold-out::after{
+  content:"SOLD OUT";
+  position:absolute;top:20px;right:-42px;
+  background:linear-gradient(135deg,#ff0055,#c8003f);
+  color:#fff;font-family:'Outfit',sans-serif;font-size:.72rem;
+  font-weight:800;letter-spacing:3px;padding:8px 44px;
+  transform:rotate(35deg);z-index:5;
+  box-shadow:0 8px 20px -4px rgba(255,0,85,.5),0 0 40px rgba(255,0,85,.3);
+  pointer-events:none;
+}
+.event-card.sold-out .event-bg{filter:grayscale(.7) brightness(.55) contrast(1.05)}
+.event-card.sold-out .event-overlay{background:linear-gradient(to top,rgba(0,0,0,.96) 0%,rgba(20,0,10,.7) 55%,rgba(0,0,0,.3) 100%)}
+.event-card.sold-out .event-hover-btn{background:rgba(80,20,40,.6) !important;color:rgba(255,255,255,.55) !important;cursor:not-allowed;pointer-events:none;border-color:rgba(255,85,119,.3) !important}
+.event-card.sold-out .event-hover-btn::before{content:"Agotado — "}
+.event-card.almost-full{position:relative}
+.event-card.almost-full::before{
+  content:"Últimas plazas";
+  position:absolute;top:14px;left:14px;z-index:5;
+  background:rgba(255,200,40,.15);border:1px solid rgba(255,200,40,.5);
+  color:#ffc828;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 10px;border-radius:99px;backdrop-filter:blur(8px);font-weight:700;
+}
+
 /* WhatsApp float — actualizar el look */
 .float-wa{transition:transform .2s ease,box-shadow .3s ease}
 .float-wa:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 28px -6px rgba(37,211,102,.5)}
@@ -785,7 +809,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   <div class="events-grid">
 
     <!-- VIE 25 TARDE -->
-    <div class="event-card reveal">
+    <div class="event-card reveal" data-event-key="tributo-canto-loco">
       <div class="event-bg" style="background-image:url('https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&w=1400&q=80');background-position:center;background-size:cover;background-color:#2a0014"></div>
       <div class="event-overlay"></div>
       <div class="event-body">
@@ -800,7 +824,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
     </div>
 
     <!-- VIE 25 NOCHE -->
-    <div class="event-card reveal">
+    <div class="event-card reveal" data-event-key="noche-shaona-viernes">
       <div class="event-bg" style="background-image:url('https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?auto=format&fit=crop&w=1400&q=80');background-position:center;background-size:cover;background-color:#0a0a1a"></div>
       <div class="event-overlay"></div>
       <div class="event-body">
@@ -815,7 +839,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
     </div>
 
     <!-- SAB 26 NOCHE -->
-    <div class="event-card reveal">
+    <div class="event-card reveal" data-event-key="petit-suisse-party">
       <div class="event-bg" style="background-image:url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1400&q=80');background-position:center;background-size:cover;background-color:#1a0010"></div>
       <div class="event-overlay"></div>
       <div class="event-body">
@@ -830,7 +854,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
     </div>
 
     <!-- SAB 27 MATINÉE -->
-    <div class="event-card reveal">
+    <div class="event-card reveal" data-event-key="matinee-shaona">
       <div class="event-bg" style="background-image:url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1400&q=80');background-position:center;background-size:cover;background-color:#1a1208"></div>
       <div class="event-overlay"></div>
       <div class="event-body">
@@ -2092,6 +2116,52 @@ window.addEventListener('scroll',()=>{
   }
   paint();
   setInterval(paint, 60000);
+})();
+
+/* ============================================================
+   SOLD OUT — comprueba event_settings de Supabase y marca los
+   eventos agotados. Bloquea el botón de reservar.
+   ============================================================ */
+(function(){
+  const cfg = window.SHAONA_CONFIG || {};
+  if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) return;
+
+  async function loadEventSettings(){
+    try {
+      const res = await fetch(`${cfg.supabaseUrl}/rest/v1/event_settings?select=event_key,event_name,sold_out,capacity`, {
+        headers: {
+          'apikey': cfg.supabaseAnonKey,
+          'Authorization': 'Bearer ' + cfg.supabaseAnonKey
+        }
+      });
+      if (!res.ok) return; // 404 = tabla no existe todavía
+      const settings = await res.json();
+      applyStatus(settings);
+    } catch(e){ /* silencio — si falla no se rompe la web */ }
+  }
+
+  function applyStatus(settings){
+    const byKey = new Map(settings.map(s => [s.event_key, s]));
+    document.querySelectorAll('.event-card[data-event-key]').forEach(card => {
+      const key = card.dataset.eventKey;
+      const s = byKey.get(key);
+      if (!s) return;
+      if (s.sold_out){
+        card.classList.add('sold-out');
+        const btn = card.querySelector('.event-hover-btn');
+        if (btn){
+          btn.setAttribute('aria-disabled','true');
+          btn.removeAttribute('onclick');
+          btn.style.pointerEvents = 'none';
+        }
+      }
+    });
+  }
+
+  loadEventSettings();
+  // Refresca cada 60s por si alguien marca sold_out desde el admin
+  // y la ficha está abierta en pestañas de clientes.
+  setInterval(loadEventSettings, 60000);
 })();
 </script>
 
