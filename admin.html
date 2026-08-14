@@ -446,7 +446,9 @@ input,select,textarea{font-family:inherit;color:inherit}
 .top-events{display:flex;flex-direction:column;gap:8px}
 .top-event{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px}
 .top-event .rank{font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--pink);font-size:1.15rem;font-variant-numeric:tabular-nums}
-.top-event .name{font-size:.9rem;font-weight:500}
+.top-event .top-event-body{min-width:0}
+.top-event .name{font-size:.9rem;font-weight:500;color:var(--text)}
+.top-event .date{font-size:.72rem;color:var(--muted);letter-spacing:.5px;margin-top:2px}
 .top-event .count{font-size:.9rem;font-weight:700;color:var(--cyan);font-variant-numeric:tabular-nums}
 
 @media (max-width:960px){
@@ -462,7 +464,28 @@ input,select,textarea{font-family:inherit;color:inherit}
 
 /* En móvil (< 640px): tablas se transforman en tarjetas apiladas */
 @media (max-width:640px){
-  .main{padding:16px 12px 60px}
+  .main{padding:18px 14px 60px}
+  /* Titular arriba con acciones centradas debajo */
+  .view-title{flex-direction:column;align-items:stretch;text-align:left;gap:12px}
+  .view-title h1{font-size:1.55rem}
+  .view-title .subtitle{font-size:.78rem}
+  .view-title .flex{width:100%;justify-content:stretch;flex-wrap:wrap;gap:8px}
+  .view-title .flex .btn{flex:1;justify-content:center;min-width:0}
+
+  /* Secciones — títulos */
+  .section-h{flex-direction:column;align-items:flex-start;gap:4px}
+  .section-h h2{font-size:1.15rem}
+  .section-h .side{font-size:.72rem}
+
+  /* Chips centrados y con más aire */
+  .chips{justify-content:center;gap:6px}
+  .chip{font-size:.72rem;padding:7px 12px}
+
+  /* Toolbar apilada limpia */
+  .toolbar{flex-direction:column;gap:8px}
+  .toolbar > *{width:100%;min-width:0}
+  .toolbar .search input{padding:11px 14px 11px 40px}
+
   .table-card{background:transparent;border:none;padding:0;overflow:visible}
   .tbl{display:block}
   .tbl thead{display:none}
@@ -487,6 +510,24 @@ input,select,textarea{font-family:inherit;color:inherit}
   .stats-grid .stat .value{font-size:1.9rem}
   .toolbar > .btn{flex:1}
   .modal-body .kv-grid{grid-template-columns:1fr}
+  .modal-foot{flex-direction:column;padding:14px 18px}
+  .modal-foot .btn{width:100%;justify-content:center;padding:12px}
+  .modal-head{padding:18px 22px 10px}
+  .modal-head .title{font-size:1.35rem}
+  .modal-body{padding:18px 22px}
+
+  /* KPIs 2 columnas en móvil */
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:8px}
+
+  /* Login card centrado y con menos padding */
+  .login-card{padding:36px 26px;margin:12px}
+
+  /* Sidebar drawer más ancho para dedos gordos */
+  .sidebar{padding:calc(var(--header-h) + 8px) 12px 20px}
+  .side-nav-item{padding:14px 16px;font-size:.9rem}
+
+  /* Stats view — chips centrados */
+  .stats-view .period-chips{justify-content:center}
 }
 </style>
 </head>
@@ -523,7 +564,7 @@ const state = {
   currentEventId: null,
   quickFilter:  'todas',           // hoy | semana | mes | pendientes | todas
   filters: {
-    type: 'all', status: 'all', from: '', to: '', text: ''
+    type: 'all', status: 'all', event: 'all', from: '', to: '', text: ''
   },
   sort: { key: 'created_at', dir: 'desc' },
   realtimeOn:   false,
@@ -1042,6 +1083,10 @@ function renderReservas(){
         <option value="cancelada">Canceladas</option>
         <option value="no-show">No-show</option>
       </select>
+      <select id="fEvent">
+        <option value="all">Cualquier evento</option>
+        ${uniqueEventOptions()}
+      </select>
       ${renderDatePicker()}
     </div>
 
@@ -1049,11 +1094,13 @@ function renderReservas(){
 
   $('#fType').value = state.filters.type;
   $('#fStatus').value = state.filters.status;
-  ['fText','fType','fStatus'].forEach(id => {
+  $('#fEvent').value = state.filters.event;
+  ['fText','fType','fStatus','fEvent'].forEach(id => {
     $('#'+id).addEventListener('input', () => {
       state.filters.text   = $('#fText').value;
       state.filters.type   = $('#fType').value;
       state.filters.status = $('#fStatus').value;
+      state.filters.event  = $('#fEvent').value;
       paintReservationsTable();
     });
   });
@@ -1077,6 +1124,29 @@ function quickChip(id, label){
   return `<div class="chip ${state.quickFilter===id?'active':''}" data-q="${id}">${label} <span class="count">${list.length}</span></div>`;
 }
 
+// Lista única de "Evento — fecha" a partir de todas las reservas.
+// Se usa en el select del filtro. Ordenados por más recientes primero.
+function uniqueEventOptions(){
+  const map = new Map();
+  for (const r of state.reservations){
+    const name = (r.event_name || '').trim();
+    if (!name) continue;
+    const date = (r.event_date || '').trim();
+    const key = name + '|' + date;
+    if (!map.has(key)) map.set(key, { name, date, latest: r.created_at, count: 1 });
+    else {
+      const it = map.get(key);
+      it.count++;
+      if (r.created_at > it.latest) it.latest = r.created_at;
+    }
+  }
+  const arr = [...map.entries()].sort((a,b) => a[1].latest < b[1].latest ? 1 : -1);
+  return arr.map(([key, it]) => {
+    const label = it.date ? `${it.name} · ${it.date}` : it.name;
+    return `<option value="${esc(key)}">${esc(label)} (${it.count})</option>`;
+  }).join('');
+}
+
 function filteredReservationsForChip(chip){
   const now = new Date();
   const startToday = startOfDay(now), endToday = endOfDay(now);
@@ -1097,6 +1167,10 @@ function filteredReservations(){
   const f = state.filters;
   if (f.type !== 'all')   list = list.filter(r => r.type === f.type);
   if (f.status !== 'all') list = list.filter(r => r.status === f.status);
+  if (f.event  !== 'all' && f.event) {
+    // "Nombre|Fecha" identifica evento único (mismo nombre + misma fecha)
+    list = list.filter(r => (r.event_name || '') + '|' + (r.event_date || '') === f.event);
+  }
   if (f.from){
     const from = startOfDay(f.from);
     list = list.filter(r => new Date(r.created_at) >= from);
@@ -1689,22 +1763,30 @@ function paintTypeBreakdown(items){
 function paintTopEvents(items){
   const el = $('#topEvents');
   if (!el) return;
+  // Agrupa por nombre + fecha del evento (así distingue misma edición
+  // vs ediciones distintas del mismo evento en fechas diferentes).
   const counts = new Map();
   for (const r of items){
     const name = (r.event_name || '').trim();
     if (!name) continue;
-    counts.set(name, (counts.get(name) || 0) + 1);
+    const date = (r.event_date || '').trim();
+    const key = name + '|' + date;
+    if (!counts.has(key)) counts.set(key, { name, date, count: 1 });
+    else counts.get(key).count++;
   }
-  const top = [...counts.entries()].sort((a,b) => b[1] - a[1]).slice(0, 5);
+  const top = [...counts.values()].sort((a,b) => b.count - a.count).slice(0, 5);
   if (!top.length){
-    el.innerHTML = `<div class="empty" style="padding:20px 0"><p>Sin eventos identificados</p></div>`;
+    el.innerHTML = `<div class="empty" style="padding:20px 0"><p>Sin eventos identificados en el periodo</p></div>`;
     return;
   }
-  el.innerHTML = top.map(([name, count], i) => `
+  el.innerHTML = top.map((it, i) => `
     <div class="top-event">
       <div class="rank">${i+1}º</div>
-      <div class="name">${esc(name)}</div>
-      <div class="count">${count}</div>
+      <div class="top-event-body">
+        <div class="name">${esc(it.name)}</div>
+        ${it.date ? `<div class="date">${esc(it.date)}</div>` : ''}
+      </div>
+      <div class="count">${it.count}</div>
     </div>`).join('');
 }
 

@@ -299,9 +299,14 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   /* Modal */
   .modal{padding:24px 18px;max-width:95vw}
   .modal-title{font-size:1.4rem}
-  /* Hero menos agresivo en móvil */
-  .hero{padding:0 0 40px 18px}
-  .hero h1{font-size:2.2rem}
+  /* Hero centrado y con padding equilibrado en móvil */
+  .hero{padding:60px 20px 50px;text-align:center;align-items:center;justify-content:center}
+  .hero-content{max-width:520px;margin:0 auto;text-align:center}
+  .hero h1,.hero .hero-title{font-size:clamp(2.4rem,10vw,3.2rem);text-align:center}
+  .hero-desc{margin-left:auto;margin-right:auto;text-align:center}
+  .hero-btns{justify-content:center}
+  .hero-rating{margin-left:auto;margin-right:auto}
+  .hero-eyebrow{text-align:center}
   /* Reducir padding de secciones */
   .section-wrap,.reservados-section,.bachata-section,.cumple-section,.ig-section{padding:40px 18px}
   /* Eventos */
@@ -318,8 +323,40 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   .bottle-controls{gap:6px}
   .btn-counter{width:26px;height:26px;font-size:.9rem}
   .bottle-count{min-width:16px;font-size:.85rem}
-  .hero h1{font-size:1.8rem}
+  .hero h1{font-size:1.9rem}
   .section-heading{font-size:1.6rem}
+}
+/* Correcciones extra de centrado en móvil */
+@media (max-width:600px){
+  /* Secciones centradas */
+  .section-heading,.section-label{text-align:center}
+  /* Los CTAs debajo del heading centrados */
+  section > .btn-primary,section > .btn-ghost{margin-left:auto;margin-right:auto;display:inline-flex}
+  /* Trust bar: iconos centrados con el texto también */
+  .trust-tile{text-align:center;align-items:center}
+  .trust-tile-icon{margin-left:auto;margin-right:auto}
+  /* Reviews header y CTA centrados */
+  .reviews-head,.reviews-cta{text-align:center}
+  .rating-badge{margin-left:auto;margin-right:auto}
+  /* Ubicación: sección label y H2 centrados en móvil */
+  section#ubicacion .reveal p{text-align:center}
+  section#ubicacion h2{text-align:center}
+  section#ubicacion > div > div > .reveal:first-child{align-items:center}
+  section#ubicacion .contact-blocks{align-items:stretch;width:100%}
+  section#ubicacion .open-status{align-self:center}
+  section#ubicacion .contact-block{justify-content:flex-start}
+  /* Botones a full-width para golpe visual coherente */
+  section#ubicacion > div > div > .reveal > div[style*="display:flex;gap:12px"]{justify-content:center}
+  /* Ticker no rebasa */
+  .ticker-inner{white-space:nowrap}
+  /* Modal reservas: cierre X mejor tocable */
+  .modal-close{width:36px;height:36px;font-size:1.05rem}
+  /* Cumpleaños packs centrados */
+  .cumple-card{text-align:center;align-items:center}
+  .btn-cumple{margin-left:auto;margin-right:auto;display:inline-flex}
+  /* IG CTA */
+  .ig-section{text-align:center}
+  .ig-left{align-items:center}
 }
 </style>
 <style>
