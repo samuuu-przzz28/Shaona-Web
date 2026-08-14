@@ -206,6 +206,43 @@ input,select,textarea{font-family:inherit;color:inherit}
 .toolbar select:focus,.toolbar input[type="date"]:focus{outline:none;border-color:var(--pink)}
 .toolbar input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) hue-rotate(180deg);opacity:.6}
 
+/* Date range picker */
+.date-picker{position:relative}
+.date-picker-btn{display:inline-flex;align-items:center;gap:10px;background:var(--bg-1);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-size:.85rem;border-radius:var(--radius);cursor:pointer;transition:border-color .15s ease;font-family:inherit;min-width:210px}
+.date-picker-btn:hover{border-color:var(--border-hi)}
+.date-picker.open .date-picker-btn{border-color:var(--pink)}
+.date-picker-btn .ic{width:16px;height:16px;stroke:var(--pink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.date-picker-btn .chev{width:14px;height:14px;margin-left:auto;opacity:.5;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s ease}
+.date-picker.open .date-picker-btn .chev{transform:rotate(180deg)}
+.date-picker-btn .lbl{flex:1;text-align:left}
+
+.date-picker-popover{position:absolute;top:calc(100% + 6px);left:0;z-index:30;background:linear-gradient(160deg,var(--bg-1) 0%,var(--bg-2) 100%);border:1px solid var(--border-hi);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-lg);display:none;min-width:320px}
+.date-picker.open .date-picker-popover{display:block}
+
+/* Presets como chips arriba */
+.dp-presets{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.dp-preset{background:transparent;border:1px solid var(--border);color:var(--text-2);padding:6px 12px;border-radius:99px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .15s ease;font-family:inherit}
+.dp-preset:hover{border-color:var(--border-hi);color:var(--text)}
+.dp-preset.active{background:var(--pink);border-color:var(--pink);color:#fff}
+
+/* Calendar */
+.dp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
+.dp-nav{background:transparent;border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:1.1rem;line-height:1;display:grid;place-items:center;transition:all .15s ease}
+.dp-nav:hover{border-color:var(--pink);color:var(--pink)}
+.dp-title{font-weight:600;font-size:.9rem;text-transform:capitalize;letter-spacing:.5px}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dp-dow{font-size:.62rem;color:var(--muted);text-align:center;letter-spacing:1px;text-transform:uppercase;padding:6px 0;font-weight:600}
+.dp-day{aspect-ratio:1;min-width:36px;display:grid;place-items:center;font-size:.82rem;cursor:pointer;color:var(--text);transition:background .12s ease;border-radius:6px;font-variant-numeric:tabular-nums;user-select:none}
+.dp-day:hover{background:rgba(255,0,102,.15)}
+.dp-day.other-month{color:var(--muted-2);opacity:.35}
+.dp-day.today{outline:1px solid rgba(255,0,102,.4);outline-offset:-1px}
+.dp-day.in-range{background:rgba(255,0,102,.18);border-radius:0}
+.dp-day.start,.dp-day.end{background:var(--pink);color:#fff;font-weight:700}
+.dp-day.start{border-radius:6px 0 0 6px}
+.dp-day.end{border-radius:0 6px 6px 0}
+.dp-day.start.end{border-radius:6px}
+.dp-day.start:hover,.dp-day.end:hover{background:var(--pink-2)}
+
 /* Filter chips */
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .chip{padding:7px 14px;font-size:.75rem;font-weight:500;background:var(--bg-1);border:1px solid var(--border);border-radius:99px;cursor:pointer;transition:all .15s ease;color:var(--text-2);display:inline-flex;align-items:center;gap:8px}
@@ -269,7 +306,10 @@ input,select,textarea{font-family:inherit;color:inherit}
 .detail-block .db-count{font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--pink);letter-spacing:1.5px;text-transform:uppercase;line-height:1.05;margin-bottom:6px;font-variant-numeric:tabular-nums}
 .detail-block .db-body{font-family:'Outfit',sans-serif;font-size:1.05rem;color:var(--text);line-height:1.55;font-weight:500}
 .detail-block .db-body b{color:var(--pink);font-weight:700}
-.detail-block .db-extra{margin-top:8px;font-size:.78rem;color:var(--muted);font-style:italic}
+.detail-block .db-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.detail-block .db-item{font-family:'Outfit',sans-serif;font-size:1.05rem;color:var(--text);line-height:1.35;font-weight:500;display:flex;align-items:baseline;gap:10px}
+.detail-block .db-item b{color:var(--pink);font-weight:800;font-size:1.15rem;min-width:28px;text-align:right;font-variant-numeric:tabular-nums}
+.detail-block .db-extra{margin-top:10px;font-size:.78rem;color:var(--muted);font-style:italic;padding-top:8px;border-top:1px dashed var(--border)}
 .detail-block.cyan{background:linear-gradient(160deg,rgba(0,224,255,.09),rgba(0,224,255,.03));border-color:rgba(0,224,255,.28)}
 .detail-block.cyan .db-count{color:var(--cyan)}
 .detail-block.cyan .db-body b{color:var(--cyan)}
@@ -878,24 +918,22 @@ function renderReservas(){
         <option value="cancelada">Canceladas</option>
         <option value="no-show">No-show</option>
       </select>
-      <input type="date" id="fFrom" value="${state.filters.from}" title="Desde">
-      <input type="date" id="fTo" value="${state.filters.to}" title="Hasta">
+      ${renderDatePicker()}
     </div>
 
     <div class="table-card" id="resTable"></div>`;
 
   $('#fType').value = state.filters.type;
   $('#fStatus').value = state.filters.status;
-  ['fText','fType','fStatus','fFrom','fTo'].forEach(id => {
+  ['fText','fType','fStatus'].forEach(id => {
     $('#'+id).addEventListener('input', () => {
       state.filters.text   = $('#fText').value;
       state.filters.type   = $('#fType').value;
       state.filters.status = $('#fStatus').value;
-      state.filters.from   = $('#fFrom').value;
-      state.filters.to     = $('#fTo').value;
       paintReservationsTable();
     });
   });
+  wireDatePicker();
   $$('.chip[data-q]').forEach(c => c.addEventListener('click', () => {
     state.quickFilter = c.dataset.q;
     renderReservas();
@@ -1109,8 +1147,188 @@ function kv(k,v,big=false){
   return `<div class="kv-item"><span class="k">${esc(k)}</span><span class="v ${big?'big':''}">${v}</span></div>`;
 }
 
+/* ============================================================
+   DATE RANGE PICKER — un solo botón, popover con presets + calendario
+   ============================================================ */
+const DP_MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DP_DOW    = ['L','M','X','J','V','S','D'];
+const dp = { open:false, viewY:new Date().getFullYear(), viewM:new Date().getMonth() };
+
+function dpIso(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function dpFromIso(s){ return s ? new Date(s+'T00:00:00') : null; }
+
+function dpLabel(){
+  const f = state.filters.from, t = state.filters.to;
+  if (!f && !t) return 'Cualquier fecha';
+  const fmt = d => dpFromIso(d).toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
+  if (f && !t) return `Desde ${fmt(f)}`;
+  if (!f && t) return `Hasta ${fmt(t)}`;
+  if (f === t) return fmt(f);
+  return `${fmt(f)} – ${fmt(t)}`;
+}
+
+function dpActivePreset(){
+  const f = state.filters.from, t = state.filters.to;
+  if (!f && !t) return 'clear';
+  const iso = dpIso;
+  const today = new Date(), y = today.getFullYear(), m = today.getMonth();
+  const yst = new Date(today); yst.setDate(yst.getDate()-1);
+  const w7 = new Date(today); w7.setDate(w7.getDate()-6);
+  const w30 = new Date(today); w30.setDate(w30.getDate()-29);
+  const mStart = new Date(y,m,1), mPrevStart = new Date(y,m-1,1), mPrevEnd = new Date(y,m,0);
+  if (f===iso(today) && t===iso(today)) return 'hoy';
+  if (f===iso(yst)   && t===iso(yst))   return 'ayer';
+  if (f===iso(w7)    && t===iso(today)) return '7d';
+  if (f===iso(w30)   && t===iso(today)) return '30d';
+  if (f===iso(mStart) && t===iso(today)) return 'mes';
+  if (f===iso(mPrevStart) && t===iso(mPrevEnd)) return 'mesPrev';
+  return '';
+}
+
+function renderDatePicker(){
+  return `<div class="date-picker ${dp.open?'open':''}" id="datePicker">
+    <button class="date-picker-btn" id="dpBtn" type="button">
+      <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      <span class="lbl" id="dpLbl">${esc(dpLabel())}</span>
+      <svg class="chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="date-picker-popover" id="dpPop">
+      <div class="dp-presets" id="dpPresets"></div>
+      <div class="dp-cal" id="dpCal"></div>
+    </div>
+  </div>`;
+}
+
+function paintPresets(){
+  const active = dpActivePreset();
+  const presets = [
+    ['hoy','Hoy'],['ayer','Ayer'],['7d','Últimos 7 días'],['30d','Últimos 30 días'],
+    ['mes','Este mes'],['mesPrev','Mes pasado'],['clear','Todo']
+  ];
+  $('#dpPresets').innerHTML = presets.map(([k,l]) =>
+    `<button class="dp-preset ${active===k?'active':''}" data-preset="${k}">${l}</button>`
+  ).join('');
+  $$('#dpPresets .dp-preset').forEach(b => b.addEventListener('click', () => dpApplyPreset(b.dataset.preset)));
+}
+
+function paintDpCalendar(){
+  const cal = $('#dpCal');
+  if (!cal) return;
+  const y = dp.viewY, m = dp.viewM;
+  const first = new Date(y,m,1);
+  const dowFirst = (first.getDay() + 6) % 7; // lunes=0
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const daysInPrev  = new Date(y,m,0).getDate();
+  const fromT = state.filters.from ? dpFromIso(state.filters.from).getTime() : null;
+  const toT   = state.filters.to   ? dpFromIso(state.filters.to).getTime()   : null;
+  const todayIso = dpIso(new Date());
+
+  const cells = [];
+  for (let i=dowFirst-1;i>=0;i--) cells.push({ y:m===0?y-1:y, m:m===0?11:m-1, d:daysInPrev-i, other:true });
+  for (let d=1; d<=daysInMonth; d++) cells.push({ y, m, d, other:false });
+  while (cells.length % 7 !== 0){
+    const d = cells.length - dowFirst - daysInMonth + 1;
+    cells.push({ y:m===11?y+1:y, m:m===11?0:m+1, d, other:true });
+  }
+
+  const dayCells = cells.map(c => {
+    const iso = `${c.y}-${String(c.m+1).padStart(2,'0')}-${String(c.d).padStart(2,'0')}`;
+    const t = new Date(c.y,c.m,c.d).getTime();
+    const isStart = fromT && iso === state.filters.from;
+    const isEnd   = toT && iso === state.filters.to;
+    const inRange = fromT && toT && t > fromT && t < toT;
+    const cls = ['dp-day',
+      c.other?'other-month':'',
+      iso===todayIso?'today':'',
+      isStart?'start':'',
+      isEnd?'end':'',
+      inRange?'in-range':''
+    ].filter(Boolean).join(' ');
+    return `<div class="${cls}" data-iso="${iso}">${c.d}</div>`;
+  }).join('');
+
+  cal.innerHTML = `
+    <div class="dp-head">
+      <button class="dp-nav" data-nav="-1" type="button">‹</button>
+      <div class="dp-title">${DP_MONTHS[m]} ${y}</div>
+      <button class="dp-nav" data-nav="1" type="button">›</button>
+    </div>
+    <div class="dp-grid">
+      ${DP_DOW.map(n=>`<div class="dp-dow">${n}</div>`).join('')}
+      ${dayCells}
+    </div>`;
+  $$('#dpCal .dp-day').forEach(el => el.addEventListener('click', () => dpPickDay(el.dataset.iso)));
+  $$('#dpCal .dp-nav').forEach(el => el.addEventListener('click', () => {
+    const delta = parseInt(el.dataset.nav,10);
+    dp.viewM += delta;
+    if (dp.viewM < 0){ dp.viewM = 11; dp.viewY--; }
+    if (dp.viewM > 11){ dp.viewM = 0; dp.viewY++; }
+    paintDpCalendar();
+  }));
+}
+
+function dpPickDay(iso){
+  if (!state.filters.from || (state.filters.from && state.filters.to)){
+    state.filters.from = iso;
+    state.filters.to = '';
+  } else {
+    // ya hay from, no hay to
+    if (iso < state.filters.from){
+      state.filters.to = state.filters.from;
+      state.filters.from = iso;
+    } else {
+      state.filters.to = iso;
+    }
+  }
+  paintDpCalendar();
+  paintPresets();
+  $('#dpLbl').textContent = dpLabel();
+  paintReservationsTable();
+}
+
+function dpApplyPreset(preset){
+  const today = new Date();
+  const iso = d => dpIso(d);
+  switch(preset){
+    case 'hoy':     state.filters.from = iso(today); state.filters.to = iso(today); break;
+    case 'ayer':    { const y=new Date(today); y.setDate(y.getDate()-1); state.filters.from=iso(y); state.filters.to=iso(y); break; }
+    case '7d':      { const s=new Date(today); s.setDate(s.getDate()-6); state.filters.from=iso(s); state.filters.to=iso(today); break; }
+    case '30d':     { const s=new Date(today); s.setDate(s.getDate()-29); state.filters.from=iso(s); state.filters.to=iso(today); break; }
+    case 'mes':     { const s=new Date(today.getFullYear(),today.getMonth(),1); state.filters.from=iso(s); state.filters.to=iso(today); break; }
+    case 'mesPrev': { const s=new Date(today.getFullYear(),today.getMonth()-1,1); const e=new Date(today.getFullYear(),today.getMonth(),0); state.filters.from=iso(s); state.filters.to=iso(e); dp.viewY=s.getFullYear(); dp.viewM=s.getMonth(); break; }
+    case 'clear':   state.filters.from=''; state.filters.to=''; break;
+  }
+  if (state.filters.from){ const d = dpFromIso(state.filters.from); dp.viewY=d.getFullYear(); dp.viewM=d.getMonth(); }
+  paintDpCalendar();
+  paintPresets();
+  $('#dpLbl').textContent = dpLabel();
+  paintReservationsTable();
+}
+
+function wireDatePicker(){
+  const wrap = $('#datePicker');
+  if (!wrap) return;
+  // Vista inicial: mes del "from" o mes actual
+  if (state.filters.from){ const d = dpFromIso(state.filters.from); dp.viewY=d.getFullYear(); dp.viewM=d.getMonth(); }
+  paintPresets();
+  paintDpCalendar();
+  $('#dpBtn').addEventListener('click', e => {
+    e.stopPropagation();
+    dp.open = !dp.open;
+    wrap.classList.toggle('open', dp.open);
+  });
+  // Click fuera → cerrar
+  document.addEventListener('click', function onOut(e){
+    if (!wrap.contains(e.target) && dp.open){
+      dp.open = false;
+      wrap.classList.remove('open');
+    }
+  });
+}
+
 // Bloque destacado para "N botellas (1 × X + 2 × Y)" o "N mezclas: A + B"
-// o "2 (14€)" — cachimbas. Lo hace visual y rápido de leer en un vistazo.
+// o "2 (14€)" — cachimbas. Lo hace visual y rápido de leer en un vistazo,
+// con cada item en su propia línea.
 function fmtOrder(label, raw, color='pink'){
   if (!raw) return '';
   const str = String(raw).trim();
@@ -1124,19 +1342,24 @@ function fmtOrder(label, raw, color='pink'){
     extra = m[4] ? m[4].replace(/^\[|\]$/g,'').trim() : '';
   }
   if (!count){
-    // no arranca por número → fallback simple
     return `<div class="kv-item kv-full"><span class="k">${esc(label)}</span>
       <div class="detail-block ${color}"><div class="db-body">${esc(str)}</div></div></div>`;
   }
-  // resalta cada "N × Cosa" en negrita
-  const highlighted = esc(body)
-    .replace(/(\d+)\s*[×x]\s*/g, '<b>$1×</b> ')
-    .replace(/\s*\+\s*/g, '  <span style="color:var(--muted)">·</span>  ');
+  // Parte cada "1 × Ron Barceló + 2 × Belaire Rosé" en items independientes
+  const items = body
+    ? body.split(/\s*\+\s*/).map(part => {
+        const p = part.trim();
+        if (!p) return '';
+        const im = p.match(/^(\d+)\s*[×x]\s*(.+)$/i);
+        if (im) return `<div class="db-item"><b>${im[1]}×</b> <span>${esc(im[2].trim())}</span></div>`;
+        return `<div class="db-item"><span>${esc(p)}</span></div>`;
+      }).filter(Boolean).join('')
+    : '';
   return `<div class="kv-item kv-full">
     <span class="k">${esc(label)}</span>
     <div class="detail-block ${color}">
-      <div class="db-count">${count} ${esc(unit)}${body?':':''}</div>
-      ${body ? `<div class="db-body">${highlighted}</div>` : ''}
+      <div class="db-count">${count} ${esc(unit)}${items?':':''}</div>
+      ${items ? `<div class="db-list">${items}</div>` : ''}
       ${extra ? `<div class="db-extra">+ ${esc(extra)}</div>` : ''}
     </div>
   </div>`;
