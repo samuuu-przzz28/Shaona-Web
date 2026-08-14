@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin · Shaona</title>
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0a0008">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0008'/%3E%3Ctext x='50' y='72' font-family='Georgia,serif' font-size='72' font-weight='700' fill='%23ff0055' text-anchor='middle' font-style='italic'%3ES%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap">
@@ -164,7 +166,7 @@ input,select,textarea{font-family:inherit;color:inherit}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
 .stat{padding:20px 22px;background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);position:relative;overflow:hidden}
 .stat .label{font-size:.66rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-.stat .value{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;line-height:1;color:var(--text)}
+.stat .value{font-family:'Outfit',sans-serif;font-size:2.4rem;font-weight:700;line-height:1;color:var(--text);letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .stat .value.pink{color:var(--pink)}
 .stat .value.cyan{color:var(--cyan)}
 .stat .value.gold{color:var(--gold)}
@@ -260,6 +262,20 @@ input,select,textarea{font-family:inherit;color:inherit}
 .kv-item .k{display:block;font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 .kv-item .v{color:var(--text);font-size:.9rem;word-break:break-word;line-height:1.4}
 .kv-item .v.big{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600}
+
+/* Bloques destacados para pedidos (botellas / cachimbas / mezclas) */
+.kv-item.kv-full{grid-column:1 / -1}
+.detail-block{background:linear-gradient(160deg,rgba(255,0,102,.09),rgba(255,0,102,.03));border:1px solid rgba(255,0,102,.28);border-radius:10px;padding:14px 18px;margin-top:6px}
+.detail-block .db-count{font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--pink);letter-spacing:1.5px;text-transform:uppercase;line-height:1.05;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.detail-block .db-body{font-family:'Outfit',sans-serif;font-size:1.05rem;color:var(--text);line-height:1.55;font-weight:500}
+.detail-block .db-body b{color:var(--pink);font-weight:700}
+.detail-block .db-extra{margin-top:8px;font-size:.78rem;color:var(--muted);font-style:italic}
+.detail-block.cyan{background:linear-gradient(160deg,rgba(0,224,255,.09),rgba(0,224,255,.03));border-color:rgba(0,224,255,.28)}
+.detail-block.cyan .db-count{color:var(--cyan)}
+.detail-block.cyan .db-body b{color:var(--cyan)}
+.detail-block.gold{background:linear-gradient(160deg,rgba(255,200,40,.09),rgba(255,200,40,.03));border-color:rgba(255,200,40,.28)}
+.detail-block.gold .db-count{color:var(--gold)}
+.detail-block.gold .db-body b{color:var(--gold)}
 .kv-item .v a{color:var(--cyan);border-bottom:1px dashed var(--cyan);padding-bottom:1px}
 
 /* Section header */
@@ -1032,9 +1048,9 @@ function openReservationModal(id){
       ${r.event_date ? kv('Fecha', esc(r.event_date)) : ''}
       ${r.people ? kv('Personas', esc(r.people)) : ''}
       ${r.total ? kv('Total', esc(r.total)) : ''}
-      ${r.bottles ? kv('Botellas', esc(r.bottles)) : ''}
-      ${r.hookahs ? kv('Cachimbas', esc(r.hookahs)) : ''}
-      ${r.mixers ? kv('Mezclas', esc(r.mixers)) : ''}
+      ${r.bottles ? fmtOrder('Botellas', r.bottles, 'pink')  : ''}
+      ${r.hookahs ? fmtOrder('Cachimbas', r.hookahs, 'gold') : ''}
+      ${r.mixers  ? fmtOrder('Mezclas', r.mixers, 'cyan')    : ''}
       ${r.promo ? kv('Promo', esc(r.promo)) : ''}
     </div>
     ${r.comments ? `<div style="margin-top:20px"><div style="font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Comentarios del cliente</div><div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:.9rem;line-height:1.5">${esc(r.comments)}</div></div>` : ''}
@@ -1091,6 +1107,39 @@ function openReservationModal(id){
 
 function kv(k,v,big=false){
   return `<div class="kv-item"><span class="k">${esc(k)}</span><span class="v ${big?'big':''}">${v}</span></div>`;
+}
+
+// Bloque destacado para "N botellas (1 × X + 2 × Y)" o "N mezclas: A + B"
+// o "2 (14€)" — cachimbas. Lo hace visual y rápido de leer en un vistazo.
+function fmtOrder(label, raw, color='pink'){
+  if (!raw) return '';
+  const str = String(raw).trim();
+  // Patrón: "N unidad (...)" | "N unidad: ..." | "N (14€)" | "Ninguna" | libre
+  const m = str.match(/^(\d+)\s*(botellas?|mezclas?|cachimbas?)?\s*[:\(]?\s*([^\[\]]*?)\)?\s*(\[.+\])?\s*$/i);
+  let count = '', unit = label.toUpperCase(), body = str, extra = '';
+  if (m){
+    count = m[1] || '';
+    if (m[2]) unit = m[2].toUpperCase();
+    body  = (m[3] || '').trim();
+    extra = m[4] ? m[4].replace(/^\[|\]$/g,'').trim() : '';
+  }
+  if (!count){
+    // no arranca por número → fallback simple
+    return `<div class="kv-item kv-full"><span class="k">${esc(label)}</span>
+      <div class="detail-block ${color}"><div class="db-body">${esc(str)}</div></div></div>`;
+  }
+  // resalta cada "N × Cosa" en negrita
+  const highlighted = esc(body)
+    .replace(/(\d+)\s*[×x]\s*/g, '<b>$1×</b> ')
+    .replace(/\s*\+\s*/g, '  <span style="color:var(--muted)">·</span>  ');
+  return `<div class="kv-item kv-full">
+    <span class="k">${esc(label)}</span>
+    <div class="detail-block ${color}">
+      <div class="db-count">${count} ${esc(unit)}${body?':':''}</div>
+      ${body ? `<div class="db-body">${highlighted}</div>` : ''}
+      ${extra ? `<div class="db-extra">+ ${esc(extra)}</div>` : ''}
+    </div>
+  </div>`;
 }
 
 /* ============================================================
@@ -1221,7 +1270,7 @@ function paintRankTable(list){
       <tbody>
         ${list.map((r,i) => `
           <tr>
-            <td><strong style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:${i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--text)'}">${i+1}º</strong></td>
+            <td><strong style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.15rem;font-variant-numeric:tabular-nums;color:${i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--text)'}">${i+1}º</strong></td>
             <td class="name-cell"><strong>${esc(r.name)}</strong>${r.prize_delivered_at?`<small style="color:var(--green)">✓ premio entregado</small>`:''}</td>
             <td><a href="tel:${esc(r.phone)}" style="color:var(--cyan)">${esc(r.phone)}</a></td>
             <td class="num" style="color:var(--cyan);font-size:1.05rem">${r.score}</td>
