@@ -1375,6 +1375,55 @@ const MODAL_BASE = `
   <button class="btn-primary" style="width:100%;margin-top:12px" onclick="submitReserva()">Confirmar Reserva →</button>
   <button class="btn-pay">Pagar ahora &nbsp;<span class="no-disp">No disponible</span></button>
 `;
+
+// Modal especializado para cumpleaños — captura toda la info que hace
+// falta para preparar bien la mesa (homenajeado, fecha exacta, decoración,
+// alergias) antes de que llegue el día.
+const MODAL_CUMPLE = `
+  <p class="modal-eyebrow">Pack Cumpleaños</p>
+  <div class="modal-title" id="modalTitle">—</div>
+  <p class="modal-sub" id="modalSub">—</p>
+
+  <div class="fg" style="margin-top:8px"><label>Nombre del organizador (quien reserva)</label><input id="mNombre" type="text" placeholder="Tu nombre"><span class="field-error"></span></div>
+  <div class="fg-row">
+    <div class="fg"><label>Teléfono</label><input id="mTelefono" type="tel" placeholder="600 000 000"><span class="field-error"></span></div>
+    <div class="fg"><label>Email</label><input id="mEmail" type="email" placeholder="tu@email.com"><span class="field-error"></span></div>
+  </div>
+
+  <div class="fg"><label>Nombre del homenajeado</label><input id="mHomenajeado" type="text" placeholder="¿A quién le vais a cantar el cumpleaños feliz?"></div>
+
+  <div class="fg-row">
+    <div class="fg"><label>Fecha preferida</label><input id="mFechaCumple" type="date" min=""><span class="field-error" id="mFechaError"></span></div>
+    <div class="fg"><label>Hora aproximada</label><select id="mHoraCumple">
+      <option value="18:00">18:00 (tardeo)</option>
+      <option value="20:00">20:00</option>
+      <option value="22:00">22:00</option>
+      <option value="23:59" selected>23:59 (noche)</option>
+      <option value="01:00">01:00</option>
+    </select></div>
+  </div>
+
+  <div class="fg-row">
+    <div class="fg"><label>Nº de personas</label><input id="mPersonas" type="number" min="4" max="30" value="8"></div>
+    <div class="fg"><label>Cumpleañero (edad)</label><input id="mEdad" type="number" min="18" max="99" placeholder="opcional"></div>
+  </div>
+
+  <div class="fg">
+    <label>Extras (marca los que os interesen)</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:6px;font-size:.85rem;color:var(--muted)">
+      <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="exDeco" style="accent-color:var(--pink)"> Decoración especial</label>
+      <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="exTarta" style="accent-color:var(--pink)"> Tarta (consultar)</label>
+      <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="exFoto" style="accent-color:var(--pink)"> Foto/vídeo del momento</label>
+      <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="exSorp" style="accent-color:var(--pink)"> Sorpresa (no avisar al homenajeado)</label>
+    </div>
+  </div>
+
+  <div class="fg"><label>Alergias / peticiones especiales</label><input id="mComentarios" type="text" placeholder="Sin gluten, decoración concreta, canción especial…"></div>
+
+  <div id="mError" style="color:#ff4466;font-size:.78rem;margin-top:4px;display:none">Por favor rellena los campos obligatorios.</div>
+  <button class="btn-primary" style="width:100%;margin-top:12px" onclick="submitReserva()">Solicitar cumpleaños</button>
+  <p style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:10px">Te confirmaremos por WhatsApp la disponibilidad de esa fecha en menos de 24h</p>
+`;
 let promoDiscount = 0;
 const PROMO_CODES = {'SHAONA10':10,'NOCHE15':15,'VIP20':20};
 
@@ -1388,7 +1437,10 @@ const BOTTLE_PRICING = {
 const MAX_BOTTLES = 6;
 
 // Catálogo de botellas disponibles (plus = suplemento € por unidad)
-const BOTTLE_CATALOG = [
+// Estos son los VALORES POR DEFECTO. Al abrir el modal, se intenta cargar
+// el catálogo real desde Supabase (que el admin gestiona) — si funciona,
+// sustituye estos. Si Supabase no responde, seguimos usando estos como fallback.
+let BOTTLE_CATALOG = [
   {id:'ron-barcelo',     name:'Ron Barceló',           sub:'Ron añejo',           plus:0},
   {id:'negrita',         name:'Ron Negrita',           sub:'Ron blanco',          plus:0},
   {id:'vodka-absolut',   name:'Vodka Absolut',         sub:'Vodka premium',       plus:0},
@@ -1404,8 +1456,29 @@ const BOTTLE_CATALOG = [
   {id:'belaire-rose',    name:'✨ Belaire Rosé',        sub:'Espumoso recomendado',plus:0}
 ];
 
-// Catálogo de mezclas (plus = coste por unidad)
-const MIXER_CATALOG = [
+// Al arrancar, intenta cargar catálogo dinámico desde Supabase.
+// Si tiene éxito, sobrescribe los arrays por defecto.
+(async function loadCatalogFromSupabase(){
+  const cfg = window.SHAONA_CONFIG || {};
+  if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) return;
+  try {
+    const res = await fetch(`${cfg.supabaseUrl}/rest/v1/catalog_items?select=kind,item_key,name,sub,plus,sort_order&available=eq.true&order=sort_order.asc`, {
+      headers: { 'apikey': cfg.supabaseAnonKey, 'Authorization': 'Bearer ' + cfg.supabaseAnonKey }
+    });
+    if (!res.ok) return;
+    const items = await res.json();
+    if (!Array.isArray(items) || !items.length) return;
+    const bottles = items.filter(i => i.kind === 'bottle')
+      .map(i => ({ id: i.item_key, name: i.name, sub: i.sub || '', plus: i.plus || 0 }));
+    const mixers  = items.filter(i => i.kind === 'mixer')
+      .map(i => ({ id: i.item_key, name: i.name, sub: i.sub || '', plus: i.plus || 0 }));
+    if (bottles.length) BOTTLE_CATALOG = bottles;
+    if (mixers.length)  MIXER_CATALOG  = mixers;
+  } catch(e){ /* silencio — usa el fallback */ }
+})();
+
+// Catálogo de mezclas (plus = coste por unidad) — mismo esquema fallback + dinámico
+let MIXER_CATALOG = [
   {id:'coca-cola',       name:'Coca-Cola',             sub:'Refresco · gratis',   plus:0},
   {id:'coca-zero',       name:'Coca-Cola Zero',        sub:'Refresco · gratis',   plus:0},
   {id:'fanta-naranja',   name:'Fanta Naranja',         sub:'Refresco · gratis',   plus:0},
@@ -1719,13 +1792,34 @@ function applyPromo(){
   }
 }
 function openModal(title,sub){
-  document.getElementById('modalContent').innerHTML=MODAL_BASE;
+  const isCumple = /cumplea/i.test(title);
+  document.getElementById('modalContent').innerHTML = isCumple ? MODAL_CUMPLE : MODAL_BASE;
   document.getElementById('modalTitle').textContent=title;
   document.getElementById('modalSub').textContent=sub;
   currentEvento=title;
   currentPrecio=sub;
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow='hidden';
+  // Si es cumple, minima fecha = hoy
+  if (isCumple){
+    const dateInput = document.getElementById('mFechaCumple');
+    if (dateInput){
+      const t = new Date();
+      const iso = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+      dateInput.min = iso;
+      // Validación en cambio de fecha: comprueba días bloqueados
+      dateInput.addEventListener('change', async () => {
+        const errEl = document.getElementById('mFechaError');
+        if (errEl) errEl.textContent = '';
+        if (!dateInput.value) return;
+        const blocked = await checkDayBlocked(new Date(dateInput.value + 'T00:00'));
+        if (blocked && errEl){
+          errEl.textContent = blocked.message || `Ese día no está disponible (${blocked.reason||'cerrado'})`;
+          errEl.style.color = '#ff5577';
+        }
+      });
+    }
+  }
 }
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
@@ -1797,16 +1891,56 @@ async function submitReserva(){
   btn.textContent = 'Enviando...';
   btn.disabled = true;
 
+  // Campos extra si estamos en un modal de cumpleaños
+  const esCumple = /cumplea/i.test(currentEvento);
+  const homenajeado  = document.getElementById('mHomenajeado')?.value?.trim();
+  const fechaCumple  = document.getElementById('mFechaCumple')?.value;
+  const horaCumple   = document.getElementById('mHoraCumple')?.value;
+  const edad         = document.getElementById('mEdad')?.value;
+  const exDeco  = document.getElementById('exDeco')?.checked;
+  const exTarta = document.getElementById('exTarta')?.checked;
+  const exFoto  = document.getElementById('exFoto')?.checked;
+  const exSorp  = document.getElementById('exSorp')?.checked;
+
+  // Si es cumple: verifica día bloqueado y arma detalles
+  let comentariosFull = comentarios || '';
+  let fechaEventoStr = currentPrecio;
+  if (esCumple){
+    if (fechaCumple){
+      const blocked = await checkDayBlocked(new Date(fechaCumple + 'T00:00'));
+      if (blocked){
+        btn.textContent = 'Solicitar cumpleaños';
+        btn.disabled = false;
+        const errEl = document.getElementById('mError');
+        errEl.textContent = blocked.message || `El día ${fechaCumple} no está disponible (${blocked.reason||'cerrado'}). Elige otro.`;
+        errEl.style.display = 'block';
+        return;
+      }
+      const d = new Date(fechaCumple + 'T' + (horaCumple||'23:59'));
+      fechaEventoStr = d.toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'2-digit',year:'2-digit'}) + ' · ' + (horaCumple||'23:59');
+    }
+    const extras = [];
+    if (exDeco)  extras.push('Decoración');
+    if (exTarta) extras.push('Tarta');
+    if (exFoto)  extras.push('Foto/vídeo');
+    if (exSorp)  extras.push('Sorpresa (no avisar)');
+    const partes = [];
+    if (homenajeado) partes.push('🎂 Homenajeado: ' + homenajeado + (edad?` (${edad} años)`:''));
+    if (extras.length) partes.push('✨ Extras: ' + extras.join(', '));
+    if (comentarios) partes.push('📝 ' + comentarios);
+    comentariosFull = partes.join(' · ');
+  }
+
   const payload = construirPayload({
     tipo:         detectarTipoReserva(currentEvento),
     evento:       currentEvento,
-    fecha_evento: currentPrecio,
+    fecha_evento: fechaEventoStr,
     nombre:       nombre,
     telefono:     telefono,
     email:        email,
     personas:     personas,
     total:        currentPrecio,
-    comentarios:  comentarios
+    comentarios:  comentariosFull
   });
 
   try {
@@ -1829,6 +1963,22 @@ async function submitReserva(){
     </div>
   `;
 }
+// Comprueba si una fecha está bloqueada en el calendario del admin.
+// Devuelve el bloque o null si el día está libre.
+async function checkDayBlocked(date){
+  const cfg = window.SHAONA_CONFIG || {};
+  if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) return null;
+  const iso = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+  try {
+    const res = await fetch(`${cfg.supabaseUrl}/rest/v1/calendar_blocks?select=block_type,reason,message&block_date=eq.${iso}`, {
+      headers: { 'apikey': cfg.supabaseAnonKey, 'Authorization': 'Bearer ' + cfg.supabaseAnonKey }
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return (rows && rows[0]) ? rows[0] : null;
+  } catch(e){ return null; }
+}
+
 async function submitReservado(){
   const nombreEl = document.getElementById('rNombre');
   const telefonoEl = document.getElementById('rTelefono');
@@ -1889,6 +2039,16 @@ async function submitReservado(){
   const fechaEvento = getProximaFecha(diaSemana);
   const fechaEventoStr = fechaEvento.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
   const nombreEvento = selectedEventoKey === 'viernes' ? 'Viernes de Shaona' : 'Petit Suisse Party (Sábado)';
+
+  // Comprueba si ese día está bloqueado (calendario admin)
+  const blockedInfo = await checkDayBlocked(fechaEvento);
+  if (blockedInfo){
+    btn.textContent = 'Solicitar reservado';
+    btn.disabled = false;
+    errorEl.textContent = blockedInfo.message || `Ese día (${fechaEventoStr}) no está disponible. ${blockedInfo.reason || ''}`;
+    errorEl.style.display = 'block';
+    return;
+  }
 
   const payload = construirPayload({
     tipo:         'reservado',

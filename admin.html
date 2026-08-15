@@ -407,6 +407,67 @@ input,select,textarea{font-family:inherit;color:inherit}
 }
 
 /* ============================================================
+   CALENDARIO — vista mensual de días bloqueados
+   ============================================================ */
+.cal-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.cal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;text-transform:capitalize;flex:1}
+.cal-header .dp-nav{background:var(--bg-1);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:1.2rem;display:grid;place-items:center}
+.cal-header .dp-nav:hover{border-color:var(--pink);color:var(--pink)}
+.cal-grid{background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;margin-bottom:14px}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.cal-dow{text-align:center;font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:6px 0;font-weight:600}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1.15;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 8px;cursor:pointer;transition:all .15s ease;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;min-height:60px}
+.cal-day:hover{border-color:var(--pink);background:rgba(255,0,102,.05);transform:translateY(-1px)}
+.cal-day-num{font-family:'Outfit',sans-serif;font-weight:600;font-size:.9rem;color:var(--text);font-variant-numeric:tabular-nums}
+.cal-day-reason{font-size:.62rem;color:var(--text-2);line-height:1.2;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cal-other{opacity:.35}
+.cal-today{border:2px solid var(--pink);box-shadow:0 0 12px rgba(255,0,102,.2)}
+.cal-blocked{cursor:pointer}
+.cal-block-closed{background:linear-gradient(135deg,rgba(255,85,119,.15),rgba(255,85,119,.05));border-color:rgba(255,85,119,.4)}
+.cal-block-closed .cal-day-num{color:var(--red)}
+.cal-block-private{background:linear-gradient(135deg,rgba(0,224,255,.12),rgba(0,224,255,.03));border-color:rgba(0,224,255,.35)}
+.cal-block-private .cal-day-num{color:var(--cyan)}
+.cal-block-limited{background:linear-gradient(135deg,rgba(255,200,40,.12),rgba(255,200,40,.03));border-color:rgba(255,200,40,.35)}
+.cal-block-limited .cal-day-num{color:var(--gold)}
+.cal-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);padding:4px 0}
+.cal-lg-dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.cal-lg-dot.open{background:var(--bg);border:1px solid var(--border)}
+.cal-lg-dot.closed{background:var(--red)}
+.cal-lg-dot.private{background:var(--cyan)}
+.cal-lg-dot.limited{background:var(--gold)}
+@media (max-width:640px){
+  .cal-day{min-height:52px;padding:4px 5px}
+  .cal-day-num{font-size:.78rem}
+  .cal-day-reason{font-size:.55rem}
+  .cal-dow{font-size:.6rem;padding:4px 0}
+}
+
+/* ============================================================
+   CATÁLOGO — toggle switch tipo iOS + cards por ítem
+   ============================================================ */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.cat-item{background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;transition:opacity .2s ease}
+.cat-item.off{opacity:.55;background:linear-gradient(160deg,var(--bg-2) 0%,rgba(0,0,0,.4) 100%)}
+.cat-item.off .cat-item-name{text-decoration:line-through;color:var(--muted)}
+.cat-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.cat-item-name{font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;color:var(--text);line-height:1.2;margin-bottom:2px}
+.cat-item-sub{font-size:.78rem;color:var(--muted);line-height:1.3;margin-bottom:6px}
+.cat-plus{background:rgba(255,200,40,.15);color:var(--gold);font-size:.66rem;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:6px}
+.cat-item-key{font-size:.7rem}
+.cat-item-key code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:3px;font-family:'SF Mono',Menlo,monospace;color:var(--cyan);font-size:.7rem}
+.cat-item-actions{display:flex;gap:6px;padding-top:12px;border-top:1px solid var(--border)}
+.cat-item-actions .btn{flex:1;justify-content:center}
+
+/* Toggle switch estilo iOS */
+.cat-toggle{position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;flex-shrink:0}
+.cat-toggle input{opacity:0;width:0;height:0}
+.cat-toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:99px;transition:background .2s ease}
+.cat-toggle-slider::before{content:"";position:absolute;left:2px;top:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s ease;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.cat-toggle input:checked + .cat-toggle-slider{background:var(--pink)}
+.cat-toggle input:checked + .cat-toggle-slider::before{transform:translateX(20px)}
+
+/* ============================================================
    EVENTOS — cards de gestión de capacidad
    ============================================================ */
 .event-mgmt-card{background:linear-gradient(160deg,var(--bg-1) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:12px;transition:border-color .2s ease}
@@ -595,7 +656,11 @@ const state = {
   realtimeOn:   false,
   sidebarOpen:  false,
   statsPeriod:  '30d',         // 7d | 30d | 12m | year
-  eventSettings: []            // capacidad + sold_out por evento
+  eventSettings: [],           // capacidad + sold_out por evento
+  catalogItems: [],            // botellas + mezclas
+  calendarBlocks: [],          // días cerrados / privados
+  calViewY: new Date().getFullYear(),
+  calViewM: new Date().getMonth()
 };
 
 // ---------- SVG icons ----------
@@ -841,6 +906,12 @@ function renderApp(){
           <div class="side-nav-item ${state.view==='eventos'?'active':''}" data-nav="eventos">
             <span class="icon">${ICONS.calendar}</span>Eventos
           </div>
+          <div class="side-nav-item ${state.view==='calendario'?'active':''}" data-nav="calendario">
+            <span class="icon">${ICONS.clock}</span>Calendario
+          </div>
+          <div class="side-nav-item ${state.view==='catalogo'?'active':''}" data-nav="catalogo">
+            <span class="icon">${ICONS.gift}</span>Catálogo
+          </div>
           <div class="side-section">Enlaces</div>
           <a class="side-nav-item" href="index.html" target="_blank" rel="noopener">
             <span class="icon">${ICONS.eye}</span>Ver la web
@@ -891,6 +962,8 @@ function routeToView(){
   else if (state.view === 'torneo') renderTorneo();
   else if (state.view === 'stats') renderStats();
   else if (state.view === 'eventos') renderEventos();
+  else if (state.view === 'calendario') renderCalendario();
+  else if (state.view === 'catalogo') renderCatalogo();
 }
 
 /* ============================================================
@@ -899,17 +972,21 @@ function routeToView(){
 let dataLoaded = false;
 async function ensureData(force=false){
   if (dataLoaded && !force) return;
-  const [rRes, rSco, rEvt] = await Promise.all([
+  const [rRes, rSco, rEvt, rCat, rCal] = await Promise.all([
     supa.from('reservations').select('*').order('created_at',{ascending:false}).limit(3000),
     supa.from('tournament_scores').select('*').order('created_at',{ascending:false}).limit(5000),
-    supa.from('event_settings').select('*').order('event_date',{ascending:true}).limit(500)
+    supa.from('event_settings').select('*').order('event_date',{ascending:true}).limit(500),
+    supa.from('catalog_items').select('*').order('sort_order',{ascending:true}).limit(500),
+    supa.from('calendar_blocks').select('*').order('block_date',{ascending:true}).limit(500)
   ]);
   if (rRes.error){ toast('Error cargando reservas', rRes.error.message, 'error'); return; }
   if (rSco.error){ toast('Error cargando puntuaciones', rSco.error.message, 'error'); return; }
   state.reservations = rRes.data || [];
   state.scores = rSco.data || [];
-  // event_settings puede no existir todavía (si el usuario no ha corrido la migración)
-  state.eventSettings = (rEvt && !rEvt.error) ? (rEvt.data || []) : [];
+  // Las tablas nuevas pueden no existir todavía → no bloquean el resto
+  state.eventSettings   = (rEvt && !rEvt.error) ? (rEvt.data || []) : [];
+  state.catalogItems    = (rCat && !rCat.error) ? (rCat.data || []) : [];
+  state.calendarBlocks  = (rCal && !rCal.error) ? (rCal.data || []) : [];
   state.events = [...new Set(state.scores.map(s => s.event_id))];
   if (!state.currentEventId || !state.events.includes(state.currentEventId)){
     state.currentEventId = state.events[0] || null;
@@ -1777,6 +1854,386 @@ function openEventModal(ev){
         toast(isNew?'Evento creado':'Cambios guardados','','success');
         close();
         paintEventsList();
+      }}
+    ]
+  });
+}
+
+/* ============================================================
+   VIEW: CALENDARIO — bloquear días
+   ============================================================ */
+function renderCalendario(){
+  const y = state.calViewY, m = state.calViewM;
+  const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const dowNames  = ['L','M','X','J','V','S','D'];
+
+  $('#mainView').innerHTML = `
+    <div class="view-title">
+      <div>
+        <h1>Calendario <em>de disponibilidad</em></h1>
+        <div class="subtitle">Bloquea días para vacaciones, eventos privados o reformas. En la web no se aceptarán reservas para esos días.</div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn ghost sm" id="refreshBtn">${ICONS.refresh} Recargar</button>
+      </div>
+    </div>
+
+    <div class="cal-header">
+      <button class="dp-nav" id="calPrev" type="button">‹</button>
+      <div class="cal-title">${monthNames[m]} <span style="color:var(--muted)">${y}</span></div>
+      <button class="dp-nav" id="calNext" type="button">›</button>
+      <button class="btn ghost sm" id="calToday">Ir a hoy</button>
+    </div>
+
+    <div class="cal-grid" id="calGrid"></div>
+
+    <div class="cal-legend">
+      <span class="cal-lg-dot open"></span> Abierto
+      <span class="cal-lg-dot closed"></span> Cerrado
+      <span class="cal-lg-dot private"></span> Evento privado
+      <span class="cal-lg-dot limited"></span> Aforo limitado
+    </div>
+
+    <div class="section-h" style="margin-top:32px"><h2>Días bloqueados <em>próximos</em></h2></div>
+    <div id="calList"></div>
+  `;
+
+  $('#refreshBtn').addEventListener('click', async () => {
+    await ensureData(true); routeToView(); toast('Datos recargados','','success',1500);
+  });
+  $('#calPrev').addEventListener('click', () => {
+    state.calViewM--;
+    if (state.calViewM < 0){ state.calViewM = 11; state.calViewY--; }
+    renderCalendario();
+  });
+  $('#calNext').addEventListener('click', () => {
+    state.calViewM++;
+    if (state.calViewM > 11){ state.calViewM = 0; state.calViewY++; }
+    renderCalendario();
+  });
+  $('#calToday').addEventListener('click', () => {
+    const t = new Date();
+    state.calViewY = t.getFullYear(); state.calViewM = t.getMonth();
+    renderCalendario();
+  });
+
+  paintCalendarGrid(y, m, dowNames);
+  paintBlockList();
+}
+
+function paintCalendarGrid(y, m, dowNames){
+  const grid = $('#calGrid');
+  if (!grid) return;
+  const first = new Date(y, m, 1);
+  const dowFirst = (first.getDay() + 6) % 7;
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const daysInPrev  = new Date(y, m, 0).getDate();
+  const todayIso = new Date().toISOString().slice(0,10);
+  const blockMap = new Map(state.calendarBlocks.map(b => [b.block_date, b]));
+
+  const cells = [];
+  for (let i=dowFirst-1;i>=0;i--) cells.push({ y:m===0?y-1:y, m:m===0?11:m-1, d:daysInPrev-i, other:true });
+  for (let d=1; d<=daysInMonth; d++) cells.push({ y, m, d, other:false });
+  while (cells.length % 7 !== 0){
+    const d = cells.length - dowFirst - daysInMonth + 1;
+    cells.push({ y:m===11?y+1:y, m:m===11?0:m+1, d, other:true });
+  }
+
+  const dowHeader = dowNames.map(n => `<div class="cal-dow">${n}</div>`).join('');
+  const dayCells = cells.map(c => {
+    const iso = `${c.y}-${String(c.m+1).padStart(2,'0')}-${String(c.d).padStart(2,'0')}`;
+    const b = blockMap.get(iso);
+    const classes = [
+      'cal-day',
+      c.other?'cal-other':'',
+      iso===todayIso?'cal-today':'',
+      b ? ('cal-block-'+b.block_type) : '',
+      b ? 'cal-blocked' : ''
+    ].filter(Boolean).join(' ');
+    return `<div class="${classes}" data-iso="${iso}" ${c.other?'data-other':''}>
+      <div class="cal-day-num">${c.d}</div>
+      ${b ? `<div class="cal-day-reason">${esc(b.reason || (b.block_type==='closed'?'Cerrado':b.block_type==='private'?'Privado':'Limitado'))}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  grid.innerHTML = `<div class="cal-dow-row">${dowHeader}</div><div class="cal-days">${dayCells}</div>`;
+
+  grid.querySelectorAll('.cal-day').forEach(el => {
+    el.addEventListener('click', () => openBlockModal(el.dataset.iso, blockMap.get(el.dataset.iso)));
+  });
+}
+
+function paintBlockList(){
+  const el = $('#calList');
+  if (!el) return;
+  const todayIso = new Date().toISOString().slice(0,10);
+  const upcoming = state.calendarBlocks
+    .filter(b => b.block_date >= todayIso)
+    .sort((a,b) => a.block_date.localeCompare(b.block_date));
+  if (!upcoming.length){
+    el.innerHTML = `<div class="empty"><div class="icon">${ICONS.calendar}</div><h3>No hay días bloqueados</h3><p>Click en cualquier día del calendario para bloquearlo.</p></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="table-card"><table class="tbl">
+    <thead><tr><th>Fecha</th><th>Tipo</th><th>Motivo</th><th></th></tr></thead>
+    <tbody>
+      ${upcoming.map(b => `<tr>
+        <td data-label="Fecha">${new Date(b.block_date+'T00:00').toLocaleDateString('es-ES',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</td>
+        <td data-label="Tipo">${b.block_type==='closed'?'<span class="pill red">Cerrado</span>':b.block_type==='private'?'<span class="pill cyan">Privado</span>':'<span class="pill gold">Limitado</span>'}</td>
+        <td data-label="Motivo">${esc(b.reason || '—')}</td>
+        <td data-label="Acciones" class="actions">
+          <button class="btn icon-only ghost" data-edit-block="${b.id}" title="Editar">${ICONS.edit}</button>
+          <button class="btn icon-only ghost danger" data-del-block="${b.id}" title="Borrar">${ICONS.trash}</button>
+        </td>
+      </tr>`).join('')}
+    </tbody></table></div>`;
+  $$('[data-edit-block]').forEach(b => b.addEventListener('click', () => {
+    const block = state.calendarBlocks.find(x => x.id === b.dataset.editBlock);
+    if (block) openBlockModal(block.block_date, block);
+  }));
+  $$('[data-del-block]').forEach(b => b.addEventListener('click', () => {
+    const block = state.calendarBlocks.find(x => x.id === b.dataset.delBlock);
+    if (block) removeBlock(block);
+  }));
+}
+
+function openBlockModal(iso, existing){
+  const dateReadable = new Date(iso+'T00:00').toLocaleDateString('es-ES',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const body = `
+    <div class="form-row">
+      <label>Fecha</label>
+      <input type="text" value="${dateReadable}" readonly>
+    </div>
+    <div class="form-row">
+      <label>Tipo de bloqueo</label>
+      <select id="blkType">
+        <option value="closed" ${existing?.block_type==='closed'?'selected':''}>Cerrado</option>
+        <option value="private" ${existing?.block_type==='private'?'selected':''}>Evento privado</option>
+        <option value="limited" ${existing?.block_type==='limited'?'selected':''}>Aforo limitado</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Motivo (uso interno)</label>
+      <input type="text" id="blkReason" value="${esc(existing?.reason || '')}" placeholder="Ej: Vacaciones, Reforma, Boda…">
+    </div>
+    <div class="form-row">
+      <label>Mensaje para la web (opcional)</label>
+      <input type="text" id="blkMsg" value="${esc(existing?.message || '')}" placeholder="Ej: Cerramos por vacaciones, volvemos el 5">
+    </div>
+  `;
+  const actions = [
+    { label:'Cancelar', cls:'ghost', onClick: c => c() },
+    { label: existing?'Guardar':'Bloquear día', cls:'primary', icon: ICONS.check, onClick: async close => {
+      const payload = {
+        block_date: iso,
+        block_type: $('#blkType').value,
+        reason:     $('#blkReason').value.trim() || null,
+        message:    $('#blkMsg').value.trim() || null
+      };
+      let error;
+      if (existing){
+        const r = await supa.from('calendar_blocks').update(payload).eq('id', existing.id).select().single();
+        error = r.error;
+        if (!error){
+          const idx = state.calendarBlocks.findIndex(x => x.id === existing.id);
+          if (idx>=0) state.calendarBlocks[idx] = r.data;
+        }
+      } else {
+        const r = await supa.from('calendar_blocks').insert(payload).select().single();
+        error = r.error;
+        if (!error) state.calendarBlocks.push(r.data);
+      }
+      if (error) return toast('Error', error.message, 'error');
+      toast('Día actualizado','','success');
+      close();
+      renderCalendario();
+    }}
+  ];
+  if (existing){
+    actions.unshift({ label:'Desbloquear', cls:'ghost danger', icon: ICONS.trash, onClick: c => { c(); removeBlock(existing); } });
+  }
+  modal({
+    title: existing?'Editar día bloqueado':'Bloquear día',
+    subtitle: dateReadable,
+    body, actions
+  });
+}
+
+async function removeBlock(block){
+  confirmModal({
+    title:'Desbloquear día', danger:true,
+    message:`¿Reactivar reservas del ${new Date(block.block_date+'T00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'long'})}? La web volverá a permitir reservas.`,
+    confirmLabel:'Desbloquear',
+    onConfirm: async () => {
+      const { error } = await supa.from('calendar_blocks').delete().eq('id', block.id);
+      if (error) return toast('Error', error.message, 'error');
+      state.calendarBlocks = state.calendarBlocks.filter(x => x.id !== block.id);
+      toast('Día desbloqueado','','success');
+      renderCalendario();
+    }
+  });
+}
+
+/* ============================================================
+   VIEW: CATÁLOGO — gestión de botellas y mezclas
+   ============================================================ */
+function renderCatalogo(){
+  const items = state.catalogItems || [];
+  const tableAvailable = items.length > 0 || true; // podemos añadir aunque esté vacío
+
+  $('#mainView').innerHTML = `
+    <div class="view-title">
+      <div>
+        <h1>Catálogo <em>del bar</em></h1>
+        <div class="subtitle">Activa o desactiva botellas y mezclas al momento. Los desactivados desaparecen de los formularios de la web.</div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn ghost sm" id="refreshBtn">${ICONS.refresh} Recargar</button>
+        <button class="btn primary sm" id="newItemBtn">+ Nuevo ítem</button>
+      </div>
+    </div>
+
+    <div class="chips" id="catChips">
+      <div class="chip active" data-kind="bottle">Botellas <span class="count">${items.filter(i=>i.kind==='bottle').length}</span></div>
+      <div class="chip" data-kind="mixer">Mezclas <span class="count">${items.filter(i=>i.kind==='mixer').length}</span></div>
+    </div>
+
+    <div id="catList"></div>
+  `;
+
+  $('#refreshBtn').addEventListener('click', async () => {
+    await ensureData(true); routeToView(); toast('Datos recargados','','success',1500);
+  });
+  $('#newItemBtn').addEventListener('click', () => openCatalogModal(null));
+  $$('#catChips .chip').forEach(c => c.addEventListener('click', () => {
+    $$('#catChips .chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    paintCatalogList(c.dataset.kind);
+  }));
+  paintCatalogList('bottle');
+}
+
+function paintCatalogList(kind){
+  const el = $('#catList');
+  if (!el) return;
+  const items = state.catalogItems.filter(i => i.kind === kind);
+  if (!items.length){
+    el.innerHTML = `<div class="empty"><div class="icon">${ICONS.gift}</div><h3>Sin ítems en el catálogo</h3><p>Añade tu primer ${kind==='bottle'?'botella':'mezcla'} con "+ Nuevo ítem".</p></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="cat-grid">${items.map(it => `
+    <div class="cat-item ${it.available?'':'off'}">
+      <div class="cat-item-head">
+        <div>
+          <div class="cat-item-name">${esc(it.name)}</div>
+          <div class="cat-item-sub">${esc(it.sub || '—')} ${it.plus?`<span class="cat-plus">+${it.plus}€</span>`:''}</div>
+          <div class="cat-item-key"><code>${esc(it.item_key)}</code></div>
+        </div>
+        <label class="cat-toggle" title="${it.available?'Disponible en la web':'Oculto — no aparece en formularios'}">
+          <input type="checkbox" data-toggle="${it.id}" ${it.available?'checked':''}>
+          <span class="cat-toggle-slider"></span>
+        </label>
+      </div>
+      <div class="cat-item-actions">
+        <button class="btn ghost sm" data-edit="${it.id}">${ICONS.edit} Editar</button>
+        <button class="btn ghost sm danger" data-delete="${it.id}">${ICONS.trash} Borrar</button>
+      </div>
+    </div>
+  `).join('')}</div>`;
+  $$('[data-toggle]').forEach(cb => cb.addEventListener('change', async () => {
+    const id = cb.dataset.toggle;
+    const available = cb.checked;
+    const { error } = await supa.from('catalog_items').update({ available }).eq('id', id);
+    if (error){ toast('Error', error.message, 'error'); cb.checked = !available; return; }
+    const it = state.catalogItems.find(x => x.id === id);
+    if (it) it.available = available;
+    toast(available?'Ítem activado':'Ítem desactivado — no aparece en la web','','success', 2500);
+    paintCatalogList(kind);
+  }));
+  $$('[data-edit]').forEach(b => b.addEventListener('click', () => openCatalogModal(state.catalogItems.find(x=>x.id===b.dataset.edit))));
+  $$('[data-delete]').forEach(b => b.addEventListener('click', () => {
+    const it = state.catalogItems.find(x=>x.id===b.dataset.delete);
+    if (!it) return;
+    confirmModal({
+      title:'Borrar ítem', danger:true,
+      message:`¿Borrar <strong>${esc(it.name)}</strong> del catálogo? Puedes desactivarlo en vez de borrarlo si es temporal.`,
+      confirmLabel:'Borrar', onConfirm: async () => {
+        const { error } = await supa.from('catalog_items').delete().eq('id', it.id);
+        if (error) return toast('Error', error.message, 'error');
+        state.catalogItems = state.catalogItems.filter(x => x.id !== it.id);
+        toast('Ítem borrado','','success');
+        paintCatalogList(kind);
+      }
+    });
+  }));
+}
+
+function openCatalogModal(it){
+  const isNew = !it;
+  const body = `
+    <div class="form-row">
+      <label>Tipo</label>
+      <select id="cKind" ${isNew?'':'disabled'}>
+        <option value="bottle" ${it?.kind==='bottle'||isNew?'selected':''}>Botella</option>
+        <option value="mixer" ${it?.kind==='mixer'?'selected':''}>Mezcla</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Nombre</label>
+      <input type="text" id="cName" value="${esc(it?.name || '')}" placeholder="Ej: Ron Barceló">
+    </div>
+    <div class="form-row">
+      <label>Descripción corta</label>
+      <input type="text" id="cSub" value="${esc(it?.sub || '')}" placeholder="Ej: Ron añejo · Premium">
+    </div>
+    <div class="form-row">
+      <label>Clave única (item_key)</label>
+      <input type="text" id="cKey" value="${esc(it?.item_key || '')}" placeholder="Ej: ron-barcelo" ${isNew?'':'readonly'}>
+    </div>
+    <div class="form-row">
+      <label>Suplemento € (0 si sin recargo)</label>
+      <input type="number" id="cPlus" min="0" value="${it?.plus ?? 0}">
+    </div>
+    <div class="form-row">
+      <label>Orden en la lista (número menor = arriba)</label>
+      <input type="number" id="cOrder" min="0" value="${it?.sort_order ?? 100}">
+    </div>
+  `;
+  modal({
+    title: isNew?'Nuevo ítem':`Editar: ${esc(it.name)}`,
+    subtitle: isNew?'Añade una botella o mezcla nueva':'Modifica los datos',
+    body,
+    actions: [
+      { label:'Cancelar', cls:'ghost', onClick: c => c() },
+      { label: isNew?'Crear':'Guardar', cls:'primary', icon: ICONS.check, onClick: async close => {
+        const payload = {
+          kind: $('#cKind').value,
+          item_key: $('#cKey').value.trim(),
+          name: $('#cName').value.trim(),
+          sub:  $('#cSub').value.trim() || null,
+          plus: parseInt($('#cPlus').value, 10) || 0,
+          sort_order: parseInt($('#cOrder').value, 10) || 100
+        };
+        if (!payload.item_key || !payload.name){
+          return toast('Faltan datos','Clave y nombre son obligatorios','error');
+        }
+        let error;
+        if (isNew){
+          const r = await supa.from('catalog_items').insert(payload).select().single();
+          error = r.error;
+          if (!error) state.catalogItems.push(r.data);
+        } else {
+          const r = await supa.from('catalog_items').update(payload).eq('id', it.id).select().single();
+          error = r.error;
+          if (!error){
+            const idx = state.catalogItems.findIndex(x => x.id === it.id);
+            if (idx>=0) state.catalogItems[idx] = r.data;
+          }
+        }
+        if (error) return toast('Error', error.message, 'error');
+        toast(isNew?'Ítem creado':'Cambios guardados','','success');
+        close();
+        paintCatalogList(payload.kind);
       }}
     ]
   });
