@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Celebra en Shaona · Cumpleaños, aniversarios, empresa, graduaciones</title>
+<meta name="description" content="Reserva tu celebración en Shaona Hookah Lounge (Velilla de San Antonio, Madrid). Cumpleaños, aniversarios, cenas de empresa, graduaciones. Local privatizable, packs a medida y todo listo.">
+<meta name="theme-color" content="#0a0008">
+<meta property="og:title" content="Celebra en Shaona · Cumpleaños, empresa, aniversarios">
+<meta property="og:description" content="Reserva tu celebración privada en Shaona Hookah Lounge, Velilla de San Antonio.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0008'/%3E%3Ctext x='50' y='72' font-family='Georgia,serif' font-size='72' font-weight='700' fill='%23ff0055' text-anchor='middle' font-style='italic'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#FF0055; --pink-2:#c8003f; --cyan:#00EEFF;
+  --bg:#080808; --bg2:#0f0f0f; --card:#111;
+  --border:rgba(255,255,255,.07); --border-hi:rgba(255,255,255,.14);
+  --text:#f0f0f0; --text-2:#c8c0c6; --muted:#666;
+  --green:#00C46A;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+nav{position:sticky;top:0;left:0;right:0;z-index:200;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600}
+.brand em{color:var(--pink);font-style:normal}
+.brand-sub{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-left:10px}
+.nav-back{color:var(--muted);font-size:.78rem;letter-spacing:2px;text-transform:uppercase;transition:color .2s ease}
+.nav-back:hover{color:var(--pink)}
+
+/* HERO */
+.hero-c{padding:70px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero-c::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(circle,rgba(255,0,85,.15) 0%,transparent 60%);pointer-events:none}
+.eyebrow{font-size:.66rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:14px;position:relative}
+.hero-c h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,6vw,4.2rem);font-weight:300;line-height:1.05;margin-bottom:16px;position:relative}
+.hero-c h1 em{font-style:italic;color:var(--pink)}
+.hero-c p.lead{color:var(--muted);font-size:1rem;max-width:620px;margin:0 auto;line-height:1.65;position:relative}
+
+/* TIPOS */
+.types-strip{max-width:1200px;margin:20px auto 60px;padding:0 32px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.type-card{background:linear-gradient(160deg,var(--card) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:14px;padding:26px 22px;text-align:center;transition:all .3s ease;cursor:pointer}
+.type-card:hover,.type-card.active{border-color:var(--pink);transform:translateY(-3px);box-shadow:0 20px 40px -20px rgba(255,0,85,.35)}
+.type-card.active{background:linear-gradient(160deg,rgba(255,0,85,.12),rgba(0,0,0,.5))}
+.type-icon{font-size:2.2rem;margin-bottom:12px;line-height:1}
+.type-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:4px;line-height:1.15}
+.type-tag{font-size:.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+@media(max-width:900px){.types-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.types-strip{grid-template-columns:1fr}}
+
+/* MAIN SPLIT: fotos + form */
+.main-split{max-width:1240px;margin:0 auto 80px;padding:0 32px;display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
+
+/* GALERÍA IZQ */
+.gal{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:8px;margin-bottom:20px;border-radius:12px;overflow:hidden}
+.gal > div{background-size:cover;background-position:center;background-color:#150015;transition:transform .5s ease}
+.gal > div:hover{transform:scale(1.03)}
+.gal .g-main{grid-column:1 / -1;grid-row:1;height:340px;border-radius:8px 8px 0 0}
+.gal .g-thumb{height:160px}
+.gal .g-thumb:first-of-type{border-radius:0 0 0 8px}
+.gal .g-thumb:last-of-type{border-radius:0 0 8px 0}
+
+.included{background:linear-gradient(160deg,var(--card),rgba(0,0,0,.5));border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-top:8px}
+.included h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:14px}
+.included h3 em{color:var(--pink);font-style:italic}
+.included ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.included li{font-size:.85rem;color:var(--text-2);padding-left:22px;position:relative;line-height:1.5}
+.included li::before{content:"✓";position:absolute;left:0;color:var(--pink);font-weight:700;font-size:.95rem}
+@media(max-width:520px){.included ul{grid-template-columns:1fr}}
+
+/* FORM DER */
+.form-card{background:linear-gradient(160deg,var(--card) 0%,rgba(0,0,0,.6) 100%);border:1px solid var(--border);border-radius:14px;padding:36px 32px;position:sticky;top:100px}
+.form-card h3{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;line-height:1.15;margin-bottom:6px}
+.form-card h3 em{color:var(--pink);font-style:italic}
+.form-card .fc-sub{font-size:.82rem;color:var(--muted);margin-bottom:24px;letter-spacing:.5px}
+
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--border);color:var(--text);padding:12px 14px;font-size:.92rem;border-radius:6px;font-family:inherit;transition:border-color .15s ease}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--pink)}
+.fg textarea{resize:vertical;min-height:80px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg .err{color:#ff5577;font-size:.78rem;margin-top:6px;min-height:1em}
+
+.check-group{display:flex;flex-wrap:wrap;gap:10px 18px}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-2);cursor:pointer;padding:6px 0}
+.check input{accent-color:var(--pink);width:16px;height:16px}
+
+.optional-block{background:rgba(0,0,0,.3);border:1px dashed var(--border);border-radius:8px;padding:14px 16px;margin-top:6px;display:none}
+.optional-block.on{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.78rem;color:var(--muted);line-height:1.5;margin:14px 0 20px;cursor:pointer}
+.consent input{margin-top:3px;accent-color:var(--pink);flex-shrink:0}
+
+.btn-submit{width:100%;background:var(--pink);color:#fff;border:none;padding:16px;font-size:.82rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s ease;border-radius:6px;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn-submit:hover{background:var(--pink-2);transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(255,0,85,.5)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-submit svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.err-general{color:#ff5577;font-size:.85rem;text-align:center;margin-top:12px;min-height:1em}
+
+.success-box{text-align:center;padding:20px 0}
+.success-box .check-ico{width:64px;height:64px;background:var(--green);border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;font-size:2rem;color:#fff}
+.success-box h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:10px}
+.success-box p{color:var(--muted);font-size:.95rem;line-height:1.6;max-width:340px;margin:0 auto}
+
+/* SECTION: FAQ + TESTIMONIALS */
+.faq{max-width:900px;margin:0 auto 80px;padding:0 32px}
+.faq h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;text-align:center;margin-bottom:8px}
+.faq h2 em{color:var(--pink);font-style:italic}
+.faq-sub{text-align:center;color:var(--muted);margin-bottom:32px;font-size:.9rem}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:10px;transition:border-color .2s ease}
+.faq-item:hover{border-color:var(--border-hi)}
+.faq-item h4{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.9rem;color:var(--text-2);line-height:1.6}
+
+/* FOOTER */
+footer.footer-pro{background:#050505;border-top:1px solid var(--border);padding:44px 32px 24px;color:var(--muted);text-align:center}
+footer.footer-pro .fp-brand{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--text);margin-bottom:10px}
+footer.footer-pro .fp-brand em{color:var(--pink);font-style:normal}
+footer.footer-pro p{font-size:.82rem;line-height:1.7;max-width:600px;margin:0 auto 16px}
+footer.footer-pro .fp-links{display:flex;gap:20px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+footer.footer-pro .fp-links a{color:var(--muted);font-size:.76rem;letter-spacing:1px;text-transform:uppercase;transition:color .2s ease}
+footer.footer-pro .fp-links a:hover{color:var(--pink)}
+footer.footer-pro .copy{font-size:.7rem;color:#333;margin-top:22px}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .main-split{grid-template-columns:1fr;gap:40px}
+  .form-card{position:static}
+}
+@media(max-width:640px){
+  nav{padding:14px 18px}
+  .hero-c{padding:50px 20px 30px}
+  .types-strip{padding:0 18px;margin-bottom:40px}
+  .main-split{padding:0 18px}
+  .form-card{padding:26px 22px}
+  .gal .g-main{height:240px}
+  .gal .g-thumb{height:120px}
+  .fg-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">Shaona<em>.</em><span class="brand-sub">Celebraciones</span></a>
+  <a href="index.html" class="nav-back">← Volver a la web</a>
+</nav>
+
+<section class="hero-c">
+  <p class="eyebrow">// Reserva tu celebración</p>
+  <h1>Celebra tu momento <em>en Shaona</em></h1>
+  <p class="lead">Cumpleaños, aniversarios, cenas de empresa, graduaciones, despedidas… Reserva mesa o el local completo, elige bebidas y comida a medida, y déjanos preparar la mejor noche de todas.</p>
+</section>
+
+<div class="types-strip">
+  <div class="type-card" data-type="cumpleanos">
+    <div class="type-icon">🎂</div>
+    <div class="type-name">Cumpleaños</div>
+    <div class="type-tag">Desde 8 personas</div>
+  </div>
+  <div class="type-card" data-type="aniversario">
+    <div class="type-icon">💍</div>
+    <div class="type-name">Aniversarios</div>
+    <div class="type-tag">Reservado íntimo</div>
+  </div>
+  <div class="type-card" data-type="empresa">
+    <div class="type-icon">💼</div>
+    <div class="type-name">Empresa</div>
+    <div class="type-tag">Cena · Afterwork</div>
+  </div>
+  <div class="type-card" data-type="graduacion">
+    <div class="type-icon">🎓</div>
+    <div class="type-name">Graduaciones</div>
+    <div class="type-tag">Grupos grandes</div>
+  </div>
+</div>
+
+<div class="main-split">
+  <!-- IZQUIERDA: fotos + qué incluye -->
+  <div>
+    <div class="gal">
+      <div class="g-main" style="background-image:url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1400&q=80')"></div>
+      <div class="g-thumb" style="background-image:url('https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=800&q=80')"></div>
+      <div class="g-thumb" style="background-image:url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80')"></div>
+    </div>
+
+    <div class="included">
+      <h3>Qué está <em>incluido</em></h3>
+      <ul>
+        <li>Mesa reservada o local privatizable</li>
+        <li>Personal atento durante toda la celebración</li>
+        <li>Cachimba de sabores premium</li>
+        <li>Decoración personalizada según ocasión</li>
+        <li>Confirmación por WhatsApp en 24 h</li>
+        <li>Sin pago por adelantado obligatorio</li>
+      </ul>
+    </div>
+
+    <div class="included" style="margin-top:14px">
+      <h3>Extras que puedes <em>añadir</em></h3>
+      <ul>
+        <li>🍰 Tarta personalizada</li>
+        <li>🥂 Barra libre por horas</li>
+        <li>🎧 DJ residente 2-3 h</li>
+        <li>📸 Fotógrafo del evento</li>
+        <li>🍽️ Cena o cátering</li>
+        <li>🎈 Decoración temática</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DERECHA: formulario -->
+  <div>
+    <div class="form-card" id="formCard">
+      <h3>Tu <em>reserva</em></h3>
+      <p class="fc-sub">Rellena y te contactamos en menos de 24h con propuesta y precio.</p>
+
+      <form id="celebForm">
+        <div class="fg">
+          <label>Motivo de la celebración</label>
+          <select id="fMotivo" required>
+            <option value="cumpleanos">🎂 Cumpleaños</option>
+            <option value="aniversario">💍 Aniversario</option>
+            <option value="empresa">💼 Cena / Evento de empresa</option>
+            <option value="graduacion">🎓 Graduación</option>
+            <option value="despedida">👰 Despedida</option>
+            <option value="otro">✨ Otro (explicar en comentarios)</option>
+          </select>
+        </div>
+
+        <div class="fg">
+          <label>Nombre del organizador</label>
+          <input type="text" id="fNombre" required autocomplete="name" placeholder="Tu nombre">
+          <div class="err" id="errNombre"></div>
+        </div>
+
+        <div class="fg-row">
+          <div class="fg">
+            <label>Teléfono</label>
+            <input type="tel" id="fTelefono" required autocomplete="tel" placeholder="600 000 000">
+            <div class="err" id="errTelefono"></div>
+          </div>
+          <div class="fg">
+            <label>Email</label>
+            <input type="email" id="fEmail" autocomplete="email" placeholder="tu@email.com">
+          </div>
+        </div>
+
+        <div class="fg" id="fgHomenajeado">
+          <label id="lblHomenajeado">Homenajeado / empresa</label>
+          <input type="text" id="fHomenajeado" placeholder="Nombre de la persona o empresa">
+        </div>
+
+        <div class="fg-row">
+          <div class="fg">
+            <label>Fecha preferida</label>
+            <input type="date" id="fFecha" required>
+            <div class="err" id="errFecha"></div>
+          </div>
+          <div class="fg">
+            <label>Hora</label>
+            <select id="fHora" required>
+              <option value="14:00">14:00 (comida)</option>
+              <option value="17:00">17:00 (tardeo)</option>
+              <option value="20:00">20:00 (cena)</option>
+              <option value="22:00" selected>22:00</option>
+              <option value="23:59">23:59 (noche)</option>
+              <option value="01:00">01:00</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg-row">
+          <div class="fg">
+            <label>Nº personas</label>
+            <input type="number" id="fPersonas" min="4" max="80" value="10" required>
+          </div>
+          <div class="fg">
+            <label>Duración estimada</label>
+            <select id="fDuracion">
+              <option value="2h">2 horas</option>
+              <option value="3h" selected>3 horas</option>
+              <option value="4h">4 horas</option>
+              <option value="5h+">5 horas o más</option>
+              <option value="tarde-noche">Toda la tarde/noche</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Extras que os interesan</label>
+          <div class="check-group">
+            <label class="check"><input type="checkbox" id="exTarta"> 🍰 Tarta</label>
+            <label class="check"><input type="checkbox" id="exBarra"> 🥂 Barra libre</label>
+            <label class="check"><input type="checkbox" id="exDj"> 🎧 DJ</label>
+            <label class="check"><input type="checkbox" id="exFoto"> 📸 Fotógrafo</label>
+            <label class="check"><input type="checkbox" id="exDeco"> 🎈 Decoración especial</label>
+            <label class="check"><input type="checkbox" id="exSorp"> 🎁 Sorpresa</label>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="check" style="font-size:.86rem;color:var(--text-2)"><input type="checkbox" id="ckBebidas"> 🍹 Quiero pedir bebidas por adelantado (botellas, refrescos)</label>
+          <div class="optional-block" id="bebidasBlock">
+            <textarea id="fBebidas" placeholder="Ejemplo: 2 botellas de Ron Barceló, 1 Belaire Rosé, refrescos variados… Te podemos aconsejar si nos das el rango de presupuesto."></textarea>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="check" style="font-size:.86rem;color:var(--text-2)"><input type="checkbox" id="ckComida"> 🍽️ Quiero pedir comida / catering</label>
+          <div class="optional-block" id="comidaBlock">
+            <textarea id="fComida" placeholder="Ejemplo: cena para 15 con opción vegetariana, cátering tipo pica-pica, tapas variadas… Adaptamos a lo que necesitéis."></textarea>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Comentarios y peticiones especiales</label>
+          <textarea id="fComentarios" placeholder="Alergias, canción especial, hora concreta para la tarta, decoración temática, sorpresa que preparáis…"></textarea>
+        </div>
+
+        <label class="consent">
+          <input type="checkbox" id="fConsent" required>
+          <span>Acepto que Shaona conserve mis datos para contactarme sobre esta reserva. Los datos se eliminan si la celebración no se lleva a cabo o al finalizar.</span>
+        </label>
+
+        <button class="btn-submit" type="submit" id="btnSubmit">
+          Solicitar mi celebración
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="err-general" id="errGeneral"></p>
+      </form>
+
+      <div class="success-box" id="successBox" style="display:none">
+        <div class="check-ico">✓</div>
+        <h3>¡Solicitud enviada!</h3>
+        <p>Te contactaremos por WhatsApp en menos de 24 h con propuesta y precio a medida. Nos encantará ayudarte a preparar tu celebración.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="faq">
+  <h2>Preguntas <em>frecuentes</em></h2>
+  <p class="faq-sub">Todo lo que necesitas saber antes de reservar tu celebración</p>
+
+  <div class="faq-item">
+    <h4>¿Con cuánta antelación tengo que reservar?</h4>
+    <p>Recomendamos al menos <strong>2 semanas</strong> para poder preparar todo con calma. Para eventos con local privatizado o grupos grandes (más de 20), mejor con 3-4 semanas.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Puedo privatizar el local?</h4>
+    <p>Sí, según fecha y aforo. Suelen ser eventos de al menos 25-30 personas. Te confirmamos disponibilidad y coste según fecha exacta.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Cuánto cuesta una celebración?</h4>
+    <p>Depende del número de personas, extras y comida. Hacemos <strong>presupuesto a medida sin compromiso</strong> tras rellenar el formulario. Ejemplos: cumpleaños 8 personas con botella y tarta desde 99€; local privatizado 30 personas con cátering y DJ desde 600€.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Puedo llevar mi propia tarta?</h4>
+    <p>¡Claro! Sin coste adicional. Si nos avisas, la guardamos en frío y la sacamos en el momento que nos digas.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Pagáis algo por adelantado?</h4>
+    <p>Para reservas normales, <strong>no</strong>. Para privatizaciones o eventos de más de 25 personas, pedimos una señal del 30% al confirmar (transferencia o Bizum).</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Y si cancelo?</h4>
+    <p>Cancelación gratuita hasta <strong>72h antes</strong> del evento. Después, se conserva la señal (si la hubo).</p>
+  </div>
+</section>
+
+<footer class="footer-pro">
+  <div class="fp-brand">Shaona<em>.</em></div>
+  <p>Hookah lounge en Velilla de San Antonio, Madrid. Reservados, cumpleaños, eventos privados y los mejores tardeos de la zona.</p>
+  <div class="fp-links">
+    <a href="index.html">Volver a la web</a>
+    <a href="index.html#eventos">Próximos eventos</a>
+    <a href="index.html#reservados">Reservar mesa</a>
+    <a href="https://wa.me/34600000000" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://instagram.com/shaonahookah" target="_blank" rel="noopener">Instagram</a>
+  </div>
+  <div class="copy">© <span id="footYear">2026</span> Shaona Hookah Lounge · Todos los derechos reservados</div>
+</footer>
+
+<script src="shaona-config.js"></script>
+<script>
+// Año dinámico
+document.getElementById('footYear').textContent = new Date().getFullYear();
+
+// Motivo → seleccionar tarjeta y actualizar label
+const motivoSel = document.getElementById('fMotivo');
+const cards = document.querySelectorAll('.type-card');
+const lblHomenajeado = document.getElementById('lblHomenajeado');
+const fHomenajeado = document.getElementById('fHomenajeado');
+const fgHomenajeado = document.getElementById('fgHomenajeado');
+
+function setMotivoUI(mot){
+  cards.forEach(c => c.classList.toggle('active', c.dataset.type === mot));
+  if (mot === 'empresa'){
+    lblHomenajeado.textContent = 'Nombre de la empresa';
+    fHomenajeado.placeholder = 'Ej: Acme SL';
+  } else if (mot === 'aniversario'){
+    lblHomenajeado.textContent = 'Vuestros nombres (opcional)';
+    fHomenajeado.placeholder = 'Ej: María y Juan';
+  } else if (mot === 'graduacion'){
+    lblHomenajeado.textContent = 'Promoción / centro educativo';
+    fHomenajeado.placeholder = 'Ej: Promo 2026 · CEU';
+  } else if (mot === 'cumpleanos'){
+    lblHomenajeado.textContent = 'Nombre del homenajeado';
+    fHomenajeado.placeholder = '¿A quién le vais a cantar el cumpleaños?';
+  } else {
+    lblHomenajeado.textContent = 'Motivo específico';
+    fHomenajeado.placeholder = 'Cuéntanos qué celebráis';
+  }
+}
+motivoSel.addEventListener('change', () => setMotivoUI(motivoSel.value));
+cards.forEach(c => c.addEventListener('click', () => {
+  motivoSel.value = c.dataset.type;
+  setMotivoUI(c.dataset.type);
+  motivoSel.dispatchEvent(new Event('change'));
+}));
+setMotivoUI(motivoSel.value);
+
+// Toggle bloques opcionales
+document.getElementById('ckBebidas').addEventListener('change', e => {
+  document.getElementById('bebidasBlock').classList.toggle('on', e.target.checked);
+});
+document.getElementById('ckComida').addEventListener('change', e => {
+  document.getElementById('comidaBlock').classList.toggle('on', e.target.checked);
+});
+
+// Fecha mínima = hoy + validación día bloqueado
+const fFecha = document.getElementById('fFecha');
+const today = new Date();
+fFecha.min = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+fFecha.addEventListener('change', async () => {
+  const errEl = document.getElementById('errFecha');
+  errEl.textContent = '';
+  if (!fFecha.value) return;
+  const blocked = await checkDayBlocked(fFecha.value);
+  if (blocked){
+    errEl.textContent = blocked.message || `Ese día no está disponible (${blocked.reason||'cerrado'})`;
+  }
+});
+
+async function checkDayBlocked(iso){
+  const cfg = window.SHAONA_CONFIG || {};
+  if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) return null;
+  try {
+    const res = await fetch(`${cfg.supabaseUrl}/rest/v1/calendar_blocks?select=block_type,reason,message&block_date=eq.${iso}`, {
+      headers: { 'apikey': cfg.supabaseAnonKey, 'Authorization': 'Bearer ' + cfg.supabaseAnonKey }
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return (rows && rows[0]) ? rows[0] : null;
+  } catch(e){ return null; }
+}
+
+// Submit
+document.getElementById('celebForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('btnSubmit');
+  const errGen = document.getElementById('errGeneral');
+  errGen.textContent = '';
+
+  // Validación básica
+  const nombre = document.getElementById('fNombre').value.trim();
+  const telefono = document.getElementById('fTelefono').value.trim().replace(/\s+/g,'');
+  const email = document.getElementById('fEmail').value.trim();
+  const fecha = fFecha.value;
+  const consent = document.getElementById('fConsent').checked;
+
+  document.getElementById('errNombre').textContent = nombre.length < 2 ? 'Al menos 2 letras' : '';
+  document.getElementById('errTelefono').textContent = /^[+]?[0-9]{9,15}$/.test(telefono) ? '' : 'Teléfono no válido';
+  if (!consent){ errGen.textContent = 'Necesitamos tu consentimiento para contactarte.'; return; }
+  if (nombre.length < 2 || !/^[+]?[0-9]{9,15}$/.test(telefono)){
+    errGen.textContent = 'Revisa los campos marcados.';
+    return;
+  }
+  // Comprobar día bloqueado
+  const blocked = await checkDayBlocked(fecha);
+  if (blocked){
+    document.getElementById('errFecha').textContent = blocked.message || `Ese día no está disponible`;
+    errGen.textContent = 'Elige otra fecha, por favor.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = 'Enviando…';
+
+  // Construir payload
+  const motivo = motivoSel.value;
+  const homenajeado = fHomenajeado.value.trim();
+  const hora = document.getElementById('fHora').value;
+  const personas = document.getElementById('fPersonas').value;
+  const duracion = document.getElementById('fDuracion').value;
+  const bebidas = document.getElementById('ckBebidas').checked ? document.getElementById('fBebidas').value.trim() : '';
+  const comida  = document.getElementById('ckComida').checked  ? document.getElementById('fComida').value.trim()  : '';
+  const coment  = document.getElementById('fComentarios').value.trim();
+  const extras = [];
+  if (document.getElementById('exTarta').checked) extras.push('Tarta');
+  if (document.getElementById('exBarra').checked) extras.push('Barra libre');
+  if (document.getElementById('exDj').checked)    extras.push('DJ');
+  if (document.getElementById('exFoto').checked)  extras.push('Fotógrafo');
+  if (document.getElementById('exDeco').checked)  extras.push('Decoración especial');
+  if (document.getElementById('exSorp').checked)  extras.push('Sorpresa (no avisar)');
+
+  const partes = [];
+  if (homenajeado) partes.push('👤 ' + homenajeado);
+  partes.push('👥 ' + personas + ' personas · ' + duracion);
+  if (extras.length) partes.push('✨ Extras: ' + extras.join(', '));
+  if (bebidas) partes.push('🍹 Bebidas: ' + bebidas);
+  if (comida)  partes.push('🍽️ Comida: ' + comida);
+  if (coment)  partes.push('📝 ' + coment);
+  const comentariosFull = partes.join('\n');
+
+  const eventoNombre = {
+    cumpleanos:'Cumpleaños privado',
+    aniversario:'Aniversario',
+    empresa:'Evento de empresa',
+    graduacion:'Graduación',
+    despedida:'Despedida',
+    otro:'Celebración privada'
+  }[motivo] || 'Celebración privada';
+
+  // Guardar en Supabase (misma tabla reservations que las demás)
+  const cfg = window.SHAONA_CONFIG || {};
+  let ok = false;
+  if (cfg.supabaseUrl && cfg.supabaseAnonKey){
+    try {
+      const res = await fetch(`${cfg.supabaseUrl}/rest/v1/reservations`, {
+        method:'POST',
+        headers:{
+          'apikey': cfg.supabaseAnonKey,
+          'Authorization':'Bearer '+cfg.supabaseAnonKey,
+          'Content-Type':'application/json',
+          'Prefer':'return=minimal'
+        },
+        body: JSON.stringify({
+          type: 'cumpleanos',
+          event_name: eventoNombre,
+          event_date: fecha + ' · ' + hora,
+          name: nombre,
+          phone: telefono,
+          email: email || null,
+          people: parseInt(personas, 10) || null,
+          comments: comentariosFull,
+          raw: {
+            source: 'celebraciones.html',
+            motivo, homenajeado, hora, duracion, extras, bebidas, comida
+          }
+        })
+      });
+      ok = res.ok;
+    } catch(e){}
+  }
+
+  // Fallback / notificación adicional al webhook
+  try {
+    await fetch('https://hook.eu1.make.com/25v6mep1t54p8aa06uj33ci2sdygy4kv', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tipo:'cumpleanos', source:'celebraciones.html',
+        evento: eventoNombre, fecha_evento: fecha + ' · ' + hora,
+        nombre, telefono, email, personas, motivo, homenajeado, duracion,
+        extras: extras.join(', '), bebidas, comida, comentarios: coment
+      })
+    });
+  } catch(e){}
+
+  // Mostrar éxito
+  document.getElementById('celebForm').style.display = 'none';
+  document.getElementById('successBox').style.display = 'block';
+  document.getElementById('formCard').scrollIntoView({behavior:'smooth', block:'center'});
+});
+</script>
+
+</body>
+</html>

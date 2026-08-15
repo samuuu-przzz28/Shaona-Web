@@ -127,7 +127,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 48px;height:72px;d
 
 /* RESERVADOS */
 .reservados-section{background:var(--bg2);padding:100px 80px}
-.reservados-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start}
+.reservados-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:start}
+
+/* Galería de fotos del reservado (columna izquierda) */
+.reserva-gallery{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:8px;margin-bottom:24px;border-radius:12px;overflow:hidden}
+.reserva-gallery > div{position:relative;background-size:cover;background-position:center;border-radius:6px;transition:transform .4s ease;overflow:hidden}
+.reserva-gallery > div::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.35) 100%);pointer-events:none;opacity:0;transition:opacity .3s ease}
+.reserva-gallery > div:hover{transform:scale(1.02)}
+.reserva-gallery > div:hover::before{opacity:1}
+.reserva-gallery .rg-main{grid-column:1 / -1;grid-row:1;height:280px;background-color:#1a0010}
+.reserva-gallery .rg-thumb{height:140px;background-color:#150015}
+
+.reserva-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.reserva-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,0,85,.1);border:1px solid rgba(255,0,85,.25);color:var(--pink);padding:8px 14px;border-radius:99px;font-size:.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.reserva-badge svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .reserva-perks{margin-top:32px;display:flex;flex-direction:column;gap:20px}
 .perk{display:flex;align-items:flex-start;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--border)}
 .perk-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
@@ -165,6 +178,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 48px;height:72px;d
 
 /* CUMPLEAÑOS */
 .cumple-section{background:var(--bg2);padding:100px 80px}
+
+/* Sección Celebraciones — teaser en la home */
+.celeb-promo .celeb-types{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:0 auto}
+.celeb-type{background:linear-gradient(160deg,var(--card) 0%,rgba(0,0,0,.4) 100%);border:1px solid var(--border);border-radius:14px;padding:28px 22px;text-align:center;transition:all .3s ease;cursor:default}
+.celeb-type:hover{border-color:rgba(255,0,85,.35);transform:translateY(-4px);box-shadow:0 20px 40px -20px rgba(255,0,85,.3)}
+.celeb-type-icon{font-size:2.4rem;margin-bottom:14px;line-height:1}
+.celeb-type-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.15}
+.celeb-type-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+@media(max-width:900px){
+  .celeb-promo .celeb-types{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .celeb-promo .celeb-types{grid-template-columns:1fr}
+}
 .cumple-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:48px}
 .cumple-card{background:var(--card);border:1px solid var(--border);padding:40px 36px;position:relative;transition:border-color .3s}
 .cumple-card:hover{border-color:rgba(255,255,255,.15)}
@@ -702,7 +729,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
     <li><a href="#eventos">Eventos</a></li>
     <li><a href="#reservados">Reservados</a></li>
     <li><a href="#bachata">Tardeo</a></li>
-    <li><a href="#cumpleanos">Cumpleaños</a></li>
+    <li><a href="celebraciones.html">Celebraciones</a></li>
     <li><a href="#ubicacion">¿Dónde estamos?</a></li>
     <li><a href="juego.html" class="nav-tournament">🏆 Torneo</a></li>
   </ul>
@@ -719,7 +746,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   <a href="#eventos" onclick="closeMobileMenu()">Eventos</a>
   <a href="#reservados" onclick="closeMobileMenu()">Reservados</a>
   <a href="#bachata" onclick="closeMobileMenu()">Tardeo</a>
-  <a href="#cumpleanos" onclick="closeMobileMenu()">Cumpleaños</a>
+  <a href="celebraciones.html" onclick="closeMobileMenu()">Celebraciones</a>
   <a href="#ubicacion" onclick="closeMobileMenu()">¿Dónde estamos?</a>
   <a href="juego.html" style="color:var(--pink);font-weight:700">🏆 Torneo</a>
   <a href="#reservados" class="reserve-mobile" onclick="closeMobileMenu()">Reservar Mesa</a>
@@ -819,7 +846,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
         <span class="event-tag hot">Tardeo</span>
         <span class="event-tag">Desde las 18:00</span>
         <br>
-        <button class="event-hover-btn" onclick="openModal('Tributo a El Canto del Loco','Vie 25 Abr · 18:00')">Reservar</button>
+        <button class="event-hover-btn" onclick="reservarEvento('viernes','Tributo a El Canto del Loco')">Reservar mesa</button>
       </div>
     </div>
 
@@ -834,7 +861,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
         <span class="event-tag">Sesión nocturna</span>
         <span class="event-tag cyan">2 DJ's</span>
         <br>
-        <button class="event-hover-btn" onclick="openModal('Noche en el Shaona','Vie 25 Abr · 23:59')">Reservar</button>
+        <button class="event-hover-btn" onclick="reservarEvento('viernes','Noche en el Shaona')">Reservar mesa</button>
       </div>
     </div>
 
@@ -849,7 +876,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
         <span class="event-tag hot">Noche especial</span>
         <span class="event-tag">Sábado noche</span>
         <br>
-        <button class="event-hover-btn" onclick="openModal('Petit Suisse Party','Sáb 26 Abr · 23:59')">Reservar</button>
+        <button class="event-hover-btn" onclick="reservarEvento('sabado','Petit Suisse Party')">Reservar mesa</button>
       </div>
     </div>
 
@@ -864,7 +891,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
         <span class="event-tag cyan">Matinée</span>
         <span class="event-tag">Paella + vermut</span>
         <br>
-        <button class="event-hover-btn" onclick="openModal('Matinée Shaona','Sáb 27 Abr · 12:00')">Reservar</button>
+        <button class="event-hover-btn" onclick="reservarEvento('sabado','Matinée Shaona')">Reservar mesa</button>
       </div>
     </div>
 
@@ -876,8 +903,21 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   <div class="reservados-inner">
     <div class="reveal">
       <p class="section-label">// EXCLUSIVO</p>
-      <h2 class="section-heading" style="margin-bottom:0">Solicita tu <em>Reservado</em></h2>
-      <p style="color:var(--muted);font-size:.9rem;line-height:1.7;margin-top:16px">Reservados para un máximo de <strong style="color:var(--text)">8 personas</strong>. Mínimo 3 botellas — cuantas más pidas, mejor precio. Cachimba incluida en todos los reservados.</p>
+      <h2 class="section-heading" style="margin-bottom:14px">Solicita tu <em>Reservado</em></h2>
+
+      <div class="reserva-badges">
+        <span class="reserva-badge"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/><circle cx="10" cy="7" r="4"/></svg> Hasta 8 personas</span>
+        <span class="reserva-badge"><svg viewBox="0 0 24 24"><path d="M6 2l3 6h6l3-6M6 2l3 6-3 14h12l-3-14 3-6"/></svg> Mínimo 3 botellas</span>
+        <span class="reserva-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Cachimba incluida</span>
+      </div>
+
+      <div class="reserva-gallery">
+        <div class="rg-main" style="background-image:url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="rg-thumb" style="background-image:url('https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="rg-thumb" style="background-image:url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80')"></div>
+      </div>
+
+      <p style="color:var(--text-2,var(--muted));font-size:.95rem;line-height:1.7;margin-bottom:20px">Nuestros <strong style="color:var(--text)">reservados</strong> son la mejor forma de vivir el Shaona con tus amigos: mesa reservada, botellas a elegir, mezclas ilimitadas y cachimba premium montada al momento. Elige día, marca botellas y te confirmamos por WhatsApp en menos de 24 horas.</p>
       <div class="reserva-perks">
         <div class="perk">
           <span class="perk-icon">🥃</span>
@@ -1038,78 +1078,44 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
   </div>
 </section>
 
-<!-- CUMPLEAÑOS -->
-<section id="cumpleanos" class="cumple-section">
+<!-- CELEBRACIONES (teaser de la página dedicada) -->
+<section id="cumpleanos" class="cumple-section celeb-promo">
   <div style="max-width:1200px;margin:0 auto">
-    <p class="section-label reveal">// Celebraciones</p>
-    <h2 class="section-heading reveal">Packs <em>Cumpleaños</em></h2>
-    <div class="cumple-grid">
+    <div style="text-align:center">
+      <p class="section-label reveal">// Celebraciones privadas</p>
+      <h2 class="section-heading reveal">Celebra tu momento <em>en Shaona</em></h2>
+      <p class="reveal" style="color:var(--muted);font-size:.98rem;line-height:1.7;max-width:640px;margin:16px auto 40px">Cumpleaños, aniversarios, cenas de empresa, graduaciones o cualquier ocasión especial. Local privatizable, packs a medida y todo listo para que sólo tengáis que disfrutar.</p>
+    </div>
 
-      <div class="cumple-card reveal">
-        <div class="cumple-tag">Esencial</div>
-        <div class="cumple-name">Pack Básico</div>
-        <div class="cumple-price">99€</div>
-        <div class="cumple-price-note">Hasta 8 personas</div>
-        <div class="cumple-divider"></div>
-        <ul class="cumple-features">
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Mesa reservada 3 horas</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Tarta de cumpleaños</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>1 botella a elegir</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Decoración básica</li>
-          <li class="cumple-feat-item not-included"><span class="feat-icon">✗</span>Hookah no incluida</li>
-          <li class="cumple-feat-item not-included"><span class="feat-icon">✗</span>DJ privado no incluido</li>
-          <li class="cumple-feat-item not-included"><span class="feat-icon">✗</span>Local completo no incluido</li>
-        </ul>
-        <div class="cumple-upgrade">
-          <strong>+ Hookah</strong> por solo 30€ más · <strong>+ 1 hora extra</strong> por 25€
-        </div>
-        <button class="btn-cumple" onclick="openModal('Pack Básico Cumpleaños','99€ · hasta 8 personas')">Reservar</button>
+    <div class="celeb-types reveal">
+      <div class="celeb-type">
+        <div class="celeb-type-icon">🎂</div>
+        <div class="celeb-type-name">Cumpleaños</div>
+        <div class="celeb-type-desc">Tarta, decoración y todo para el homenajeado</div>
       </div>
-
-      <div class="cumple-card featured reveal">
-        <div class="cumple-tag">⭐ Más popular</div>
-        <div class="cumple-name">Pack VIP</div>
-        <div class="cumple-price">179€</div>
-        <div class="cumple-price-note">Hasta 15 personas</div>
-        <div class="cumple-divider"></div>
-        <ul class="cumple-features">
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Local privado 4 horas</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Tarta personalizada</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>2 botellas + refrescos</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Cachimba incluida</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Decoración completa</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span><strong>Cena incluida</strong></li>
-          <li class="cumple-feat-item not-included"><span class="feat-icon">✗</span>DJ privado no incluido</li>
-          <li class="cumple-feat-item not-included"><span class="feat-icon">✗</span>Fotógrafo no incluido</li>
-        </ul>
-        <div class="cumple-upgrade">
-          <strong>+ DJ 2h</strong> por 60€ · <strong>+ 5ª hora</strong> por 35€ · <strong>+ Fotógrafo 1h</strong> por 50€
-        </div>
-        <button class="btn-cumple featured-btn" onclick="openModal('Pack VIP Cumpleaños','179€ · hasta 15 personas')">Reservar</button>
+      <div class="celeb-type">
+        <div class="celeb-type-icon">💍</div>
+        <div class="celeb-type-name">Aniversarios</div>
+        <div class="celeb-type-desc">Mesa reservada, ambiente cuidado y detalles</div>
       </div>
-
-      <div class="cumple-card reveal">
-        <div class="cumple-tag">Total</div>
-        <div class="cumple-name">Pack Premium</div>
-        <div class="cumple-price">299€</div>
-        <div class="cumple-price-note">Hasta 30 personas</div>
-        <div class="cumple-divider"></div>
-        <ul class="cumple-features">
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Local completo 5 horas</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Tarta personalizada XL</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Barra libre 3 horas</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>2 cachimbas premium</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>DJ noche completa</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Fotógrafo 1 hora</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span>Decoración premium</li>
-          <li class="cumple-feat-item included"><span class="feat-icon">✓</span><strong>Cena con complementos a elegir</strong> 🍽️</li>
-        </ul>
-        <div class="cumple-upgrade">
-          <strong>+ Barra libre extra</strong> por 40€/h · <strong>+ Local hasta las 4am</strong> por 80€
-        </div>
-        <button class="btn-cumple" onclick="openModal('Pack Premium Cumpleaños','299€ · hasta 30 personas')">Reservar</button>
+      <div class="celeb-type">
+        <div class="celeb-type-icon">💼</div>
+        <div class="celeb-type-name">Empresa</div>
+        <div class="celeb-type-desc">Cenas de equipo, afterworks y networking</div>
       </div>
+      <div class="celeb-type">
+        <div class="celeb-type-icon">🎓</div>
+        <div class="celeb-type-name">Graduaciones</div>
+        <div class="celeb-type-desc">Grupos grandes, packs desde 30 personas</div>
+      </div>
+    </div>
 
+    <div style="text-align:center;margin-top:44px" class="reveal">
+      <a href="celebraciones.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:12px;padding:16px 32px;font-size:.9rem;text-decoration:none">
+        Reservar mi celebración
+        <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:12px">Elige motivo · Personas · Bebidas · Comida · Comentarios · Confirmación 24h</p>
     </div>
   </div>
 </section>
@@ -1963,6 +1969,52 @@ async function submitReserva(){
     </div>
   `;
 }
+// Reservar mesa para un evento concreto → hace scroll al form,
+// selecciona el día correcto y resalta el bloque para que el usuario
+// vea al momento dónde tiene que rellenar.
+function reservarEvento(dia, nombreEvento){
+  const target = document.getElementById('reservados');
+  if (!target) return;
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Damos un momento a que llegue el scroll y luego seleccionamos + resaltamos
+  setTimeout(() => {
+    try { selectEvento(dia); } catch(e){}
+    const form = document.querySelector('.form-box');
+    if (form){
+      form.style.transition = 'box-shadow .4s ease, transform .4s ease';
+      form.style.boxShadow = '0 0 0 3px var(--pink), 0 20px 60px -20px rgba(255,0,85,.5)';
+      form.style.transform = 'translateY(-4px)';
+      setTimeout(() => {
+        form.style.boxShadow = '';
+        form.style.transform = '';
+      }, 1800);
+    }
+    // Toast bonito
+    if (nombreEvento){
+      showToast(`Reservando mesa para ${nombreEvento} · ${dia==='viernes'?'Viernes':'Sábado'}`);
+    }
+  }, 550);
+}
+
+// Toast simple, no bloqueante
+function showToast(msg){
+  let t = document.getElementById('__toast__');
+  if (t) t.remove();
+  t = document.createElement('div');
+  t.id = '__toast__';
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;top:88px;left:50%;transform:translateX(-50%);background:var(--pink);color:#fff;padding:12px 24px;border-radius:99px;font-size:.85rem;font-weight:600;letter-spacing:.5px;z-index:1000;box-shadow:0 12px 32px -8px rgba(255,0,85,.5);animation:toastPop .3s ease';
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.transition = 'opacity .3s ease, transform .3s ease'; t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(-8px)'; }, 2600);
+  setTimeout(() => t.remove(), 2950);
+}
+if (!document.querySelector('style[data-toast]')){
+  const s = document.createElement('style');
+  s.setAttribute('data-toast','1');
+  s.textContent = '@keyframes toastPop{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+  document.head.appendChild(s);
+}
+
 // Comprueba si una fecha está bloqueada en el calendario del admin.
 // Devuelve el bloque o null si el día está libre.
 async function checkDayBlocked(date){
