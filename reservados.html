@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reserva tu Reservado en Shaona · Zona VIP</title>
+<meta name="description" content="Reserva un reservado en Shaona Hookah Lounge (Velilla de San Antonio, Madrid). Mesa exclusiva para tu grupo, botellería premium a elegir, cachimba incluida y confirmación en 24h.">
+<meta name="theme-color" content="#0a0008">
+<meta property="og:title" content="Reserva tu Reservado en Shaona · Zona VIP">
+<meta property="og:description" content="Mesa exclusiva, botellas a elegir, cachimba incluida. Reserva tu propio rincón en Shaona.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0008'/%3E%3Ctext x='50' y='72' font-family='Georgia,serif' font-size='72' font-weight='700' fill='%23ff0055' text-anchor='middle' font-style='italic'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#FF0055; --pink-2:#c8003f; --pink-glow:rgba(255,0,85,.5);
+  --cyan:#00EEFF; --cyan-glow:rgba(0,238,255,.4);
+  --bg:#080808; --bg2:#0f0f0f; --card:#111;
+  --border:rgba(255,255,255,.07); --border-hi:rgba(255,255,255,.14);
+  --text:#f0f0f0; --text-2:#c8c0c6; --muted:#666;
+  --green:#00C46A; --gold:#ffc828;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+nav{position:sticky;top:0;left:0;right:0;z-index:200;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600}
+.brand em{color:var(--pink);font-style:normal}
+.brand-sub{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-left:10px}
+.nav-back{color:var(--muted);font-size:.78rem;letter-spacing:2px;text-transform:uppercase;transition:color .2s ease}
+.nav-back:hover{color:var(--pink)}
+
+/* HERO */
+.hero-r{padding:70px 32px 30px;text-align:center;position:relative;overflow:hidden}
+.hero-r::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(circle,rgba(255,0,85,.15) 0%,transparent 60%);pointer-events:none}
+.eyebrow{font-size:.66rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:14px;position:relative}
+.hero-r h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,6vw,4.6rem);font-weight:300;line-height:1.05;margin-bottom:16px;position:relative}
+.hero-r h1 em{font-style:italic;color:var(--pink)}
+.hero-r p.lead{color:var(--muted);font-size:1rem;max-width:640px;margin:0 auto;line-height:1.65;position:relative}
+.hero-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px;position:relative}
+.hero-badge{background:rgba(255,0,85,.1);border:1px solid rgba(255,0,85,.3);color:var(--pink);padding:8px 16px;border-radius:99px;font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+.hero-badge svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* GALERÍA FULL WIDTH bajo hero */
+.hero-gallery{max-width:1240px;margin:20px auto 60px;padding:0 32px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;height:340px}
+.hero-gallery > div{background-size:cover;background-position:center;background-color:#150015;border-radius:8px;transition:transform .5s ease}
+.hero-gallery > div:hover{transform:scale(1.02)}
+@media(max-width:900px){
+  .hero-gallery{grid-template-columns:1fr 1fr;grid-template-rows:180px 180px;height:auto}
+  .hero-gallery > div:first-child{grid-column:1 / -1}
+}
+@media(max-width:520px){
+  .hero-gallery{grid-template-columns:1fr;grid-template-rows:200px 140px 140px;padding:0 18px}
+  .hero-gallery > div:first-child{grid-column:auto}
+}
+
+/* MAIN SPLIT: info + form */
+.main-split{max-width:1240px;margin:0 auto 60px;padding:0 32px;display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:start}
+@media(max-width:960px){
+  .main-split{grid-template-columns:1fr;gap:40px}
+  .form-card{position:static !important}
+}
+@media(max-width:640px){
+  .main-split{padding:0 18px}
+}
+
+/* Info side */
+.info-box{background:linear-gradient(160deg,var(--card),rgba(0,0,0,.5));border:1px solid var(--border);border-radius:12px;padding:26px 30px;margin-bottom:14px}
+.info-box h3{font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:16px;line-height:1.15}
+.info-box h3 em{color:var(--pink);font-style:italic}
+.info-box ul{list-style:none;display:grid;grid-template-columns:1fr;gap:10px 20px}
+.info-box li{font-size:.9rem;color:var(--text-2);padding-left:26px;position:relative;line-height:1.5}
+.info-box li::before{content:"";position:absolute;left:0;top:6px;width:16px;height:16px;background:var(--pink);border-radius:50%;display:grid;place-items:center;font-size:.7rem;color:#fff;line-height:1;font-weight:700}
+.info-box li::after{content:"✓";position:absolute;left:2px;top:4px;color:#fff;font-weight:700;font-size:.75rem}
+.info-box.steps ol{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:14px}
+.info-box.steps li{counter-increment:step;font-size:.9rem;color:var(--text-2);padding-left:38px;position:relative;line-height:1.5}
+.info-box.steps li::before{content:counter(step);position:absolute;left:0;top:0;width:26px;height:26px;background:transparent;border:1.5px solid var(--pink);color:var(--pink);border-radius:50%;display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-weight:700}
+.info-box.steps li::after{display:none}
+.info-box li strong{color:var(--text);font-weight:600}
+
+/* FORM CARD */
+.form-card{background:linear-gradient(160deg,var(--card) 0%,rgba(0,0,0,.6) 100%);border:1px solid var(--border);border-radius:14px;padding:36px 32px;position:sticky;top:100px;box-shadow:0 30px 80px -20px rgba(255,0,85,.15)}
+.form-card h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;line-height:1.15;margin-bottom:6px}
+.form-card h3 em{color:var(--pink);font-style:italic}
+.form-card .fc-sub{font-size:.82rem;color:var(--muted);margin-bottom:24px;letter-spacing:.5px}
+
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--border);color:var(--text);padding:12px 14px;font-size:.92rem;border-radius:6px;font-family:inherit;transition:border-color .15s ease}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--pink)}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-error{color:#ff5577;font-size:.78rem;display:block;margin-top:6px;min-height:1em}
+
+/* Event selector (viernes/sábado) */
+.event-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.event-sel-card{background:rgba(0,0,0,.4);border:1.5px solid var(--border);border-radius:8px;padding:16px 18px;cursor:pointer;transition:all .2s ease;text-align:center}
+.event-sel-card:hover{border-color:rgba(255,0,85,.4)}
+.event-sel-card.selected{border-color:var(--pink);background:linear-gradient(160deg,rgba(255,0,85,.12),rgba(0,0,0,.4));box-shadow:0 8px 24px -8px rgba(255,0,85,.3)}
+.ev-nombre{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--text);line-height:1.15}
+.ev-dia{font-size:.72rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;font-weight:600}
+.event-sel-card.selected .ev-dia{color:var(--pink)}
+
+/* Botellas/mezclas — reutiliza el sistema genérico */
+.bottle-block-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.bottle-block-header .bh-title{font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.bottle-block-header .bh-min{font-size:.7rem;color:var(--pink);font-weight:600}
+.bottle-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.bottle-row{background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:6px;padding:10px 12px;display:flex;gap:10px;align-items:center}
+.bottle-row select{flex:1;min-width:0;padding:8px 30px 8px 12px;background:rgba(0,0,0,.3);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:.85rem;border-radius:4px;cursor:pointer;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='%23ff0066'><path d='M6 8L2 4h8z'/></svg>");background-repeat:no-repeat;background-position:right 10px center;background-size:10px}
+.bottle-row select:focus{outline:none;border-color:var(--pink)}
+.bottle-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.btn-counter{width:30px;height:30px;border-radius:50%;background:var(--pink);color:#fff;border:none;cursor:pointer;font-size:1rem;font-weight:700;display:grid;place-items:center;transition:all .15s ease;line-height:1}
+.btn-counter:hover{background:var(--pink-2);transform:scale(1.05)}
+.btn-counter.btn-remove{width:26px;height:26px;font-size:.9rem;background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--muted)}
+.btn-counter.btn-remove:hover{background:#ff3355;border-color:#ff3355;color:#fff}
+.bottle-count{min-width:20px;text-align:center;font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;font-variant-numeric:tabular-nums;color:var(--text)}
+.btn-add-bottle{width:100%;background:transparent;border:1.5px dashed rgba(255,0,85,.4);color:var(--pink);padding:10px;font-size:.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:6px;transition:all .2s ease}
+.btn-add-bottle:hover{background:rgba(255,0,85,.08);border-color:var(--pink)}
+.btn-add-bottle:disabled{opacity:.4;cursor:not-allowed}
+.bottle-summary{display:flex;justify-content:space-between;align-items:baseline;padding:8px 12px;font-size:.8rem;color:var(--muted)}
+.bottle-summary strong{color:var(--text);font-weight:600}
+
+/* Precio */
+.price-box{background:linear-gradient(135deg,rgba(255,0,85,.08),rgba(0,0,0,.5));border:1px solid rgba(255,0,85,.3);border-radius:10px;padding:18px 22px;margin:14px 0}
+.price-row{display:flex;justify-content:space-between;align-items:baseline;font-size:.85rem;color:var(--muted);margin-bottom:4px}
+.price-row.total{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--text);font-weight:700;padding-top:12px;margin-top:8px;border-top:1px solid var(--border)}
+.price-row.total strong{color:var(--pink);font-family:'Outfit',sans-serif;font-weight:800;font-variant-numeric:tabular-nums}
+.price-row.per-person{font-size:.72rem;color:var(--cyan);letter-spacing:.5px}
+
+.btn-submit{width:100%;background:var(--pink);color:#fff;border:none;padding:16px;font-size:.82rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s ease;border-radius:6px;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn-submit:hover{background:var(--pink-2);transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(255,0,85,.5)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.err-general{color:#ff5577;font-size:.85rem;text-align:center;margin-top:12px;min-height:1em}
+
+.success-box{text-align:center;padding:20px 0}
+.success-box .check-ico{width:64px;height:64px;background:var(--green);border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;font-size:2rem;color:#fff}
+.success-box h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:10px}
+.success-box p{color:var(--muted);font-size:.95rem;line-height:1.6;max-width:340px;margin:0 auto 6px}
+
+/* FAQ + footer (misma línea que celebraciones) */
+.faq{max-width:900px;margin:60px auto 80px;padding:0 32px}
+.faq h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;text-align:center;margin-bottom:8px}
+.faq h2 em{color:var(--pink);font-style:italic}
+.faq-sub{text-align:center;color:var(--muted);margin-bottom:32px;font-size:.9rem}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:10px;transition:border-color .2s ease}
+.faq-item:hover{border-color:var(--border-hi)}
+.faq-item h4{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.9rem;color:var(--text-2);line-height:1.6}
+
+footer.footer-pro{background:#050505;border-top:1px solid var(--border);padding:44px 32px 24px;color:var(--muted);text-align:center}
+footer.footer-pro .fp-brand{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--text);margin-bottom:10px}
+footer.footer-pro .fp-brand em{color:var(--pink);font-style:normal}
+footer.footer-pro p{font-size:.82rem;line-height:1.7;max-width:600px;margin:0 auto 16px}
+footer.footer-pro .fp-links{display:flex;gap:20px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+footer.footer-pro .fp-links a{color:var(--muted);font-size:.76rem;letter-spacing:1px;text-transform:uppercase;transition:color .2s ease}
+footer.footer-pro .fp-links a:hover{color:var(--pink)}
+footer.footer-pro .copy{font-size:.7rem;color:#333;margin-top:22px}
+
+@media(max-width:640px){
+  nav{padding:14px 18px}
+  .hero-r{padding:50px 20px 24px}
+  .form-card{padding:26px 22px}
+  .info-box{padding:22px 24px}
+  .fg-row{grid-template-columns:1fr}
+  .event-selector{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">Shaona<em>.</em><span class="brand-sub">Reservados VIP</span></a>
+  <a href="index.html" class="nav-back">← Volver a la web</a>
+</nav>
+
+<section class="hero-r">
+  <p class="eyebrow">// Zona VIP · Solicita tu reservado</p>
+  <h1>Tu rincón <em>privado</em></h1>
+  <p class="lead">Mesa reservada para tu grupo, botellería premium a elegir, mezclas ilimitadas y cachimba incluida. Vive el Shaona como uno de los tuyos — con tu propio espacio, tu música y tu ambiente.</p>
+  <div class="hero-badges">
+    <span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/><circle cx="10" cy="7" r="4"/></svg> Hasta 8 personas</span>
+    <span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l3 6h6l3-6M6 2l3 6-3 14h12l-3-14 3-6"/></svg> Botellería a elegir</span>
+    <span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Cachimba incluida</span>
+    <span class="hero-badge"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Confirmación 24h</span>
+  </div>
+</section>
+
+<div class="hero-gallery">
+  <div style="background-image:url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1400&q=80')"></div>
+  <div style="background-image:url('https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=800&q=80')"></div>
+  <div style="background-image:url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80')"></div>
+</div>
+
+<div class="main-split">
+  <!-- IZQUIERDA: información -->
+  <div>
+    <div class="info-box">
+      <h3>Qué está <em>incluido</em></h3>
+      <ul>
+        <li>Mesa reservada para tu grupo durante toda la noche</li>
+        <li>Cachimba premium, sabores a elegir</li>
+        <li>Mezclas (refrescos, tónica…) <strong>sin coste extra</strong></li>
+        <li>Personal atento durante toda la reserva</li>
+        <li>Hielo, cristalería y decoración</li>
+        <li>Confirmación por WhatsApp en menos de 24h</li>
+      </ul>
+    </div>
+
+    <div class="info-box steps">
+      <h3>Cómo <em>funciona</em></h3>
+      <ol>
+        <li><strong>Elige el día</strong> (viernes o sábado)</li>
+        <li><strong>Escoge tus botellas</strong> — mínimo 3, más cantidad = mejor precio por persona</li>
+        <li><strong>Selecciona las mezclas</strong> que os gusten</li>
+        <li><strong>Rellena datos y envía</strong> — te contactamos por WhatsApp</li>
+        <li>Confirmamos y <strong>a disfrutar</strong>: sin pago por adelantado</li>
+      </ol>
+    </div>
+
+    <div class="info-box">
+      <h3>Recomendaciones del <em>equipo</em></h3>
+      <ul>
+        <li><strong>Belaire Rosé</strong> para brindar y romper el hielo</li>
+        <li><strong>Ron Barceló + Coca-Cola</strong>, clásico infalible</li>
+        <li><strong>Ginebra Hendrick's + Tónica</strong>, la copa que nunca falla</li>
+        <li>Si venís más de 6, <strong>4-5 botellas</strong> os dejan mejor precio por persona</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DERECHA: formulario -->
+  <div>
+    <div class="form-card" id="formCard">
+      <h3>Solicita tu <em>reservado</em></h3>
+      <p class="fc-sub">Rellena en 2 minutos. Te confirmamos por WhatsApp en 24h.</p>
+
+      <div id="reservaForm">
+        <div class="fg-row">
+          <div class="fg">
+            <label>Nombre</label>
+            <input id="rNombre" type="text" placeholder="Tu nombre" autocomplete="name">
+            <span class="field-error"></span>
+          </div>
+          <div class="fg">
+            <label>Teléfono</label>
+            <input id="rTelefono" type="tel" placeholder="600 000 000" autocomplete="tel">
+            <span class="field-error"></span>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Día del reservado <span style="color:#ff4466;font-size:.8rem;text-transform:none;letter-spacing:0" id="eventoError"></span></label>
+          <div class="event-selector">
+            <div class="event-sel-card" id="evCard-viernes" onclick="selectEvento('viernes')">
+              <div class="ev-nombre">Viernes de Shaona</div>
+              <div class="ev-dia">Viernes noche</div>
+            </div>
+            <div class="event-sel-card" id="evCard-sabado" onclick="selectEvento('sabado')">
+              <div class="ev-nombre">Petit Suisse Party</div>
+              <div class="ev-dia">Sábado noche</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Nº de personas</label>
+          <select id="rPersonas">
+            <option value="2">2 personas</option>
+            <option value="3">3 personas</option>
+            <option value="4" selected>4 personas</option>
+            <option value="5">5 personas</option>
+            <option value="6">6 personas</option>
+            <option value="7">7 personas</option>
+            <option value="8">8 personas (máx)</option>
+          </select>
+        </div>
+
+        <div class="fg">
+          <div class="bottle-block-header">
+            <div class="bh-title">Botellas <span style="color:var(--pink);font-weight:700">*</span></div>
+            <div class="bh-min">Mínimo 3</div>
+          </div>
+          <div class="bottle-list" id="bottleList"></div>
+          <button type="button" class="btn-add-bottle" onclick="addBottleRow()">+ Añadir otra botella</button>
+        </div>
+
+        <div class="fg">
+          <div class="bottle-block-header">
+            <div class="bh-title">Mezclas / refrescos</div>
+            <div class="bh-min" style="color:var(--muted)">Opcional</div>
+          </div>
+          <div class="bottle-list" id="mixerList"></div>
+          <button type="button" class="btn-add-bottle" onclick="addMixerRow()">+ Añadir mezcla</button>
+        </div>
+
+        <div class="fg-row">
+          <div class="fg">
+            <label>Cachimbas extra</label>
+            <select id="rCachimbas">
+              <option value="0">Solo la incluida</option>
+              <option value="1">+1 extra (7€)</option>
+              <option value="2">+2 extras (14€)</option>
+              <option value="3">+3 extras (21€)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Código promocional</label>
+            <input id="rPromo" type="text" placeholder="Opcional" style="text-transform:uppercase">
+          </div>
+        </div>
+
+        <div class="price-box" id="priceBox">
+          <div class="price-row"><span id="priceBottles">3 botellas base</span><span id="basePriceLabel">210€</span></div>
+          <div class="price-row" id="premiumRow" style="display:none"><span>Suplemento premium</span><span id="premiumLabel">+0€</span></div>
+          <div class="price-row" id="cachimbaRow" style="display:none"><span id="cachimbaLabel">Cachimbas extra</span><span id="cachimbaPrice">+0€</span></div>
+          <div class="price-row" id="mixerRow" style="display:none"><span id="mixerLabel">Mezclas premium</span><span id="mixerPrice">+0€</span></div>
+          <div class="price-row" id="promoRow" style="display:none;color:var(--green)"><span id="promoLabel">Descuento</span><span id="promoPrice">-0€</span></div>
+          <div class="price-row total"><span>Total</span><strong id="packPrice">210€</strong></div>
+          <div class="price-row per-person" style="justify-content:flex-end"><span id="perPersona">52,50€ por persona</span></div>
+        </div>
+
+        <div id="reservaError" style="color:#ff5577;font-size:.85rem;margin:8px 0;display:none;text-align:center"></div>
+        <button id="reservaBtn" class="btn-submit" onclick="submitReservado()">
+          Solicita tu reservado
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:10px">Sin pago por adelantado · Confirmación por WhatsApp</p>
+      </div>
+
+      <div id="reservaSuccess" style="display:none">
+        <div class="success-box">
+          <div class="check-ico">✓</div>
+          <h3>¡Solicitud enviada!</h3>
+          <p>Te contactaremos por WhatsApp en menos de 24 h para confirmar tu reservado.</p>
+          <p style="font-size:.75rem;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-top:12px">Nos vemos en Shaona 🔥</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="faq">
+  <h2>Preguntas <em>frecuentes</em></h2>
+  <p class="faq-sub">Todo lo que necesitas saber antes de reservar</p>
+
+  <div class="faq-item">
+    <h4>¿Es obligatorio pagar por adelantado?</h4>
+    <p>No. Rellenas el formulario, te contactamos por WhatsApp para confirmar disponibilidad, y el pago se hace en el local el día de la reserva.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Qué pasa si somos menos de 8?</h4>
+    <p>Ningún problema, es el máximo permitido. Podéis ser <strong>desde 2 personas</strong>. Cuantos más seáis, mejor os sale por cabeza al repartir las botellas.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Puedo cambiar las botellas después de reservar?</h4>
+    <p>Sí. Hasta 24h antes de la reserva puedes escribirnos por WhatsApp para ajustar botellas, mezclas o número de personas.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿La cachimba está realmente incluida?</h4>
+    <p>Sí, <strong>una cachimba premium montada al momento</strong> viene incluida en todos los reservados. Si queréis más, podéis añadir extras por 7€/unidad.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Puedo llevar algo de comer?</h4>
+    <p>Tapas y snacks se pueden pedir en barra al llegar. Si queréis algo más elaborado (tarta, cátering, comida especial), lo comentamos por WhatsApp — tenemos opciones.</p>
+  </div>
+  <div class="faq-item">
+    <h4>¿Y si no llegamos a la hora de la reserva?</h4>
+    <p>Guardamos la mesa 45 min desde la hora acordada. Si vais con retraso, avisadnos por WhatsApp y no hay problema.</p>
+  </div>
+</section>
+
+<footer class="footer-pro">
+  <div class="fp-brand">Shaona<em>.</em></div>
+  <p>Hookah lounge en Velilla de San Antonio, Madrid. Reservados VIP, cumpleaños, eventos privados y los mejores tardeos de la zona.</p>
+  <div class="fp-links">
+    <a href="index.html">Volver a la web</a>
+    <a href="index.html#eventos">Próximos eventos</a>
+    <a href="celebraciones.html">Celebraciones privadas</a>
+    <a href="https://wa.me/34600000000" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://instagram.com/shaonahookah" target="_blank" rel="noopener">Instagram</a>
+  </div>
+  <div class="copy">© <span id="footYear">2026</span> Shaona Hookah Lounge · Todos los derechos reservados</div>
+</footer>
+
+<script src="shaona-config.js"></script>
+<script>
+/* ============================================================
+   LÓGICA DEL FORMULARIO DE RESERVADOS
+   (self-contained, replica y comparte esquema con la web principal)
+   ============================================================ */
+
+document.getElementById('footYear').textContent = new Date().getFullYear();
+
+const WEBHOOK_URL = 'https://hook.eu1.make.com/25v6mep1t54p8aa06uj33ci2sdygy4kv';
+
+// Precios escalonados por número total de botellas (mín 3)
+const BOTTLE_PRICING = { 3:210, 4:280, 5:330, 6:378 };
+const MAX_BOTTLES = 6;
+const PROMO_CODES = { 'SHAONA10':10, 'NOCHE15':15, 'VIP20':20 };
+let promoDiscount = 0;
+
+// Catálogo por defecto (se sobreescribe con Supabase si está disponible)
+let BOTTLE_CATALOG = [
+  {id:'ron-barcelo',     name:'Ron Barceló',           sub:'Ron añejo',           plus:0},
+  {id:'negrita',         name:'Ron Negrita',           sub:'Ron blanco',          plus:0},
+  {id:'vodka-absolut',   name:'Vodka Absolut',         sub:'Vodka premium',       plus:0},
+  {id:'whisky-jd',       name:"Whisky JD",             sub:"Jack Daniel's",       plus:0},
+  {id:'jd-tennessee',    name:"JD Tennessee Honey",    sub:'Plus +7€',            plus:7},
+  {id:'jd-apple',        name:"JD Apple",              sub:'Plus +7€',            plus:7},
+  {id:'red-label',       name:'Whisky Red Label',      sub:'Whisky escocés',      plus:0},
+  {id:'black-label',     name:'Whisky Black Label',    sub:'Plus +7€',            plus:7},
+  {id:'double-black',    name:'Double Black Label',    sub:'Plus +15€',           plus:15},
+  {id:'ginebra-hendricks',name:"Ginebra Hendrick's",   sub:'Premium gin',         plus:0},
+  {id:'puerto-indias',   name:'Puerto de Indias',      sub:'Plus +5€ · Gin fresa',plus:5},
+  {id:'jagermeister',    name:'Jägermeister',          sub:'Plus +7€ · Licor',    plus:7},
+  {id:'belaire-rose',    name:'✨ Belaire Rosé',        sub:'Espumoso recomendado',plus:0}
+];
+let MIXER_CATALOG = [
+  {id:'coca-cola',       name:'Coca-Cola',             sub:'Refresco · gratis',   plus:0},
+  {id:'coca-zero',       name:'Coca-Cola Zero',        sub:'Refresco · gratis',   plus:0},
+  {id:'fanta-naranja',   name:'Fanta Naranja',         sub:'Refresco · gratis',   plus:0},
+  {id:'fanta-limon',     name:'Fanta Limón',           sub:'Refresco · gratis',   plus:0},
+  {id:'sprite',          name:'Sprite',                sub:'Refresco · gratis',   plus:0},
+  {id:'tonica',          name:'Tónica',                sub:'Refresco · gratis',   plus:0},
+  {id:'red-bull',        name:'Red Bull',              sub:'Plus +4€',            plus:4},
+  {id:'monster-mango',   name:'Monster Mango',         sub:'Plus +4€',            plus:4}
+];
+
+// Carga catálogo dinámico desde Supabase (si disponible)
+(async function(){
+  const cfg = window.SHAONA_CONFIG || {};
+  if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) return;
+  try {
+    const res = await fetch(`${cfg.supabaseUrl}/rest/v1/catalog_items?select=kind,item_key,name,sub,plus,sort_order&available=eq.true&order=sort_order.asc`, {
+      headers:{'apikey':cfg.supabaseAnonKey,'Authorization':'Bearer '+cfg.supabaseAnonKey}
+    });
+    if (!res.ok) return;
+    const items = await res.json();
+    if (!Array.isArray(items) || !items.length) return;
+    const b = items.filter(i=>i.kind==='bottle').map(i=>({id:i.item_key,name:i.name,sub:i.sub||'',plus:i.plus||0}));
+    const m = items.filter(i=>i.kind==='mixer').map(i=>({id:i.item_key,name:i.name,sub:i.sub||'',plus:i.plus||0}));
+    if (b.length) BOTTLE_CATALOG = b;
+    if (m.length) MIXER_CATALOG = m;
+    // Repintar filas si ya se habían añadido con opciones viejas
+    bottleRows.forEach((row,i) => { const sel = document.querySelector(`#bottleRow-${row.uid} select`); if(sel) sel.innerHTML = buildOptions(BOTTLE_CATALOG, row.tipo); });
+    mixerRows.forEach((row,i) => { const sel = document.querySelector(`#mixerRow-${row.uid} select`); if(sel) sel.innerHTML = buildOptions(MIXER_CATALOG, row.tipo); });
+  } catch(e){}
+})();
+
+// Estado
+let bottleRows = [];
+let mixerRows = [];
+let rowCounter = 0;
+
+function buildOptions(catalog, selectedId){
+  return catalog.map(b => `<option value="${b.id}"${b.id===selectedId?' selected':''}>${b.name}</option>`).join('');
+}
+
+/* ---- Botellas ---- */
+function addBottleRow(){
+  if (bottleRows.length >= MAX_BOTTLES) return;
+  const uid = ++rowCounter;
+  bottleRows.push({ uid, tipo: BOTTLE_CATALOG[0].id, cantidad: 1 });
+  renderBottleRows();
+}
+function removeBottleRow(uid){
+  bottleRows = bottleRows.filter(r => r.uid !== uid);
+  renderBottleRows();
+}
+function updateBottleTipo(uid, tipo){
+  const row = bottleRows.find(r=>r.uid===uid); if(row){ row.tipo = tipo; updatePrice(); }
+}
+function updateBottleQty(uid, delta){
+  const row = bottleRows.find(r=>r.uid===uid); if(!row) return;
+  row.cantidad = Math.max(1, row.cantidad + delta);
+  if (getBottleTotal() > MAX_BOTTLES){ row.cantidad -= delta; return; }
+  renderBottleRows();
+}
+function getBottleTotal(){ return bottleRows.reduce((s,r)=>s + r.cantidad, 0); }
+function getBottleSummary(){
+  return bottleRows.map(r => {
+    const b = BOTTLE_CATALOG.find(x=>x.id===r.tipo);
+    return r.cantidad + ' × ' + (b?b.name:r.tipo);
+  }).join(' + ');
+}
+function getBottlePremiumPlus(){
+  return bottleRows.reduce((s,r)=>{
+    const b = BOTTLE_CATALOG.find(x=>x.id===r.tipo);
+    return s + (b ? b.plus * r.cantidad : 0);
+  }, 0);
+}
+function renderBottleRows(){
+  const container = document.getElementById('bottleList');
+  const total = getBottleTotal();
+  container.innerHTML = bottleRows.map(row => `
+    <div class="bottle-row" id="bottleRow-${row.uid}">
+      <select onchange="updateBottleTipo(${row.uid}, this.value)">${buildOptions(BOTTLE_CATALOG, row.tipo)}</select>
+      <div class="bottle-controls">
+        <button type="button" class="btn-counter btn-remove" onclick="updateBottleQty(${row.uid}, -1)" title="Quitar">−</button>
+        <span class="bottle-count">${row.cantidad}</span>
+        <button type="button" class="btn-counter" onclick="updateBottleQty(${row.uid}, 1)" ${total>=MAX_BOTTLES?'disabled':''} title="Añadir">+</button>
+        <button type="button" class="btn-counter btn-remove" onclick="removeBottleRow(${row.uid})" title="Eliminar" style="margin-left:6px">×</button>
+      </div>
+    </div>`).join('');
+  const addBtn = document.querySelector('.btn-add-bottle');
+  if (addBtn) addBtn.disabled = total >= MAX_BOTTLES;
+  updatePrice();
+}
+
+/* ---- Mezclas ---- */
+function addMixerRow(){
+  const uid = ++rowCounter;
+  mixerRows.push({ uid, tipo: MIXER_CATALOG[0].id, cantidad: 1 });
+  renderMixerRows();
+}
+function removeMixerRow(uid){ mixerRows = mixerRows.filter(r=>r.uid!==uid); renderMixerRows(); }
+function updateMixerTipo(uid, tipo){ const r = mixerRows.find(x=>x.uid===uid); if(r){ r.tipo = tipo; updatePrice(); } }
+function updateMixerQty(uid, delta){ const r = mixerRows.find(x=>x.uid===uid); if(!r) return; r.cantidad = Math.max(1, r.cantidad + delta); renderMixerRows(); }
+function getMixerTotal(){ return mixerRows.reduce((s,r)=>s+r.cantidad, 0); }
+function getMixerSummary(){
+  return mixerRows.map(r=>{
+    const m = MIXER_CATALOG.find(x=>x.id===r.tipo);
+    return r.cantidad + ' × ' + (m?m.name:r.tipo);
+  }).join(' + ');
+}
+function getMixerPlus(){
+  return mixerRows.reduce((s,r)=>{ const m = MIXER_CATALOG.find(x=>x.id===r.tipo); return s + (m?m.plus*r.cantidad:0); }, 0);
+}
+function renderMixerRows(){
+  const container = document.getElementById('mixerList');
+  container.innerHTML = mixerRows.map(row => `
+    <div class="bottle-row" id="mixerRow-${row.uid}">
+      <select onchange="updateMixerTipo(${row.uid}, this.value)">${buildOptions(MIXER_CATALOG, row.tipo)}</select>
+      <div class="bottle-controls">
+        <button type="button" class="btn-counter btn-remove" onclick="updateMixerQty(${row.uid}, -1)">−</button>
+        <span class="bottle-count">${row.cantidad}</span>
+        <button type="button" class="btn-counter" onclick="updateMixerQty(${row.uid}, 1)">+</button>
+        <button type="button" class="btn-counter btn-remove" onclick="removeMixerRow(${row.uid})" style="margin-left:6px">×</button>
+      </div>
+    </div>`).join('');
+  updatePrice();
+}
+
+/* ---- Precio ---- */
+function updatePrice(){
+  const totalBotellas = Math.max(3, getBottleTotal());
+  const base = BOTTLE_PRICING[Math.min(totalBotellas, MAX_BOTTLES)] || BOTTLE_PRICING[3];
+  const premium = getBottlePremiumPlus();
+  const cachimbasNum = parseInt(document.getElementById('rCachimbas')?.value || '0');
+  const cachimbaExtra = cachimbasNum * 7;
+  const mixerPlus = getMixerPlus();
+  const promo = document.getElementById('rPromo')?.value?.trim().toUpperCase();
+  const pct = PROMO_CODES[promo] || 0;
+  promoDiscount = pct;
+  const subtotal = base + premium + cachimbaExtra + mixerPlus;
+  const discount = Math.round(subtotal * pct / 100);
+  const total = subtotal - discount;
+  const personas = parseInt(document.getElementById('rPersonas')?.value || '4');
+
+  document.getElementById('priceBottles').textContent = `${getBottleTotal()} botellas base`;
+  document.getElementById('basePriceLabel').textContent = base + '€';
+  const showRow = (id, cond, label, val) => {
+    const row = document.getElementById(id);
+    if (!row) return;
+    row.style.display = cond ? 'flex' : 'none';
+    if (cond){
+      if (label) row.querySelector('span:first-child').textContent = label;
+      row.querySelector('span:last-child, strong:last-child').textContent = val;
+    }
+  };
+  showRow('premiumRow', premium>0, 'Suplemento premium', '+'+premium+'€');
+  showRow('cachimbaRow', cachimbaExtra>0, `${cachimbasNum} cachimba${cachimbasNum>1?'s':''} extra`, '+'+cachimbaExtra+'€');
+  showRow('mixerRow', mixerPlus>0, 'Mezclas premium', '+'+mixerPlus+'€');
+  showRow('promoRow', pct>0, `Descuento (${promo} · ${pct}%)`, '-'+discount+'€');
+  document.getElementById('packPrice').textContent = total + '€';
+  document.getElementById('perPersona').textContent = (total/personas).toFixed(2).replace('.',',') + '€ por persona';
+}
+
+/* ---- Selector de evento ---- */
+let selectedEventoKey = null;
+function selectEvento(key){
+  selectedEventoKey = key;
+  document.getElementById('evCard-viernes').classList.toggle('selected', key==='viernes');
+  document.getElementById('evCard-sabado').classList.toggle('selected',  key==='sabado');
+  document.getElementById('eventoError').textContent = '';
+}
+
+function getProximaFecha(diaSemana){
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const diff = (diaSemana - hoy.getDay() + 7) % 7 || 7;
+  const f = new Date(hoy); f.setDate(hoy.getDate() + diff);
+  return f;
+}
+
+function validarTelefono(t){ return /^[+]?[0-9\s]{9,15}$/.test(t); }
+function validarEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function showFieldError(el, msg){
+  if (!el) return;
+  const err = el.parentElement.querySelector('.field-error');
+  if (err) err.textContent = msg;
+  el.style.borderColor = msg ? '#ff5577' : '';
+  if (msg) setTimeout(() => { el.style.borderColor = ''; if(err) err.textContent = ''; }, 4000);
+}
+
+async function checkDayBlocked(date){
+  const cfg = window.SHAONA_CONFIG || {};
+  if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) return null;
+  const iso = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+  try {
+    const res = await fetch(`${cfg.supabaseUrl}/rest/v1/calendar_blocks?select=block_type,reason,message&block_date=eq.${iso}`, {
+      headers:{'apikey':cfg.supabaseAnonKey,'Authorization':'Bearer '+cfg.supabaseAnonKey}
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return (rows && rows[0]) ? rows[0] : null;
+  } catch(e){ return null; }
+}
+
+/* ---- Submit ---- */
+async function submitReservado(){
+  const nombreEl = document.getElementById('rNombre');
+  const telefonoEl = document.getElementById('rTelefono');
+  const nombre = nombreEl.value.trim();
+  const telefono = telefonoEl.value.trim();
+  const personas = document.getElementById('rPersonas').value;
+  const totalBotellas = getBottleTotal();
+  const errorEl = document.getElementById('reservaError');
+
+  let hay = false;
+  if (!nombre || nombre.length < 2){ showFieldError(nombreEl,'Mínimo 2 caracteres'); hay = true; }
+  if (!telefono || !validarTelefono(telefono)){ showFieldError(telefonoEl,'Teléfono no válido (9 dígitos)'); hay = true; }
+  if (!selectedEventoKey){ document.getElementById('eventoError').textContent = '— Elige un día'; hay = true; }
+  if (hay){ errorEl.textContent = 'Revisa los campos marcados.'; errorEl.style.display = 'block'; return; }
+  if (totalBotellas < 3){ errorEl.textContent = 'Selecciona al menos 3 botellas.'; errorEl.style.display = 'block'; return; }
+
+  errorEl.style.display = 'none';
+  const btn = document.getElementById('reservaBtn');
+  btn.disabled = true;
+  btn.innerHTML = 'Enviando…';
+
+  const diaSemana = selectedEventoKey === 'viernes' ? 5 : 6;
+  const fechaEvento = getProximaFecha(diaSemana);
+  const fechaEventoStr = fechaEvento.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const nombreEvento = selectedEventoKey === 'viernes' ? 'Viernes de Shaona' : 'Petit Suisse Party (Sábado)';
+
+  // Comprueba día bloqueado
+  const blockedInfo = await checkDayBlocked(fechaEvento);
+  if (blockedInfo){
+    btn.disabled = false;
+    btn.innerHTML = 'Solicita tu reservado <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+    errorEl.textContent = blockedInfo.message || `Ese día (${fechaEventoStr}) no está disponible. ${blockedInfo.reason || ''}`;
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const cachimbas = document.getElementById('rCachimbas').value || '0';
+  const cachimbasNum = parseInt(cachimbas);
+  const promo = document.getElementById('rPromo').value.trim().toUpperCase() || '—';
+  const totalFinal = document.getElementById('packPrice').textContent;
+  const porPersona = document.getElementById('perPersona').textContent;
+  const botellasDesglose = getBottleSummary();
+  const mezclasDesglose = getMixerSummary();
+  const totalMezclas = getMixerTotal();
+  const bottlePlus = getBottlePremiumPlus();
+  const mixerPlus = getMixerPlus();
+
+  const payload = {
+    fecha_envio: new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}),
+    hora_envio:  new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),
+    tipo:         'reservado',
+    evento:       nombreEvento,
+    fecha_evento: fechaEventoStr,
+    nombre:       nombre,
+    telefono:     telefono,
+    email:        '—',
+    personas:     personas,
+    botellas:     totalBotellas + ' botellas (' + botellasDesglose + ')' + (bottlePlus > 0 ? ' [+' + bottlePlus + '€ premium]' : ''),
+    cachimbas:    cachimbasNum > 0 ? cachimbasNum + ' (' + (cachimbasNum * 7) + '€)' : 'Ninguna',
+    botella_pref: totalMezclas > 0 ? totalMezclas + ' mezclas: ' + mezclasDesglose + (mixerPlus > 0 ? ' [+' + mixerPlus + '€]' : '') : 'Sin mezclas',
+    total:        totalFinal + ' (' + porPersona + ')',
+    promo:        promo,
+    comentarios:  '—',
+    estado:       'Pendiente'
+  };
+
+  // Enviar a Supabase + webhook en paralelo
+  const cfg = window.SHAONA_CONFIG || {};
+  const promises = [];
+  promises.push(fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }).catch(()=>{}));
+  if (cfg.supabaseUrl && cfg.supabaseAnonKey){
+    promises.push(fetch(`${cfg.supabaseUrl}/rest/v1/reservations`, {
+      method:'POST',
+      headers:{'apikey':cfg.supabaseAnonKey,'Authorization':'Bearer '+cfg.supabaseAnonKey,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body: JSON.stringify({
+        type:'reservado',
+        event_name: payload.evento,
+        event_date: payload.fecha_evento,
+        name: payload.nombre,
+        phone: payload.telefono,
+        people: parseInt(payload.personas, 10) || null,
+        bottles: payload.botellas,
+        hookahs: payload.cachimbas,
+        mixers: payload.botella_pref,
+        total: payload.total,
+        promo: promo !== '—' ? promo : null,
+        raw: payload
+      })
+    }).catch(()=>{}));
+  }
+  await Promise.all(promises);
+
+  document.getElementById('reservaForm').style.display = 'none';
+  document.getElementById('reservaSuccess').style.display = 'block';
+  document.getElementById('formCard').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ---- INIT ---- */
+// Añade 3 filas iniciales de botellas
+addBottleRow();
+addBottleRow();
+addBottleRow();
+// Escuchar cambios en personas/promo/cachimbas para actualizar precio
+document.getElementById('rPersonas').addEventListener('change', updatePrice);
+document.getElementById('rCachimbas').addEventListener('change', updatePrice);
+document.getElementById('rPromo').addEventListener('input', updatePrice);
+// Preseleccionar día si viene por ?dia=viernes|sabado
+(function(){
+  const params = new URLSearchParams(location.search);
+  const dia = params.get('dia');
+  if (dia === 'viernes' || dia === 'sabado') selectEvento(dia);
+})();
+</script>
+
+</body>
+</html>
