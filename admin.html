@@ -1433,9 +1433,9 @@ function openReservationModal(id){
       ${r.event_date ? kv('Fecha', esc(r.event_date)) : ''}
       ${r.people ? kv('Personas', esc(r.people)) : ''}
       ${r.total ? kv('Total', esc(r.total)) : ''}
-      ${r.bottles ? fmtOrder('Botellas', r.bottles, 'pink')  : ''}
-      ${r.hookahs ? fmtOrder('Cachimbas', r.hookahs, 'gold') : ''}
-      ${r.mixers  ? fmtOrder('Mezclas', r.mixers, 'cyan')    : ''}
+      ${r.bottles ? kv('Botellas', esc(r.bottles)) : ''}
+      ${r.hookahs ? kv('Cachimbas', esc(r.hookahs)) : ''}
+      ${r.mixers  ? kv('Mezclas', esc(r.mixers))    : ''}
       ${r.promo ? kv('Promo', esc(r.promo)) : ''}
     </div>
     ${r.comments ? `<div style="margin-top:20px"><div style="font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Comentarios del cliente</div><div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:.9rem;line-height:1.5">${esc(r.comments)}</div></div>` : ''}

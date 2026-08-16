@@ -2083,10 +2083,13 @@ function selectEvento(key){
 }
 
 // === INICIALIZACIÓN ===
-initBottleSelector();
-updatePackPrice();
+// El form de reservados se movió a reservados.html — solo inicializar si sigue en la página
+if (document.getElementById('bottleContainer')) {
+  initBottleSelector();
+  updatePackPrice();
+}
 
-// Bloquear fechas pasadas en el input de fecha
+// Bloquear fechas pasadas en el input de fecha (solo si el form está presente)
 const fechaInput = document.getElementById('rFecha');
 if(fechaInput){
   const hoy = new Date().toISOString().split('T')[0];
