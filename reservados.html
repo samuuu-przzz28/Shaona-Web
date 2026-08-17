@@ -324,6 +324,12 @@ footer.footer-pro .copy{font-size:.7rem;color:#333;margin-top:22px}
           <div class="price-row per-person" style="justify-content:flex-end"><span id="perPersona">52,50€ por persona</span></div>
         </div>
 
+        <!-- Confirmación visual del día concreto que se está reservando -->
+        <div id="fechaResumen" style="display:none;background:linear-gradient(135deg,rgba(0,224,255,.08),rgba(0,0,0,.4));border:1px solid rgba(0,224,255,.25);border-radius:8px;padding:14px 18px;margin:14px 0;text-align:center">
+          <div style="font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:6px">Estás reservando para</div>
+          <div id="fechaResumenText" style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--text);line-height:1.2">—</div>
+        </div>
+
         <div id="reservaError" style="color:#ff5577;font-size:.85rem;margin:8px 0;display:none;text-align:center"></div>
         <button id="reservaBtn" class="btn-submit" onclick="submitReservado()">
           Solicita tu reservado
@@ -588,6 +594,19 @@ function selectEvento(key){
   document.getElementById('evCard-viernes').classList.toggle('selected', key==='viernes');
   document.getElementById('evCard-sabado').classList.toggle('selected',  key==='sabado');
   document.getElementById('eventoError').textContent = '';
+
+  // Muestra la fecha concreta que se está reservando
+  const diaSemana = key === 'viernes' ? 5 : 6;
+  const fecha = getProximaFecha(diaSemana);
+  const nombreDia = key === 'viernes' ? 'Viernes' : 'Sábado';
+  const nombreEvento = key === 'viernes' ? 'Viernes de Shaona' : 'Petit Suisse Party';
+  const fechaStr = fecha.toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+  const resumen = document.getElementById('fechaResumen');
+  const resumenTxt = document.getElementById('fechaResumenText');
+  if (resumen && resumenTxt){
+    resumenTxt.innerHTML = `${nombreDia} <span style="color:var(--pink)">${fechaStr}</span><div style="font-size:.78rem;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:500;margin-top:4px">${nombreEvento}</div>`;
+    resumen.style.display = 'block';
+  }
 }
 
 function getProximaFecha(diaSemana){

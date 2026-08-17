@@ -1030,30 +1030,7 @@ footer p{font-size:.72rem;color:#333;letter-spacing:1px}
       <p class="reveal" style="color:var(--muted);font-size:.98rem;line-height:1.7;max-width:640px;margin:16px auto 40px">Cumpleaños, aniversarios, cenas de empresa, graduaciones o cualquier ocasión especial. Local privatizable, packs a medida y todo listo para que sólo tengáis que disfrutar.</p>
     </div>
 
-    <div class="celeb-types reveal">
-      <div class="celeb-type">
-        <div class="celeb-type-icon">🎂</div>
-        <div class="celeb-type-name">Cumpleaños</div>
-        <div class="celeb-type-desc">Tarta, decoración y todo para el homenajeado</div>
-      </div>
-      <div class="celeb-type">
-        <div class="celeb-type-icon">💍</div>
-        <div class="celeb-type-name">Aniversarios</div>
-        <div class="celeb-type-desc">Mesa reservada, ambiente cuidado y detalles</div>
-      </div>
-      <div class="celeb-type">
-        <div class="celeb-type-icon">💼</div>
-        <div class="celeb-type-name">Empresa</div>
-        <div class="celeb-type-desc">Cenas de equipo, afterworks y networking</div>
-      </div>
-      <div class="celeb-type">
-        <div class="celeb-type-icon">🎓</div>
-        <div class="celeb-type-name">Graduaciones</div>
-        <div class="celeb-type-desc">Grupos grandes, packs desde 30 personas</div>
-      </div>
-    </div>
-
-    <div style="text-align:center;margin-top:44px" class="reveal">
+    <div style="text-align:center;margin-top:8px" class="reveal">
       <a href="celebraciones.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:12px;padding:16px 32px;font-size:.9rem;text-decoration:none">
         Reservar mi celebración
         <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1774,12 +1751,23 @@ function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow='';
 }
+// Taxonomía clara:
+//   reservado  = mesa con botellería (siempre es reservado, incluso para
+//                eventos del finde)
+//   cumpleanos = celebración privada (cumples, aniversarios, empresa,
+//                graduaciones, despedidas — TODO lo que hemos rebautizado
+//                como "Celebraciones" en la UI)
+//   evento     = reserva simple para un evento del calendario (Petit Suisse,
+//                Viernes Shaona…) sin botellería
+//   mesa       = default para reservas de mesa simple
 function detectarTipoReserva(evento){
-  if(!evento) return 'cumpleanos';
+  if(!evento) return 'mesa';
   const e = evento.toLowerCase();
-  if(e.includes('cumplea')) return 'cumpleanos';
-  if(e.includes('reservado')) return 'reservado';
-  return 'cumpleanos';
+  if (e.includes('cumplea') || e.includes('graduaci') || e.includes('aniversar') ||
+      e.includes('despedida') || e.includes('empresa') || e.includes('celebraci') ||
+      e.includes('privado')) return 'cumpleanos';
+  if (e.includes('reservado')) return 'reservado';
+  return 'evento'; // Eventos del calendario (Petit Suisse, Viernes Shaona, etc.)
 }
 
 function construirPayload(datos){
