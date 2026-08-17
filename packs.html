@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Packs y hoja de ruta — Shaona</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#181215; --paper:#f7f4f2; --paper-2:#efe9e6; --ink:#141014; --ink-2:#4d444a; --ink-3:#8b8189;
+  --pink:#ff0055; --pink-2:#c8003f; --cyan:#0079a3; --green:#178b3e; --gold:#a67c1a;
+  --border:rgba(0,0,0,.08); --border-hi:rgba(0,0,0,.16);
+}
+html,body{background:var(--bg);font-family:'Outfit',sans-serif;color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:var(--pink);text-decoration:none}
+strong{font-weight:600;color:var(--ink)}
+
+.page{max-width:900px;margin:24px auto;background:var(--paper);color:var(--ink);padding:52px 60px;box-shadow:0 40px 100px -20px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.page::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--pink) 0%,var(--gold) 55%,var(--pink) 100%)}
+
+.doc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:28px}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;letter-spacing:.3px}
+.brand em{color:var(--pink);font-style:normal}
+.brand-sub{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);font-weight:700;margin-top:2px}
+.doc-meta{text-align:right;font-size:.72rem;color:var(--ink-2);line-height:1.7}
+.doc-meta strong{color:var(--ink)}
+
+h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;line-height:1.05;font-weight:700;letter-spacing:-.5px;margin-bottom:8px}
+h1 em{color:var(--pink);font-style:italic}
+.lead{color:var(--ink-2);font-size:.98rem;line-height:1.55;max-width:640px;margin-bottom:32px}
+
+section{margin-bottom:38px}
+h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:12px}
+h2 .num{background:var(--pink);color:#fff;font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;letter-spacing:.5px;flex-shrink:0}
+h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;margin:16px 0 8px}
+p{font-size:.9rem;color:var(--ink-2);margin-bottom:10px}
+
+/* Packs base (los 3 grandes) */
+.packs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.pack{background:#fff;border:1px solid var(--border);border-radius:8px;padding:22px 22px 20px;position:relative;display:flex;flex-direction:column}
+.pack.featured{border:2px solid var(--pink);box-shadow:0 8px 30px -12px rgba(255,0,85,.35);transform:translateY(-4px)}
+.pack.featured::before{content:"Recomendado";position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--pink);color:#fff;font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:99px;white-space:nowrap}
+.pack .p-tag{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);font-weight:700;margin-bottom:8px}
+.pack .p-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;margin-bottom:4px}
+.pack .p-price{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;line-height:1;margin:6px 0 2px}
+.pack .p-price .cur{color:var(--pink);font-size:.65em}
+.pack .p-price-sub{font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:14px}
+.pack ul{list-style:none;padding:0;font-size:.82rem;line-height:1.55;color:var(--ink-2);flex:1}
+.pack li{padding-left:16px;position:relative;margin-bottom:5px}
+.pack li::before{content:"✓";position:absolute;left:0;color:var(--pink);font-weight:700}
+.pack .p-monthly{border-top:1px solid var(--border);padding-top:14px;margin-top:14px;text-align:center;font-size:.78rem;color:var(--ink-2)}
+.pack .p-monthly strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);font-weight:700}
+
+/* Upsells table */
+.ups-cat{margin-top:18px}
+.ups-cat h3{margin-bottom:8px}
+.ups-cat .cat-desc{font-size:.82rem;color:var(--ink-3);font-style:italic;margin-bottom:12px}
+table.ups{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:.85rem}
+table.ups th{text-align:left;padding:10px 14px;font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);font-weight:700;background:#faf7f5;border-bottom:1px solid var(--border)}
+table.ups td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--ink-2)}
+table.ups tr:last-child td{border-bottom:none}
+table.ups .name{font-weight:600;color:var(--ink)}
+table.ups .desc{font-size:.78rem;color:var(--ink-3);margin-top:2px;line-height:1.45}
+table.ups .price{white-space:nowrap;font-weight:700;color:var(--pink);font-variant-numeric:tabular-nums;text-align:right}
+table.ups .price small{display:block;color:var(--ink-3);font-weight:500;font-size:.68rem;margin-top:2px}
+
+.callout{background:#fff;border-left:3px solid var(--pink);padding:14px 18px;border-radius:0 4px 4px 0;margin:14px 0;font-size:.86rem;color:var(--ink-2);line-height:1.6}
+.callout strong{color:var(--ink)}
+.callout.tip{border-color:var(--green);background:#f2faf5}
+.callout.dark{background:#141014;color:#e3ded9;border-color:var(--pink)}
+.callout.dark strong{color:#fff}
+
+.combo-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:14px 18px;background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.combo-row .combo-name{font-weight:600;color:var(--ink);font-size:.9rem}
+.combo-row .combo-desc{font-size:.78rem;color:var(--ink-3);margin-top:3px}
+.combo-row .combo-price{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--pink);font-weight:700;font-variant-numeric:tabular-nums}
+
+.doc-foot{margin-top:36px;padding-top:20px;border-top:1px solid var(--border)}
+.sig{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-2);font-size:.86rem;line-height:1.6}
+.sig strong{font-style:normal;color:var(--ink);display:block;margin-top:4px;font-weight:600}
+
+@media print{
+  html,body{background:#fff}
+  .page{margin:0;padding:24px 30px;box-shadow:none;max-width:none}
+  .no-print{display:none !important}
+  section{page-break-inside:avoid}
+  .pack.featured{background:#fff}
+}
+@page{size:A4;margin:12mm}
+
+@media(max-width:700px){
+  .page{margin:8px;padding:32px 22px}
+  h1{font-size:1.9rem}
+  .packs{grid-template-columns:1fr}
+  .pack.featured{transform:none}
+  .doc-head{flex-direction:column;gap:12px}
+  .doc-meta{text-align:left}
+}
+
+.print-btn{position:fixed;bottom:20px;right:20px;background:var(--pink);color:#fff;border:none;padding:12px 22px;font-family:inherit;font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border-radius:99px;cursor:pointer;box-shadow:0 14px 32px -12px rgba(255,0,85,.6);z-index:10}
+.print-btn:hover{background:var(--pink-2)}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="doc-head">
+    <div>
+      <div class="brand">Shaona<em>.</em></div>
+      <div class="brand-sub">Packs y hoja de ruta</div>
+    </div>
+    <div class="doc-meta">
+      <div id="today"></div>
+      <div>Válido <strong>30 días</strong></div>
+    </div>
+  </div>
+
+  <h1>Packs para hoy y <em>módulos que crecen contigo</em></h1>
+  <p class="lead">Este documento resume las tres opciones de setup que os podemos entregar ahora y todos los módulos futuros que ya están pensados. La idea es que arranquéis con lo que hoy os aporta más, y añadamos capas según crezca el local.</p>
+
+  <!-- ═══════════════════ PACKS BASE ═══════════════════ -->
+  <section>
+    <h2><span class="num">1</span> Elige tu punto de arranque</h2>
+    <p>Tres opciones. La recomendada es el pack Completo — es el que os llevamos preparando, con toda la plataforma funcionando.</p>
+
+    <div class="packs">
+      <!-- ESSENTIAL -->
+      <div class="pack">
+        <div class="p-tag">Esencial</div>
+        <div class="p-name">Web + Reservas</div>
+        <div class="p-price">1.700<span class="cur"> €</span></div>
+        <div class="p-price-sub">Setup único</div>
+        <ul>
+          <li>Web pública responsive</li>
+          <li>Página dedicada de reservados</li>
+          <li>Página de celebraciones</li>
+          <li>Reservas por WhatsApp/email</li>
+          <li>SEO local + Google Maps</li>
+          <li>Reseñas Google integradas</li>
+          <li>Diseño móvil pulido</li>
+        </ul>
+        <div class="p-monthly">
+          Mantenimiento desde<br>
+          <strong>60 €/mes</strong>
+        </div>
+      </div>
+
+      <!-- FEATURED / COMPLETO -->
+      <div class="pack featured">
+        <div class="p-tag">Todo incluido</div>
+        <div class="p-name">Ecosistema completo</div>
+        <div class="p-price">2.400<span class="cur"> €</span></div>
+        <div class="p-price-sub">Setup único · IVA no incl.</div>
+        <ul>
+          <li>Todo lo del pack Esencial</li>
+          <li><strong>Panel admin completo</strong></li>
+          <li>Base de datos privada Supabase</li>
+          <li>Sistema de aforos + SOLD OUT</li>
+          <li>Calendario de días bloqueados</li>
+          <li>Catálogo dinámico de bebidas</li>
+          <li><strong>Torneo Pink Runner</strong> con ranking</li>
+          <li>Estadísticas y gráficos</li>
+          <li>Mensajes rápidos WhatsApp</li>
+          <li>Exportación CSV / Excel</li>
+        </ul>
+        <div class="p-monthly">
+          Mantenimiento recomendado<br>
+          <strong>90 €/mes</strong>
+        </div>
+      </div>
+
+      <!-- PRO -->
+      <div class="pack">
+        <div class="p-tag">Premium</div>
+        <div class="p-name">Ecosistema + Marketing</div>
+        <div class="p-price">3.200<span class="cur"> €</span></div>
+        <div class="p-price-sub">Setup único</div>
+        <ul>
+          <li>Todo lo del pack Completo</li>
+          <li>Diseño e impresión de un folleto físico QR</li>
+          <li>Configuración de Google Business</li>
+          <li>Campaña inicial de reseñas Google</li>
+          <li>Integración Instagram feed</li>
+          <li>PWA instalable (app en el móvil)</li>
+          <li>Formación 2 h presencial al equipo</li>
+        </ul>
+        <div class="p-monthly">
+          Mantenimiento con marketing<br>
+          <strong>180 €/mes</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><strong>Forma de pago del setup:</strong> 50 % al aceptar, 50 % en producción y aprobación. Bizum, transferencia o efectivo. Factura con IVA.</div>
+  </section>
+
+  <!-- ═══════════════════ QUÉ INCLUYE MENSUALIDAD ═══════════════════ -->
+  <section>
+    <h2><span class="num">2</span> Qué cubre cada mensualidad</h2>
+    <table class="ups">
+      <thead><tr><th>Plan</th><th>Precio</th><th>Horas incluidas</th><th>Cubre</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="name">Básico</td>
+          <td class="price">60 €/mes</td>
+          <td>≈ 1 h/mes</td>
+          <td>Subir eventos, cambiar fotos y textos, monitorización, soporte email</td>
+        </tr>
+        <tr>
+          <td class="name">Estándar (recomendado)</td>
+          <td class="price">90 €/mes</td>
+          <td>≈ 2 h/mes</td>
+          <td>Todo lo del Básico + cambios menores de diseño + configurar torneos + WhatsApp 24 h</td>
+        </tr>
+        <tr>
+          <td class="name">Premium</td>
+          <td class="price">180 €/mes</td>
+          <td>≈ 4 h/mes</td>
+          <td>Todo lo del Estándar + nuevo mini-juego trimestral + campaña visual por evento clave + respuesta el mismo día</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:.78rem;color:var(--ink-3);margin-top:10px">Horas extra: <strong>35 €/h</strong>. Podéis subir o bajar de plan mes a mes avisando con 30 días.</p>
+  </section>
+
+  <!-- ═══════════════════ AUTOMATIZACIONES ═══════════════════ -->
+  <section>
+    <h2><span class="num">3</span> Automatizaciones (poco dinero, mucho ROI)</h2>
+    <div class="ups-cat">
+      <div class="cat-desc">Reducen trabajo diario, aumentan conversión y confianza.</div>
+      <table class="ups">
+        <thead><tr><th style="width:60%">Módulo</th><th>Precio</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="name">Plantillas WhatsApp rápidas</div>
+              <div class="desc">Confirmar/recordar/agradecer con un click. YA INCLUIDO en la plataforma actual.</div>
+            </td>
+            <td class="price">Incluido</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Recordatorio automático 24 h antes</div>
+              <div class="desc">Manda WhatsApp/email a cada reserva pendiente. Reduce no-shows ~40%.</div>
+            </td>
+            <td class="price">300 € <small>+ 20 €/mes</small></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Email marketing eventos</div>
+              <div class="desc">Newsletter mensual con la agenda a todos los que reservaron alguna vez.</div>
+            </td>
+            <td class="price">400 € <small>+ 0 €/mes (Mailerlite free)</small></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Recuperación de reservas incompletas</div>
+              <div class="desc">Si alguien empezó a reservar y no terminó, WhatsApp automático a los 30 min.</div>
+            </td>
+            <td class="price">250 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CRECIMIENTO ═══════════════════ -->
+  <section>
+    <h2><span class="num">4</span> Módulos de crecimiento (ingresos directos)</h2>
+    <div class="ups-cat">
+      <div class="cat-desc">Aumentan el ticket medio y la frecuencia de visita.</div>
+      <table class="ups">
+        <thead><tr><th style="width:60%">Módulo</th><th>Precio</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="name">Venta de entradas online + pagos automáticos</div>
+              <div class="desc">Para NYE, Halloween, aniversario. Cliente paga con tarjeta/Bizum → billete con QR → validador en puerta. Stripe cobra 1,4% + 0,25 €/tx.</div>
+            </td>
+            <td class="price">1.500-1.800 € <small>+ 30 €/mes</small></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Programa de fidelidad</div>
+              <div class="desc">1 punto por euro. Canjeables por copas, cachimba, entrada. Aumenta frecuencia de visita.</div>
+            </td>
+            <td class="price">800 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Sistema de referidos</div>
+              <div class="desc">"Trae un amigo, os invitamos a una copa a cada uno". Código único vía WhatsApp.</div>
+            </td>
+            <td class="price">500 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Merchandising online</div>
+              <div class="desc">Tienda de camisetas, sudaderas, gorras Shaona. Envío o recogida en local.</div>
+            </td>
+            <td class="price">900 € <small>+ 15 €/mes</small></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Membresía "Shaona Club"</div>
+              <div class="desc">Cuota mensual (ej. 15 €/mes) con beneficios fijos. Ingreso recurrente predecible.</div>
+            </td>
+            <td class="price">1.200 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ GESTIÓN ═══════════════════ -->
+  <section>
+    <h2><span class="num">5</span> Módulos de gestión (facilitan el día a día)</h2>
+    <div class="ups-cat">
+      <div class="cat-desc">Menos tiempo administrativo, más control operativo.</div>
+      <table class="ups">
+        <thead><tr><th style="width:60%">Módulo</th><th>Precio</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="name">Eventos autogestionados</div>
+              <div class="desc">Vosotros creáis eventos desde el admin (nombre, fecha, foto URL, capacidad) sin necesitarme.</div>
+            </td>
+            <td class="price">180 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Multi-usuario por rol</div>
+              <div class="desc">Dueño (todo), gerente (reservas + eventos), camarero (solo reservas del día). Cada uno con su login.</div>
+            </td>
+            <td class="price">400 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Calendario visual de reservados</div>
+              <div class="desc">Vista tipo Airbnb: qué mesas libres qué día. Los camareros lo miran de un vistazo.</div>
+            </td>
+            <td class="price">600 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Check-in por QR al llegar</div>
+              <div class="desc">Cliente enseña QR de la reserva → escaneas → registra llegada + confirma que vino.</div>
+            </td>
+            <td class="price">500 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Integración con TPV</div>
+              <div class="desc">Cuando cierras cuenta en caja, se enlaza a la reserva y suma al histórico del cliente. Depende del TPV.</div>
+            </td>
+            <td class="price">500-2.000 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ ANÁLISIS ═══════════════════ -->
+  <section>
+    <h2><span class="num">6</span> Módulos de análisis (más inteligencia de negocio)</h2>
+    <div class="ups-cat">
+      <div class="cat-desc">Toma decisiones basadas en datos reales.</div>
+      <table class="ups">
+        <thead><tr><th style="width:60%">Módulo</th><th>Precio</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="name">Segmentación automática de clientes</div>
+              <div class="desc">Detecta VIPs (>X reservas), 'en riesgo' (no vienen desde X), nuevos. Acciones sugeridas.</div>
+            </td>
+            <td class="price">700 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Predicciones de negocio</div>
+              <div class="desc">Con histórico, sugiere el mejor día/hora para el próximo evento X. Necesita 3-6 meses de datos.</div>
+            </td>
+            <td class="price">1.000 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Panel de KPIs mensuales por email</div>
+              <div class="desc">Cada 1 de mes recibes un informe automático: reservas, ingresos, top eventos, evolución.</div>
+            </td>
+            <td class="price">400 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PRESENCIA ═══════════════════ -->
+  <section>
+    <h2><span class="num">7</span> Módulos de presencia digital</h2>
+    <div class="ups-cat">
+      <div class="cat-desc">Más ojos, más tráfico, más reservas.</div>
+      <table class="ups">
+        <thead><tr><th style="width:60%">Módulo</th><th>Precio</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="name">Instagram feed embebido</div>
+              <div class="desc">Las últimas 6 fotos de @shaonahookah actualizándose solas en la web.</div>
+            </td>
+            <td class="price">200 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">App PWA instalable</div>
+              <div class="desc">Los clientes pueden "instalar" la web como app en el móvil (sin App Store).</div>
+            </td>
+            <td class="price">300 €</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Google Business auto-sync</div>
+              <div class="desc">Horarios, fotos y eventos de la web se sincronizan con Google Maps y Business Profile.</div>
+            </td>
+            <td class="price">400 € <small>+ 10 €/mes API</small></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="name">Campaña inicial de reseñas Google</div>
+              <div class="desc">QR en mesas + WhatsApp automático post-visita pidiendo reseña. Sube la valoración media.</div>
+            </td>
+            <td class="price">300 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ COMBOS ═══════════════════ -->
+  <section>
+    <h2><span class="num">8</span> Combos sugeridos (precio conjunto)</h2>
+    <p>Módulos que se complementan bien juntos y salen mejor de precio en pack.</p>
+
+    <div class="combo-row">
+      <div>
+        <div class="combo-name">Combo "Pre-Halloween" — Ventas y capacidad</div>
+        <div class="combo-desc">Venta entradas online + Recordatorios automáticos + Campaña Google Reviews. Ideal antes de un evento fuerte.</div>
+      </div>
+      <div class="combo-price">2.000 €</div>
+    </div>
+
+    <div class="combo-row">
+      <div>
+        <div class="combo-name">Combo "Marketing recurrente"</div>
+        <div class="combo-desc">Email marketing + Programa fidelidad + Sistema de referidos. Máquina de repetición de visitas.</div>
+      </div>
+      <div class="combo-price">1.500 €</div>
+    </div>
+
+    <div class="combo-row">
+      <div>
+        <div class="combo-name">Combo "Operativa pro"</div>
+        <div class="combo-desc">Multi-usuario por rol + Eventos autogestionados + Calendario visual de mesas. El local se gestiona solo.</div>
+      </div>
+      <div class="combo-price">1.000 €</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ INFRA ═══════════════════ -->
+  <section>
+    <h2><span class="num">9</span> Coste real de infraestructura (aparte)</h2>
+    <p>Estos son los servicios técnicos externos. Los pagáis directamente vosotros (no reventa), quedan a nombre del Shaona.</p>
+    <table class="ups">
+      <thead><tr><th>Servicio</th><th>Precio</th><th>Cuándo aplica</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="name">Dominio</td>
+          <td class="price">≈ 12 €/año</td>
+          <td>Renovación anual</td>
+        </tr>
+        <tr>
+          <td class="name">Hosting web</td>
+          <td class="price">0 €</td>
+          <td>Vercel/Netlify free tier (suficiente para años)</td>
+        </tr>
+        <tr>
+          <td class="name">Base de datos Supabase Free</td>
+          <td class="price">0 €</td>
+          <td>Para arrancar. Pausa a los 7 días sin actividad.</td>
+        </tr>
+        <tr>
+          <td class="name">Base de datos Supabase Pro</td>
+          <td class="price">25 $/mes</td>
+          <td>Cuando queráis backups diarios + no pausa. Antes de eventos fuertes.</td>
+        </tr>
+        <tr>
+          <td class="name">Stripe (pagos, solo si vendéis entradas)</td>
+          <td class="price">1,4% + 0,25 €</td>
+          <td>Por transacción. Solo si activáis venta online.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══════════════════ CIERRE ═══════════════════ -->
+  <section>
+    <h2><span class="num">10</span> Cómo lo enseño en la reunión</h2>
+    <div class="callout dark">
+      <strong>Guion recomendado:</strong> Empiezas presentando el <em>pack Completo (2.400 €)</em> como lo que ya tenéis funcionando. Cuando pregunten "¿y esto puede crecer?", sacas esta hoja de ruta y les enseñas los módulos futuros. Cierras con:<br><br>
+      <em>"Esto es lo que hay HOY funcionando. Y esto es lo que ya está pensado para cuando queráis crecer. Nos los pedís, os los presupuestamos y en 2-3 semanas los tenéis."</em>
+    </div>
+    <p style="margin-top:14px">Con esta estructura le enseñas al dueño que no está comprando "una web y adiós", sino una plataforma que crece con el local. Ganas dos cosas: cierra más fácil el setup inicial (porque ve valor a largo plazo), y siembras futuros upsells naturales para los próximos meses.</p>
+  </section>
+
+  <div class="doc-foot">
+    <div class="sig">
+      Gracias por vuestra confianza.
+      <strong>[Tu nombre / estudio]</strong>
+    </div>
+  </div>
+
+</div>
+
+<button class="print-btn no-print" onclick="window.print()">Imprimir / Guardar PDF</button>
+
+<script>
+  document.getElementById('today').textContent = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+</script>
+
+</body>
+</html>
