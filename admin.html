@@ -319,6 +319,24 @@ input,select,textarea{font-family:inherit;color:inherit}
 .kv-item .v{color:var(--text);font-size:.9rem;word-break:break-word;line-height:1.4}
 .kv-item .v.big{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600}
 
+/* Badge coloreado por evento (color determinista según nombre) */
+.event-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:.78rem;font-weight:600;letter-spacing:.3px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.event-date-sub{font-size:.68rem;color:var(--muted);margin-top:3px;letter-spacing:.5px;font-variant-numeric:tabular-nums}
+
+/* Strip compacto y colorido (una sola línea) para botellas/cachimbas/mezclas */
+.detail-strip{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:10px 14px;border-radius:8px;background:rgba(255,0,102,.06);border:1px solid rgba(255,0,102,.22);margin-top:4px;font-family:'Outfit',sans-serif;font-size:.92rem;line-height:1.4;color:var(--text);font-weight:500}
+.detail-strip .db-badge{font-size:.68rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink);background:rgba(255,0,102,.14);padding:3px 9px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.detail-strip .db-body{flex:1;min-width:0}
+.detail-strip .db-body b{color:var(--pink);font-weight:800}
+.detail-strip .db-sep{color:var(--muted);opacity:.6}
+.detail-strip .db-extra-tag{font-size:.68rem;color:var(--gold);background:rgba(255,200,40,.12);padding:2px 8px;border-radius:99px;white-space:nowrap;font-weight:600}
+.detail-strip.gold{background:rgba(255,200,40,.06);border-color:rgba(255,200,40,.22)}
+.detail-strip.gold .db-badge{color:var(--gold);background:rgba(255,200,40,.14)}
+.detail-strip.gold .db-body b{color:var(--gold)}
+.detail-strip.cyan{background:rgba(0,224,255,.06);border-color:rgba(0,224,255,.22)}
+.detail-strip.cyan .db-badge{color:var(--cyan);background:rgba(0,224,255,.14)}
+.detail-strip.cyan .db-body b{color:var(--cyan)}
+
 /* Bloques destacados para pedidos (botellas / cachimbas / mezclas) */
 .kv-item.kv-full{grid-column:1 / -1}
 .detail-block{background:linear-gradient(160deg,rgba(255,0,102,.09),rgba(255,0,102,.03));border:1px solid rgba(255,0,102,.28);border-radius:10px;padding:14px 18px;margin-top:6px}
@@ -1141,7 +1159,7 @@ function paintLatestReservationsMini(){
             <td class="name-cell" data-label="Cliente"><strong>${esc(r.name)}</strong><small>${esc(r.phone)}</small></td>
             <td data-label="Tipo">${typePill(r.type)}</td>
             <td data-label="Estado">${statusPill(r.status)}</td>
-            <td class="hide-sm" data-label="Detalle">${esc(r.event_name || '—')}</td>
+            <td class="hide-sm" data-label="Detalle">${eventBadge(r.event_name, null)}</td>
             <td class="actions" data-label="Acciones">
               <button class="btn icon-only ghost" title="Ver">${ICONS.eye}</button>
             </td>
@@ -1185,7 +1203,7 @@ function renderReservas(){
         <option value="all">Todos los tipos</option>
         <option value="reservado">Reservados</option>
         <option value="evento">Eventos</option>
-        <option value="cumpleanos">Cumpleaños</option>
+        <option value="cumpleanos">Celebraciones</option>
         <option value="mesa">Mesas</option>
         <option value="otro">Otros</option>
       </select>
@@ -1342,7 +1360,7 @@ function paintReservationsTable(){
             <td class="name-cell" data-label="Cliente"><strong>${esc(r.name)}</strong><small>${esc(r.phone)}${r.email?' · '+esc(r.email):''}</small></td>
             <td data-label="Tipo">${typePill(r.type)}</td>
             <td data-label="Estado">${statusPill(r.status)}</td>
-            <td class="hide-sm" data-label="Evento / detalle">${esc(r.event_name || '—')}${r.event_date?` <small style="color:var(--muted)">· ${esc(r.event_date)}</small>`:''}</td>
+            <td class="hide-sm" data-label="Evento / detalle">${eventBadge(r.event_name, r.event_date)}</td>
             <td class="hide-sm" data-label="Personas">${r.people ?? '—'}</td>
             <td class="num" data-label="Total">${esc(r.total || '—')}</td>
             <td class="actions" data-label="Acciones" onclick="event.stopPropagation()">
@@ -1368,10 +1386,30 @@ function paintReservationsTable(){
   }));
 }
 
+// Badge coloreado por evento — mismo evento = mismo color (basado en hash del
+// nombre). Ayuda a reconocer a golpe de ojo qué evento es cada fila cuando
+// hay muchas mezcladas. Fecha en pill más apagada al lado.
+const EVENT_COLORS = [
+  { bg:'rgba(255,0,102,.14)', bd:'rgba(255,0,102,.35)', tx:'#ff6699' },
+  { bg:'rgba(0,224,255,.14)', bd:'rgba(0,224,255,.35)', tx:'#66e8ff' },
+  { bg:'rgba(255,200,40,.14)', bd:'rgba(255,200,40,.35)', tx:'#ffd766' },
+  { bg:'rgba(74,222,128,.14)', bd:'rgba(74,222,128,.35)', tx:'#7dd99a' },
+  { bg:'rgba(180,120,255,.14)', bd:'rgba(180,120,255,.35)', tx:'#c5a1ff' },
+  { bg:'rgba(255,126,58,.14)', bd:'rgba(255,126,58,.35)', tx:'#ffa876' },
+  { bg:'rgba(220,220,239,.10)', bd:'rgba(220,220,239,.30)', tx:'#dcdcef' }
+];
+function hashCode(s){ let h=0; for (let i=0; i<s.length; i++){ h = ((h<<5)-h) + s.charCodeAt(i); h |= 0; } return Math.abs(h); }
+function eventBadge(name, date){
+  if (!name) return '<span class="muted">—</span>';
+  const c = EVENT_COLORS[hashCode(name) % EVENT_COLORS.length];
+  const style = `background:${c.bg};border:1px solid ${c.bd};color:${c.tx}`;
+  return `<span class="event-badge" style="${style}" title="${esc(name)}${date?' · '+esc(date):''}">${esc(name)}</span>${date?`<div class="event-date-sub">${esc(date)}</div>`:''}`;
+}
+
 function typePill(type){
   const t = (type||'mesa').toLowerCase();
   const map = { reservado:'pink', evento:'cyan', cumpleanos:'gold', mesa:'muted', otro:'muted' };
-  const label = { reservado:'Reservado', evento:'Evento', cumpleanos:'Cumpleaños', mesa:'Mesa', otro:'Otro' };
+  const label = { reservado:'Reservado', evento:'Evento', cumpleanos:'Celebración', mesa:'Mesa', otro:'Otro' };
   return `<span class="pill ${map[t]||'muted'}">${esc(label[t]||t)}</span>`;
 }
 function statusPill(status){
@@ -1433,9 +1471,9 @@ function openReservationModal(id){
       ${r.event_date ? kv('Fecha', esc(r.event_date)) : ''}
       ${r.people ? kv('Personas', esc(r.people)) : ''}
       ${r.total ? kv('Total', esc(r.total)) : ''}
-      ${r.bottles ? kv('Botellas', esc(r.bottles)) : ''}
-      ${r.hookahs ? kv('Cachimbas', esc(r.hookahs)) : ''}
-      ${r.mixers  ? kv('Mezclas', esc(r.mixers))    : ''}
+      ${r.bottles ? fmtOrderCompact('Botellas', r.bottles, 'pink')  : ''}
+      ${r.hookahs ? fmtOrderCompact('Cachimbas', r.hookahs, 'gold') : ''}
+      ${r.mixers  ? fmtOrderCompact('Mezclas', r.mixers, 'cyan')    : ''}
       ${r.promo ? kv('Promo', esc(r.promo)) : ''}
     </div>
     ${r.comments ? `<div style="margin-top:20px"><div style="font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Comentarios del cliente</div><div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:.9rem;line-height:1.5">${esc(r.comments)}</div></div>` : ''}
@@ -1692,9 +1730,40 @@ function wireDatePicker(){
   });
 }
 
+// Bloque compacto y colorido en UNA línea (versión preferida por el equipo).
+// "Botellas: 4 botellas (1× Ron Barceló · 2× Belaire Rosé · 1× Vodka Absolut)"
+// con badge rosa/oro/cian a la izquierda para reconocer al vuelo.
+function fmtOrderCompact(label, raw, color='pink'){
+  if (!raw) return '';
+  const str = String(raw).trim();
+  const m = str.match(/^(\d+)\s*(botellas?|mezclas?|cachimbas?)?\s*[:\(]?\s*([^\[\]]*?)\)?\s*(\[.+\])?\s*$/i);
+  let count = '', unit = label.toLowerCase(), body = str, extra = '';
+  if (m){
+    count = m[1] || '';
+    if (m[2]) unit = m[2].toLowerCase();
+    body  = (m[3] || '').trim();
+    extra = m[4] ? m[4].replace(/^\[|\]$/g,'').trim() : '';
+  }
+  // Resalta cada "N×" en negrita del color asignado, cambia + por ·
+  const highlighted = esc(body || str)
+    .replace(/(\d+)\s*[×x]\s*/g, '<b>$1×</b>&nbsp;')
+    .replace(/\s*\+\s*/g, ' <span class="db-sep">·</span> ');
+  const badge = count
+    ? `<span class="db-badge">${count} ${esc(unit)}</span>`
+    : '';
+  return `<div class="kv-item kv-full">
+    <span class="k">${esc(label)}</span>
+    <div class="detail-strip ${color}">
+      ${badge}
+      <span class="db-body">${highlighted}</span>
+      ${extra ? `<span class="db-extra-tag">+${esc(extra)}</span>` : ''}
+    </div>
+  </div>`;
+}
+
 // Bloque destacado para "N botellas (1 × X + 2 × Y)" o "N mezclas: A + B"
-// o "2 (14€)" — cachimbas. Lo hace visual y rápido de leer en un vistazo,
-// con cada item en su propia línea.
+// o "2 (14€)" — cachimbas. Version con items en varias líneas (no usada
+// actualmente pero disponible por si se quiere volver a activar).
 function fmtOrder(label, raw, color='pink'){
   if (!raw) return '';
   const str = String(raw).trim();
@@ -2476,7 +2545,7 @@ function paintTypeBreakdown(items){
   const el = $('#typeBreakdown');
   if (!el) return;
   const types = ['reservado','evento','cumpleanos','mesa'];
-  const labels = { reservado:'Reservados', evento:'Eventos', cumpleanos:'Cumpleaños', mesa:'Mesas' };
+  const labels = { reservado:'Reservados', evento:'Eventos', cumpleanos:'Celebraciones', mesa:'Mesas' };
   const colors = { reservado:'var(--pink)', evento:'var(--cyan)', cumpleanos:'var(--gold)', mesa:'var(--muted)' };
   const total = items.length || 1;
   const rows = types.map(t => {
