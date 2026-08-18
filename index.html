@@ -63,8 +63,12 @@
 }
 </script>
 <style>
-:root{--pink:#FF0055;--cyan:#00EEFF;--pink-glow:rgba(255,0,85,.5);--cyan-glow:rgba(0,238,255,.4);--bg:#080808;--bg2:#0f0f0f;--card:#111;--border:rgba(255,255,255,.07);--text:#f0f0f0;--muted:#666;--green:#00C46A}
+:root{--pink:#FF0055;--cyan:#00EEFF;--pink-glow:rgba(255,0,85,.5);--cyan-glow:rgba(0,238,255,.4);--bg:#080808;--bg2:#0f0f0f;--card:#111;--border:rgba(255,255,255,.07);--text:#f0f0f0;--muted:#666;--green:#00C46A;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
+/* El desplegable NATIVO de <select>/<input type=date> lo pinta el SO,
+   CSS no llega ahí — color-scheme:dark le pide al navegador que use su
+   tema oscuro nativo en vez del blanco por defecto. */
+select,input[type="date"]{color-scheme:dark}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden}
 
