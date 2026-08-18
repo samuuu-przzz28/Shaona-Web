@@ -940,9 +940,9 @@ function renderApp(){
           <div class="side-nav-item ${state.view==='calendario'?'active':''}" data-nav="calendario">
             <span class="icon">${ICONS.clock}</span>Calendario
           </div>
-          <div class="side-nav-item ${state.view==='catalogo'?'active':''}" data-nav="catalogo">
+          ${false ? `<div class="side-nav-item ${state.view==='catalogo'?'active':''}" data-nav="catalogo">
             <span class="icon">${ICONS.gift}</span>Catálogo
-          </div>
+          </div>` : ''}
           <div class="side-section">Enlaces</div>
           <a class="side-nav-item" href="index.html" target="_blank" rel="noopener">
             <span class="icon">${ICONS.eye}</span>Ver la web
