@@ -1904,8 +1904,8 @@ async function submitReserva(){
 // selecciona el día correcto y resalta el bloque para que el usuario
 // vea al momento dónde tiene que rellenar.
 function reservarEvento(dia, nombreEvento){
-  // Lleva a la página dedicada de reservados con el día pre-seleccionado
-  location.href = 'reservados.html?dia=' + encodeURIComponent(dia);
+  // Lleva a la página dedicada de reservados con el día y el evento concreto pre-seleccionados
+  location.href = 'reservados.html?dia=' + encodeURIComponent(dia) + '&evento=' + encodeURIComponent(nombreEvento);
 }
 
 // Toast simple, no bloqueante
@@ -2054,7 +2054,7 @@ let selectedEventoKey = null; // 'viernes' | 'sabado'
 function getProximaFecha(diaSemana){ // 5=viernes, 6=sabado
   const hoy = new Date();
   hoy.setHours(0,0,0,0);
-  const diff = (diaSemana - hoy.getDay() + 7) % 7 || 7;
+  const diff = (diaSemana - hoy.getDay() + 7) % 7;
   const fecha = new Date(hoy);
   fecha.setDate(hoy.getDate() + diff);
   return fecha;

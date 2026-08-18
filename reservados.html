@@ -589,6 +589,7 @@ function updatePrice(){
 
 /* ---- Selector de evento ---- */
 let selectedEventoKey = null;
+let selectedEventoNombre = null;
 function selectEvento(key){
   selectedEventoKey = key;
   document.getElementById('evCard-viernes').classList.toggle('selected', key==='viernes');
@@ -599,7 +600,7 @@ function selectEvento(key){
   const diaSemana = key === 'viernes' ? 5 : 6;
   const fecha = getProximaFecha(diaSemana);
   const nombreDia = key === 'viernes' ? 'Viernes' : 'Sábado';
-  const nombreEvento = key === 'viernes' ? 'Viernes de Shaona' : 'Petit Suisse Party';
+  const nombreEvento = selectedEventoNombre || (key === 'viernes' ? 'Viernes de Shaona' : 'Petit Suisse Party');
   const fechaStr = fecha.toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
   const resumen = document.getElementById('fechaResumen');
   const resumenTxt = document.getElementById('fechaResumenText');
@@ -611,12 +612,12 @@ function selectEvento(key){
 
 function getProximaFecha(diaSemana){
   const hoy = new Date(); hoy.setHours(0,0,0,0);
-  const diff = (diaSemana - hoy.getDay() + 7) % 7 || 7;
+  const diff = (diaSemana - hoy.getDay() + 7) % 7;
   const f = new Date(hoy); f.setDate(hoy.getDate() + diff);
   return f;
 }
 
-function validarTelefono(t){ return /^[+]?[0-9\s]{9,15}$/.test(t); }
+function validarTelefono(t){ return /^[+]?[0-9]{9,15}$/.test(String(t).replace(/\s+/g,'')); }
 function validarEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 function showFieldError(el, msg){
   if (!el) return;
@@ -665,7 +666,7 @@ async function submitReservado(){
   const diaSemana = selectedEventoKey === 'viernes' ? 5 : 6;
   const fechaEvento = getProximaFecha(diaSemana);
   const fechaEventoStr = fechaEvento.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
-  const nombreEvento = selectedEventoKey === 'viernes' ? 'Viernes de Shaona' : 'Petit Suisse Party (Sábado)';
+  const nombreEvento = selectedEventoNombre || (selectedEventoKey === 'viernes' ? 'Viernes de Shaona' : 'Petit Suisse Party (Sábado)');
 
   // Comprueba día bloqueado
   const blockedInfo = await checkDayBlocked(fechaEvento);
@@ -709,29 +710,39 @@ async function submitReservado(){
 
   // Enviar a Supabase + webhook en paralelo
   const cfg = window.SHAONA_CONFIG || {};
-  const promises = [];
-  promises.push(fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }).catch(()=>{}));
-  if (cfg.supabaseUrl && cfg.supabaseAnonKey){
-    promises.push(fetch(`${cfg.supabaseUrl}/rest/v1/reservations`, {
-      method:'POST',
-      headers:{'apikey':cfg.supabaseAnonKey,'Authorization':'Bearer '+cfg.supabaseAnonKey,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body: JSON.stringify({
-        type:'reservado',
-        event_name: payload.evento,
-        event_date: payload.fecha_evento,
-        name: payload.nombre,
-        phone: payload.telefono,
-        people: parseInt(payload.personas, 10) || null,
-        bottles: payload.botellas,
-        hookahs: payload.cachimbas,
-        mixers: payload.botella_pref,
-        total: payload.total,
-        promo: promo !== '—' ? promo : null,
-        raw: payload
-      })
-    }).catch(()=>{}));
+  const results = await Promise.allSettled([
+    fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }),
+    (cfg.supabaseUrl && cfg.supabaseAnonKey)
+      ? fetch(`${cfg.supabaseUrl}/rest/v1/reservations`, {
+          method:'POST',
+          headers:{'apikey':cfg.supabaseAnonKey,'Authorization':'Bearer '+cfg.supabaseAnonKey,'Content-Type':'application/json','Prefer':'return=minimal'},
+          body: JSON.stringify({
+            type:'reservado',
+            event_name: payload.evento,
+            event_date: payload.fecha_evento,
+            name: payload.nombre,
+            phone: payload.telefono,
+            people: parseInt(payload.personas, 10) || null,
+            bottles: payload.botellas,
+            hookahs: payload.cachimbas,
+            mixers: payload.botella_pref,
+            total: payload.total,
+            promo: promo !== '—' ? promo : null,
+            raw: payload
+          })
+        })
+      : Promise.reject(new Error('Supabase no configurado'))
+  ]);
+
+  const anyOk = results.some(r => r.status === 'fulfilled' && r.value.ok);
+  btn.disabled = false;
+  btn.innerHTML = 'Solicita tu reservado <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+  if (!anyOk){
+    errorEl.textContent = 'No se ha podido enviar tu solicitud. Comprueba tu conexión e inténtalo de nuevo, o contáctanos por WhatsApp.';
+    errorEl.style.display = 'block';
+    return;
   }
-  await Promise.all(promises);
 
   document.getElementById('reservaForm').style.display = 'none';
   document.getElementById('reservaSuccess').style.display = 'block';
@@ -747,10 +758,12 @@ addBottleRow();
 document.getElementById('rPersonas').addEventListener('change', updatePrice);
 document.getElementById('rCachimbas').addEventListener('change', updatePrice);
 document.getElementById('rPromo').addEventListener('input', updatePrice);
-// Preseleccionar día si viene por ?dia=viernes|sabado
+// Preseleccionar día (y evento concreto) si viene por ?dia=viernes|sabado&evento=Nombre
 (function(){
   const params = new URLSearchParams(location.search);
   const dia = params.get('dia');
+  const evento = params.get('evento');
+  if (evento) selectedEventoNombre = evento;
   if (dia === 'viernes' || dia === 'sabado') selectEvento(dia);
 })();
 </script>
