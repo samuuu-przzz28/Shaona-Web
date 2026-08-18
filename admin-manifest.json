@@ -1,0 +1,46 @@
+{
+  "name": "Shaona Admin",
+  "short_name": "Shaona",
+  "description": "Panel de administración del Shaona Hookah Lounge — reservas, torneo, eventos, estadísticas.",
+  "start_url": "/admin.html",
+  "scope": "/admin.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0008",
+  "theme_color": "#0a0008",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%230a0008'/%3E%3Ctext x='256' y='368' font-family='Georgia,serif' font-size='360' font-weight='700' fill='%23ff0055' text-anchor='middle' font-style='italic'%3ES%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230a0008'/%3E%3Ctext x='256' y='340' font-family='Georgia,serif' font-size='320' font-weight='700' fill='%23ff0055' text-anchor='middle' font-style='italic'%3ES%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver reservas de hoy",
+      "short_name": "Reservas",
+      "url": "/admin.html#reservas",
+      "description": "Ir directamente a las reservas"
+    },
+    {
+      "name": "Torneo",
+      "short_name": "Torneo",
+      "url": "/admin.html#torneo"
+    },
+    {
+      "name": "Estadísticas",
+      "short_name": "Stats",
+      "url": "/admin.html#stats"
+    }
+  ]
+}
