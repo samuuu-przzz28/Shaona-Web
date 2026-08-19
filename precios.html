@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Precios según uso — Shaona</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#181215; --paper:#f7f4f2; --ink:#141014; --ink-2:#4d444a; --ink-3:#8b8189;
+  --pink:#ff0055; --pink-2:#c8003f; --cyan:#0079a3; --green:#178b3e; --gold:#a67c1a;
+  --border:rgba(0,0,0,.08); --border-hi:rgba(0,0,0,.16);
+}
+html,body{background:var(--bg);font-family:'Outfit',sans-serif;color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:var(--pink);text-decoration:none}
+strong{font-weight:600;color:var(--ink)}
+
+.page{max-width:900px;margin:24px auto;background:var(--paper);color:var(--ink);padding:52px 60px;box-shadow:0 40px 100px -20px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.page::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--pink) 0%,var(--gold) 55%,var(--pink) 100%)}
+
+.doc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:28px}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;letter-spacing:.3px}
+.brand em{color:var(--pink);font-style:normal}
+.brand-sub{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);font-weight:700;margin-top:2px}
+.doc-meta{text-align:right;font-size:.72rem;color:var(--ink-2);line-height:1.7}
+.doc-meta strong{color:var(--ink)}
+
+h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;line-height:1.05;font-weight:700;letter-spacing:-.5px;margin-bottom:8px}
+h1 em{color:var(--pink);font-style:italic}
+.lead{color:var(--ink-2);font-size:.98rem;line-height:1.6;max-width:640px;margin-bottom:8px}
+
+section{margin-bottom:36px}
+h2{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+h2 em{color:var(--pink);font-style:italic}
+h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;margin:14px 0 6px}
+p{font-size:.9rem;color:var(--ink-2);margin-bottom:10px}
+
+/* Callout de contexto (arriba, por qué ya no hay venta online) */
+.context-note{background:#fff;border-left:3px solid var(--green);padding:14px 18px;border-radius:0 6px 6px 0;margin:18px 0 30px;font-size:.86rem;color:var(--ink-2);line-height:1.6}
+.context-note strong{color:var(--ink)}
+
+/* Tiers por uso */
+.tiers{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.tier{background:#fff;border:1px solid var(--border);border-radius:10px;padding:26px 28px;position:relative;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+.tier.featured{border:2px solid var(--pink);box-shadow:0 10px 34px -14px rgba(255,0,85,.32)}
+.tier.featured::before{content:"Más elegido";position:absolute;top:-11px;left:32px;background:var(--pink);color:#fff;font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:99px}
+.tier-left{min-width:0}
+.tier-tag{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);font-weight:700;margin-bottom:6px}
+.tier-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;margin-bottom:6px;line-height:1.15}
+.tier-desc{font-size:.85rem;color:var(--ink-2);line-height:1.55;margin-bottom:14px;max-width:480px}
+.tier-includes{list-style:none;padding:0;font-size:.82rem;color:var(--ink-2);display:grid;grid-template-columns:1fr 1fr;gap:5px 16px}
+.tier-includes li{padding-left:15px;position:relative}
+.tier-includes li::before{content:"✓";position:absolute;left:0;color:var(--pink);font-weight:700}
+.tier-right{text-align:right;flex-shrink:0}
+.tier-price{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;line-height:1;white-space:nowrap}
+.tier-price .cur{color:var(--pink);font-size:.6em}
+.tier-price-per{font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-top:4px}
+.tier-setup{font-size:.72rem;color:var(--ink-3);margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+.tier-setup strong{color:var(--ink)}
+
+@media(max-width:640px){
+  .tier{grid-template-columns:1fr;text-align:left}
+  .tier-right{text-align:left}
+  .tier-includes{grid-template-columns:1fr}
+}
+
+/* Tabla comparativa rápida */
+table.cmp{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:.84rem;margin-top:16px}
+table.cmp th{padding:12px 14px;background:#faf7f5;border-bottom:1px solid var(--border);font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);font-weight:700;text-align:center}
+table.cmp th:first-child{text-align:left}
+table.cmp td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:center;color:var(--ink-2)}
+table.cmp td:first-child{text-align:left;font-weight:600;color:var(--ink)}
+table.cmp tr:last-child td{border-bottom:none}
+table.cmp .yes{color:var(--pink);font-weight:700}
+table.cmp .no{color:var(--ink-3);opacity:.4}
+
+.callout{background:#fff;border-left:3px solid var(--pink);padding:14px 18px;border-radius:0 6px 6px 0;margin:16px 0;font-size:.86rem;color:var(--ink-2);line-height:1.6}
+.callout strong{color:var(--ink)}
+.callout.dark{background:#141014;color:#e3ded9;border-color:var(--pink)}
+.callout.dark strong{color:#fff}
+
+.doc-foot{margin-top:36px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.sig{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-2);font-size:.86rem;line-height:1.6}
+.sig strong{font-style:normal;color:var(--ink);display:block;margin-top:4px;font-weight:600}
+
+@media print{
+  html,body{background:#fff}
+  .page{margin:0;padding:24px 30px;box-shadow:none;max-width:none}
+  .no-print{display:none !important}
+  section{page-break-inside:avoid}
+}
+@page{size:A4;margin:12mm}
+@media(max-width:700px){
+  .page{margin:8px;padding:32px 22px}
+  h1{font-size:1.9rem}
+  .doc-head{flex-direction:column;gap:12px}
+  .doc-meta{text-align:left}
+}
+
+.print-btn{position:fixed;bottom:20px;right:20px;background:var(--pink);color:#fff;border:none;padding:12px 22px;font-family:inherit;font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border-radius:99px;cursor:pointer;box-shadow:0 14px 32px -12px rgba(255,0,85,.6);z-index:10}
+.print-btn:hover{background:var(--pink-2)}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="doc-head">
+    <div>
+      <div class="brand">Shaona<em>.</em></div>
+      <div class="brand-sub">Precios según uso</div>
+    </div>
+    <div class="doc-meta">
+      <div id="today"></div>
+      <div>Válido <strong>30 días</strong></div>
+    </div>
+  </div>
+
+  <h1>Elige el nivel <em>que necesitáis hoy</em></h1>
+  <p class="lead">Tras la reunión, ajustamos la propuesta a tres niveles según cuánto vayáis a usar la plataforma en el día a día. Podéis empezar por el nivel que os encaje ahora y subir cuando os haga falta — sin perder nada de lo que ya tengáis montado.</p>
+
+  <div class="context-note">
+    <strong>Sobre la venta de entradas online:</strong> según lo hablado, la retiramos del alcance. Vuestra experiencia dice que la gente prefiere comprar en puerta, y tiene todo el sentido — no vamos a forzar un flujo de pago que no encaja con vuestro público. Todo lo que sigue es 100% reservas gestionadas por WhatsApp, sin pagos online en ningún nivel.
+  </div>
+
+  <!-- ═══════════════════ NIVELES ═══════════════════ -->
+  <section>
+    <h2>Los <em>tres niveles</em></h2>
+
+    <div class="tiers">
+      <!-- NIVEL 1 — LIGERO -->
+      <div class="tier">
+        <div class="tier-left">
+          <div class="tier-tag">Nivel 1 · Uso ligero</div>
+          <div class="tier-name">Presencia + Reservas básicas</div>
+          <div class="tier-desc">Para cuando la web es sobre todo escaparate: que se os encuentre bien en Google, que la gente vea la agenda y pueda reservar. Cambios de contenido poco frecuentes.</div>
+          <ul class="tier-includes">
+            <li>Web completa (home, eventos, ubicación)</li>
+            <li>Página de reservados</li>
+            <li>Página de celebraciones</li>
+            <li>Reservas por WhatsApp</li>
+            <li>SEO local + Google Maps</li>
+            <li>1 actualización de agenda al mes</li>
+          </ul>
+          <div class="tier-setup">Setup: <strong>1.700 €</strong> pago único</div>
+        </div>
+        <div class="tier-right">
+          <div class="tier-price">60<span class="cur"> €</span></div>
+          <div class="tier-price-per">al mes</div>
+        </div>
+      </div>
+
+      <!-- NIVEL 2 — MEDIO (recomendado) -->
+      <div class="tier featured">
+        <div class="tier-left">
+          <div class="tier-tag">Nivel 2 · Uso semanal</div>
+          <div class="tier-name">Operativa completa</div>
+          <div class="tier-desc">Para cuando tenéis eventos cada finde y necesitáis gestionar reservas activamente: panel propio, control de aforo, y capacidad de cambiar cosas vosotros mismos con soporte rápido.</div>
+          <ul class="tier-includes">
+            <li>Todo lo del Nivel 1</li>
+            <li>Panel de administración completo</li>
+            <li>Base de datos privada</li>
+            <li>Control de aforo + SOLD OUT</li>
+            <li>Calendario de disponibilidad</li>
+            <li>Mensajes rápidos WhatsApp</li>
+            <li>2-3 actualizaciones al mes</li>
+            <li>Soporte WhatsApp en 24h</li>
+          </ul>
+          <div class="tier-setup">Setup: <strong>2.400 €</strong> pago único</div>
+        </div>
+        <div class="tier-right">
+          <div class="tier-price">90<span class="cur"> €</span></div>
+          <div class="tier-price-per">al mes</div>
+        </div>
+      </div>
+
+      <!-- NIVEL 3 — INTENSIVO -->
+      <div class="tier">
+        <div class="tier-left">
+          <div class="tier-tag">Nivel 3 · Uso intensivo</div>
+          <div class="tier-name">Motor de eventos + marketing</div>
+          <div class="tier-desc">Para cuando el Shaona vive de eventos constantes, torneos, campañas y necesitáis que alguien esté encima de la plataforma casi a diario, incluida analítica para tomar decisiones.</div>
+          <ul class="tier-includes">
+            <li>Todo lo del Nivel 2</li>
+            <li>Torneo Pink Runner con ranking</li>
+            <li>Estadísticas y gráficos</li>
+            <li>Nuevo evento configurado en &lt;24h</li>
+            <li>Campaña de reseñas Google</li>
+            <li>Cambios de diseño estacionales</li>
+            <li>Respuesta el mismo día</li>
+          </ul>
+          <div class="tier-setup">Setup: <strong>3.200 €</strong> pago único</div>
+        </div>
+        <div class="tier-right">
+          <div class="tier-price">180<span class="cur"> €</span></div>
+          <div class="tier-price-per">al mes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><strong>Podéis cambiar de nivel</strong> mes a mes avisando con 30 días. Si empezáis en el Nivel 1 y en dos meses veis que necesitáis más gestión, subimos sin volver a montar nada desde cero — se añade lo que falte sobre lo que ya existe.</div>
+  </section>
+
+  <!-- ═══════════════════ COMPARATIVA ═══════════════════ -->
+  <section>
+    <h2>Comparativa <em>rápida</em></h2>
+    <table class="cmp">
+      <thead><tr><th>Incluye</th><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th></tr></thead>
+      <tbody>
+        <tr><td>Web pública + SEO</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Reservados + Celebraciones</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Panel de administración</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Control de aforo / SOLD OUT</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Calendario de disponibilidad</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Torneo con ranking</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+        <tr><td>Estadísticas y gráficos</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+        <tr><td>Actualizaciones al mes</td><td>1</td><td>2-3</td><td>Ilimitadas*</td></tr>
+        <tr><td>Tiempo de respuesta soporte</td><td>48-72h</td><td>24h</td><td>Mismo día</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.72rem;color:var(--ink-3);margin-top:8px">*Dentro de un uso razonable — cambios de contenido y ajustes menores. Funcionalidad nueva se presupuesta aparte.</p>
+  </section>
+
+  <!-- ═══════════════════ CONDICIONES ═══════════════════ -->
+  <section>
+    <h2>Condiciones</h2>
+    <p><strong>Pago del setup:</strong> 50% al aceptar, 50% en producción y aprobación. Bizum, transferencia o efectivo, factura con IVA.</p>
+    <p><strong>Mensualidad:</strong> por adelantado el día 1 de cada mes. Permanencia mínima de 3 meses en cualquier nivel.</p>
+    <p><strong>Horas extra</strong> fuera de lo incluido: 35 €/h, facturadas a fin de mes con detalle de qué se hizo.</p>
+    <p><strong>Infraestructura</strong> (dominio, hosting, base de datos) va aparte y a vuestro nombre — entre 0 y 25 €/mes según el momento. Sin sorpresas ni reventa.</p>
+  </section>
+
+  <div class="doc-foot">
+    <div class="sig">
+      Gracias por la reunión de hoy.
+      <strong>[Tu nombre / estudio]</strong>
+    </div>
+  </div>
+
+</div>
+
+<button class="print-btn no-print" onclick="window.print()">Imprimir / Guardar PDF</button>
+
+<script>
+  document.getElementById('today').textContent = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+</script>
+
+</body>
+</html>
