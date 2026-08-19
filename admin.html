@@ -677,6 +677,18 @@ const supa = (window.supabase && CFG.supabaseUrl && CFG.supabaseAnonKey)
     })
   : null;
 
+// ---------- Feature flags ----------
+// Producto actual vendido: web + reservados + celebraciones, gestión
+// exclusiva por el administrador (sin autoservicio del cliente).
+// El torneo/estadísticas/aforo quedan OCULTOS (no borrados) — reactivar
+// cambiando el valor a true si algún día se contrata ese módulo.
+const FEATURES = {
+  torneo:    false,
+  stats:     false,
+  eventos:   true,    // marcar eventos como SOLD OUT — se mantiene, es simple y útil
+  catalogo:  false
+};
+
 // ---------- State ----------
 const state = {
   session:      null,
@@ -934,28 +946,28 @@ function renderApp(){
           <div class="side-nav-item ${state.view==='reservas'?'active':''}" data-nav="reservas">
             <span class="icon">${ICONS.book}</span>Reservas
           </div>
-          <div class="side-nav-item ${state.view==='torneo'?'active':''}" data-nav="torneo">
+          ${FEATURES.torneo ? `<div class="side-nav-item ${state.view==='torneo'?'active':''}" data-nav="torneo">
             <span class="icon">${ICONS.trophy}</span>Torneo
-          </div>
-          <div class="side-nav-item ${state.view==='stats'?'active':''}" data-nav="stats">
+          </div>` : ''}
+          ${FEATURES.stats ? `<div class="side-nav-item ${state.view==='stats'?'active':''}" data-nav="stats">
             <span class="icon">${ICONS.bar}</span>Estadísticas
-          </div>
-          <div class="side-nav-item ${state.view==='eventos'?'active':''}" data-nav="eventos">
+          </div>` : ''}
+          ${FEATURES.eventos ? `<div class="side-nav-item ${state.view==='eventos'?'active':''}" data-nav="eventos">
             <span class="icon">${ICONS.calendar}</span>Eventos
-          </div>
+          </div>` : ''}
           <div class="side-nav-item ${state.view==='calendario'?'active':''}" data-nav="calendario">
             <span class="icon">${ICONS.clock}</span>Calendario
           </div>
-          ${false ? `<div class="side-nav-item ${state.view==='catalogo'?'active':''}" data-nav="catalogo">
+          ${FEATURES.catalogo ? `<div class="side-nav-item ${state.view==='catalogo'?'active':''}" data-nav="catalogo">
             <span class="icon">${ICONS.gift}</span>Catálogo
           </div>` : ''}
           <div class="side-section">Enlaces</div>
           <a class="side-nav-item" href="index.html" target="_blank" rel="noopener">
             <span class="icon">${ICONS.eye}</span>Ver la web
           </a>
-          <a class="side-nav-item" href="juego.html" target="_blank" rel="noopener">
+          ${FEATURES.torneo ? `<a class="side-nav-item" href="juego.html" target="_blank" rel="noopener">
             <span class="icon">${ICONS.trophy}</span>Ver el juego
-          </a>
+          </a>` : ''}
         </nav>
       </aside>
       <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -994,6 +1006,12 @@ function toggleSidebar(open){
 }
 
 function routeToView(){
+  // Si el estado apunta a una vista desactivada (por FEATURES), cae a dashboard
+  if (state.view === 'torneo'   && !FEATURES.torneo)   state.view = 'dashboard';
+  if (state.view === 'stats'    && !FEATURES.stats)    state.view = 'dashboard';
+  if (state.view === 'eventos'  && !FEATURES.eventos)  state.view = 'dashboard';
+  if (state.view === 'catalogo' && !FEATURES.catalogo) state.view = 'dashboard';
+
   if (state.view === 'dashboard') renderDashboard();
   else if (state.view === 'reservas') renderReservas();
   else if (state.view === 'torneo') renderTorneo();
@@ -1009,21 +1027,23 @@ function routeToView(){
 let dataLoaded = false;
 async function ensureData(force=false){
   if (dataLoaded && !force) return;
+  const empty = Promise.resolve({ data: [], error: null });
   const [rRes, rSco, rEvt, rCat, rCal] = await Promise.all([
     supa.from('reservations').select('*').order('created_at',{ascending:false}).limit(3000),
-    supa.from('tournament_scores').select('*').order('created_at',{ascending:false}).limit(5000),
+    // Torneo y Catálogo están desactivados en este producto — no se piden a la
+    // API para no gastar cuota ni mostrar errores de tablas que no se usan.
+    FEATURES.torneo   ? supa.from('tournament_scores').select('*').order('created_at',{ascending:false}).limit(5000) : empty,
     supa.from('event_settings').select('*').order('event_date',{ascending:true}).limit(500),
-    supa.from('catalog_items').select('*').order('sort_order',{ascending:true}).limit(500),
+    FEATURES.catalogo ? supa.from('catalog_items').select('*').order('sort_order',{ascending:true}).limit(500) : empty,
     supa.from('calendar_blocks').select('*').order('block_date',{ascending:true}).limit(500)
   ]);
   if (rRes.error){ toast('Error cargando reservas', rRes.error.message, 'error'); return; }
-  if (rSco.error){ toast('Error cargando puntuaciones', rSco.error.message, 'error'); return; }
   state.reservations = rRes.data || [];
-  state.scores = rSco.data || [];
   // Las tablas nuevas pueden no existir todavía → no bloquean el resto
-  state.eventSettings   = (rEvt && !rEvt.error) ? (rEvt.data || []) : [];
-  state.catalogItems    = (rCat && !rCat.error) ? (rCat.data || []) : [];
-  state.calendarBlocks  = (rCal && !rCal.error) ? (rCal.data || []) : [];
+  state.scores           = (rSco && !rSco.error) ? (rSco.data || []) : [];
+  state.eventSettings    = (rEvt && !rEvt.error) ? (rEvt.data || []) : [];
+  state.catalogItems     = (rCat && !rCat.error) ? (rCat.data || []) : [];
+  state.calendarBlocks   = (rCal && !rCal.error) ? (rCal.data || []) : [];
   state.events = [...new Set(state.scores.map(s => s.event_id))];
   if (!state.currentEventId || !state.events.includes(state.currentEventId)){
     state.currentEventId = state.events[0] || null;
@@ -1033,14 +1053,16 @@ async function ensureData(force=false){
 
 function ensureRealtime(){
   if (state.realtimeOn || !supa) return;
-  const channel = supa.channel('admin-live')
+  let channel = supa.channel('admin-live')
     .on('postgres_changes', { event:'*', schema:'public', table:'reservations' }, payload => {
       handleRealtime('reservations', payload);
-    })
-    .on('postgres_changes', { event:'*', schema:'public', table:'tournament_scores' }, payload => {
+    });
+  if (FEATURES.torneo){
+    channel = channel.on('postgres_changes', { event:'*', schema:'public', table:'tournament_scores' }, payload => {
       handleRealtime('tournament_scores', payload);
-    })
-    .subscribe(status => {
+    });
+  }
+  channel.subscribe(status => {
       if (status === 'SUBSCRIBED'){
         state.realtimeOn = true;
         const dot = $('#liveDot');
@@ -1089,10 +1111,6 @@ function renderDashboard(){
     return d >= today && d <= weekEnd;
   });
   const pending = state.reservations.filter(r => r.status === 'pendiente');
-  const activeEvents = state.events.length;
-  const totalPlayers = new Set(state.scores.map(s => s.phone)).size;
-
-  const podium = state.currentEventId ? topPodium(state.currentEventId) : [];
 
   $('#mainView').innerHTML = `
     <div class="view-title">
@@ -1120,9 +1138,9 @@ function renderDashboard(){
         <div class="foot">esperan confirmación</div>
       </div>
       <div class="stat">
-        <div class="label">Torneo · jugadores <span class="icon-bg">${ICONS.trophy}</span></div>
-        <div class="value">${totalPlayers}</div>
-        <div class="foot">${activeEvents} evento${activeEvents===1?'':'s'} con partidas</div>
+        <div class="label">Total histórico <span class="icon-bg">${ICONS.book}</span></div>
+        <div class="value">${state.reservations.length}</div>
+        <div class="foot">reservas registradas</div>
       </div>
     </div>
 
@@ -1131,14 +1149,6 @@ function renderDashboard(){
       <a class="side" href="#" data-goto="reservas">Ver todas →</a>
     </div>
     <div class="table-card" id="latestRes"></div>
-
-    <div class="section-h">
-      <h2>Podio del <em>torneo actual</em></h2>
-      <span class="side">${state.currentEventId ? esc(state.currentEventId) : 'sin evento activo'}</span>
-    </div>
-    ${podium.length
-      ? renderPodium(podium)
-      : `<div class="table-card"><div class="empty"><div class="icon">${ICONS.empty}</div><h3>Todavía no hay partidas</h3><p>Cuando arranques el torneo desde <code>juego.html</code>, aquí verás el podio en directo.</p></div></div>`}
   `;
 
   $('#refreshBtn').addEventListener('click', async () => {
