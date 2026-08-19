@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Argumentario de precios — Shaona</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#181215; --paper:#f7f4f2; --paper-2:#efe9e6; --ink:#141014; --ink-2:#4d444a; --ink-3:#8b8189;
+  --pink:#ff0055; --pink-2:#c8003f; --cyan:#0079a3; --green:#178b3e; --gold:#a67c1a;
+  --border:rgba(0,0,0,.08); --border-hi:rgba(0,0,0,.16);
+}
+html,body{background:var(--bg);font-family:'Outfit',sans-serif;color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:var(--pink);text-decoration:none}
+strong{font-weight:600;color:var(--ink)}
+
+.page{max-width:880px;margin:24px auto;background:var(--paper);color:var(--ink);padding:52px 58px;box-shadow:0 40px 100px -20px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.page::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--pink) 0%,var(--gold) 55%,var(--pink) 100%)}
+
+.doc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;letter-spacing:.3px}
+.brand em{color:var(--pink);font-style:normal}
+.brand-sub{font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);font-weight:700;margin-top:2px}
+.private-badge{display:inline-block;background:#141014;color:#fff;padding:4px 10px;border-radius:3px;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-top:8px}
+.doc-meta{text-align:right;font-size:.72rem;color:var(--ink-2);line-height:1.7}
+
+h1{font-family:'Cormorant Garamond',serif;font-size:2.2rem;line-height:1.05;font-weight:700;letter-spacing:-.5px;margin-bottom:8px}
+h1 em{color:var(--pink);font-style:italic}
+.lead{color:var(--ink-2);font-size:.94rem;line-height:1.6;margin-bottom:8px}
+
+section{margin-bottom:34px}
+h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;margin-bottom:4px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:12px}
+h2 .price-tag{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:800;color:#fff;background:var(--pink);padding:3px 12px;border-radius:99px;letter-spacing:.5px}
+h3{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;margin:16px 0 6px;color:var(--ink)}
+p{font-size:.88rem;color:var(--ink-2);margin-bottom:9px}
+
+/* Cálculo (breakdown de horas/coste) */
+.calc{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:12px 0}
+.calc-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--border);font-size:.85rem}
+.calc-row:last-child{border-bottom:none}
+.calc-row .k{color:var(--ink-2)}
+.calc-row .v{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.calc-row.total{border-top:2px solid var(--ink);margin-top:4px;padding-top:10px}
+.calc-row.total .v{color:var(--pink);font-family:'Cormorant Garamond',serif;font-size:1.2rem}
+
+/* Frase lista para usar */
+.script{background:#141014;color:#e8e3e0;border-left:3px solid var(--pink);border-radius:0 6px 6px 0;padding:14px 18px;margin:12px 0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;line-height:1.55}
+.script::before{content:"\201C";color:var(--pink);font-size:1.3em;margin-right:2px}
+.script-label{font-family:'Outfit',sans-serif;font-style:normal;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--pink);font-weight:700;display:block;margin-bottom:6px}
+
+/* Comparativa mercado */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.compare-item{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 16px}
+.compare-item .cname{font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:4px}
+.compare-item .cval{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--ink)}
+.compare-item.us{border-color:var(--pink);background:linear-gradient(160deg,#fff,#fff0f5)}
+.compare-item.us .cval{color:var(--pink)}
+@media(max-width:600px){.compare{grid-template-columns:1fr}}
+
+.callout{background:#fff;border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:.85rem;color:var(--ink-2);line-height:1.55}
+.callout strong{color:var(--ink)}
+.callout.warn{border-color:#c0392b}
+
+/* Objeciones rápidas */
+.obj{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:8px}
+.obj-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.98rem;color:var(--ink);margin-bottom:6px}
+.obj-q::before{content:"\201C"}
+.obj-q::after{content:"\201D"}
+.obj-a{font-size:.85rem;color:var(--ink-2);line-height:1.55}
+.obj-a strong{color:var(--pink)}
+
+table.year{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:.84rem;margin-top:10px}
+table.year th{padding:10px 14px;background:#faf7f5;border-bottom:1px solid var(--border);font-size:.64rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);font-weight:700;text-align:left}
+table.year td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--ink-2)}
+table.year tr:last-child td{border-bottom:none;font-weight:700;color:var(--ink);background:#faf7f5}
+
+.doc-foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--border);text-align:center}
+.doc-foot p{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-3);font-size:.85rem}
+
+@media print{
+  html,body{background:#fff}
+  .page{margin:0;padding:22px 26px;box-shadow:none;max-width:none}
+  .no-print{display:none !important}
+  section{page-break-inside:avoid}
+}
+@page{size:A4;margin:11mm}
+@media(max-width:700px){
+  .page{margin:8px;padding:30px 20px}
+  h1{font-size:1.8rem}
+  .doc-head{flex-direction:column;gap:10px}
+  .doc-meta{text-align:left}
+}
+
+.print-btn{position:fixed;bottom:20px;right:20px;background:var(--pink);color:#fff;border:none;padding:12px 22px;font-family:inherit;font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border-radius:99px;cursor:pointer;box-shadow:0 14px 32px -12px rgba(255,0,85,.6);z-index:10}
+.print-btn:hover{background:var(--pink-2)}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="doc-head">
+    <div>
+      <div class="brand">Shaona<em>.</em></div>
+      <div class="brand-sub">Argumentario de precios</div>
+      <div class="private-badge">Privado — no compartir con el cliente</div>
+    </div>
+    <div class="doc-meta">
+      <div id="today"></div>
+    </div>
+  </div>
+
+  <h1>Por qué cada <em>número es ese</em></h1>
+  <p class="lead">Esto es para ti, no para ellos. Si en algún momento preguntan "¿por qué tanto?", aquí tienes el cálculo real detrás de cada cifra, cómo se compara con el mercado, y la frase exacta que puedes soltar sin tener que improvisar.</p>
+
+  <!-- ═══════════════════ SETUP 1.000€ ═══════════════════ -->
+  <section>
+    <h2>Setup <span class="price-tag">1.000 €</span></h2>
+    <p>Es el número más fácil de defender de los cuatro — porque está objetivamente por debajo de precio de mercado para lo que incluye.</p>
+
+    <h3>Qué hay detrás de esa cifra</h3>
+    <div class="calc">
+      <div class="calc-row"><span class="k">Web pública completa (diseño + desarrollo desde cero, no plantilla)</span><span class="v">~14h</span></div>
+      <div class="calc-row"><span class="k">Página de reservados (selector de botellas con precio en vivo)</span><span class="v">~8h</span></div>
+      <div class="calc-row"><span class="k">Página de celebraciones (formulario dinámico + validaciones)</span><span class="v">~7h</span></div>
+      <div class="calc-row"><span class="k">Base de datos + seguridad + conexión de formularios</span><span class="v">~6h</span></div>
+      <div class="calc-row"><span class="k">SEO local, mapa en vivo, revisión móvil, despliegue</span><span class="v">~5h</span></div>
+      <div class="calc-row total"><span class="k">Total estimado</span><span class="v">~40h de trabajo</span></div>
+    </div>
+
+    <div class="compare">
+      <div class="compare-item">
+        <div class="cname">Agencia local (web + form contacto simple)</div>
+        <div class="cval">1.500 – 3.000 €</div>
+      </div>
+      <div class="compare-item">
+        <div class="cname">Agencia (con sistema de reservas en BBDD)</div>
+        <div class="cval">2.500 – 5.000 €</div>
+      </div>
+    </div>
+
+    <div class="callout"><strong>El argumento en una frase:</strong> a 40 horas reales de trabajo, 1.000€ son 25€/hora — muy por debajo de cualquier tarifa freelance seria (30-50€/h) y muy por debajo de precio de agencia para este alcance. No es un precio "amigo", es sencillamente justo — y aun así barato.</div>
+
+    <div class="script">
+      <span class="script-label">Si preguntan por qué no es más barato</span>
+      No es una plantilla que descargo y le cambio el logo — está hecho a medida para vosotros, con un sistema de reservas real conectado a una base de datos, no un simple formulario de contacto. Eso en cualquier estudio se paga el doble o el triple.
+    </div>
+  </section>
+
+  <!-- ═══════════════════ MENSUALIDAD 20€ ═══════════════════ -->
+  <section>
+    <h2>Mantenimiento <span class="price-tag">20 €/mes</span></h2>
+    <p>El número más bajo, y el más fácil de tumbar si alguien dice "no hace falta pagar nada un mes que no pasa nada". Por eso hay que tenerlo claro: <strong>este tramo no es "no hacer nada" — es la garantía de que todo sigue vivo</strong> aunque no haya eventos.</p>
+
+    <h3>Qué cubre en realidad</h3>
+    <div class="calc">
+      <div class="calc-row"><span class="k">Vigilar que la base de datos no se pause por inactividad</span><span class="v">✓</span></div>
+      <div class="calc-row"><span class="k">Gestionar cualquier reserva de celebración que llegue igualmente</span><span class="v">✓</span></div>
+      <div class="calc-row"><span class="k">Mantener dominio, hosting y seguridad al día</span><span class="v">✓</span></div>
+      <div class="calc-row"><span class="k">Estar disponible si algo se rompe</span><span class="v">✓</span></div>
+    </div>
+
+    <div class="compare">
+      <div class="compare-item us">
+        <div class="cname">Mantenimiento Shaona</div>
+        <div class="cval">20 €/mes</div>
+      </div>
+      <div class="compare-item">
+        <div class="cname">Una copa + una cachimba en su propio local</div>
+        <div class="cval">~20-25 €</div>
+      </div>
+    </div>
+
+    <div class="script">
+      <span class="script-label">Si dicen "un mes que no pasa nada, ¿por qué pagar?"</span>
+      Porque "que no pase nada" en la web no es gratis para mí — sigo vigilando que todo funcione, y si ese mes tranquilo entra una reserva de un cumpleaños, la gestiono igual. Es el precio de que la web nunca se caiga, cueste lo que cueste tenerla abierta ese mes.
+    </div>
+  </section>
+
+  <!-- ═══════════════════ MENSUALIDAD 100€ ═══════════════════ -->
+  <section>
+    <h2>Con eventos cada finde <span class="price-tag">100 €/mes</span></h2>
+    <p>Este es el tramo donde más te van a cuestionar el "es solo cambiar una foto" — y es donde mejor tienes que tener preparado el argumento del <strong>fontanero</strong> (lo explico abajo).</p>
+
+    <h3>El cálculo real</h3>
+    <div class="calc">
+      <div class="calc-row"><span class="k">4-5 actualizaciones de agenda al mes (una por finde)</span><span class="v">~25€/act.</span></div>
+      <div class="calc-row"><span class="k">Cada actualización: recibir info, editar, revisar en móvil, publicar</span><span class="v">~40-45min</span></div>
+      <div class="calc-row"><span class="k">+ gestión de reservas de reservados y celebraciones que lleguen</span><span class="v">incl.</span></div>
+      <div class="calc-row total"><span class="k">Tarifa hora equivalente</span><span class="v">~33€/h</span></div>
+    </div>
+
+    <div class="callout"><strong>El dato que más convence:</strong> 100€/mes es literalmente menos de lo que costaría 3-4 horas semanales de un empleado a media jornada — y aquí no hay nóminas, ni Seguridad Social, ni que esté de baja, ni que haya que formarlo. Es tener a alguien especializado sin ninguno de los problemas de contratar.</div>
+
+    <h3>El argumento del fontanero</h3>
+    <p>Este es el más importante de todo el documento — literalmente pediste "que vean que gasto tiempo pero se hace en un segundo, y resolviendo el problema en 48-72h". Aquí está la forma de decirlo:</p>
+    <div class="script">
+      <span class="script-label">Cuando digan "tarda 2 minutos, ¿por qué cobras tanto?"</span>
+      Un fontanero no te cobra por los 5 minutos que tarda en arreglar la fuga — te cobra por saber exactamente dónde mirar sin romper nada más. A mí subir un evento me lleva un minuto porque llevo meses conociendo cómo funciona esta web por dentro. Lo que pagáis no es el minuto, es que ese minuto no se convierta en media hora de casualidad de más.
+    </div>
+  </section>
+
+  <!-- ═══════════════════ MENSUALIDAD 160€ ═══════════════════ -->
+  <section>
+    <h2>Meses importantes <span class="price-tag">160 €/mes</span></h2>
+    <p>El salto de 100€ a 160€ (+60€, un 60% más) es exactamente lo que en cualquier sector se cobra como <strong>recargo de urgencia/prioridad</strong> — no es un número inventado, es estándar del mercado freelance.</p>
+
+    <div class="compare">
+      <div class="compare-item">
+        <div class="cname">Recargo urgencia típico en freelance</div>
+        <div class="cval">+30-50%</div>
+      </div>
+      <div class="compare-item us">
+        <div class="cname">Tu recargo (100€ → 160€)</div>
+        <div class="cval">+60%</div>
+      </div>
+    </div>
+
+    <h3>Qué compra ese extra</h3>
+    <div class="calc">
+      <div class="calc-row"><span class="k">Respuesta en 24h en vez de 48-72h</span><span class="v">✓</span></div>
+      <div class="calc-row"><span class="k">Más rondas de cambios si no tienen claro qué quieren aún</span><span class="v">✓</span></div>
+      <div class="calc-row"><span class="k">Prioridad sobre otros encargos ese mes</span><span class="v">✓</span></div>
+    </div>
+
+    <div class="callout warn"><strong>El argumento del coste de oportunidad:</strong> un reservado mínimo de 3 botellas ya son ~210€. Si una actualización tarde o un error en la web les hace perder UNA sola reserva en un mes fuerte (Navidad, aniversario, fin de año), ya han perdido más de lo que cuesta todo el tramo prioritario ese mes. El 160€ no es un gasto — es un seguro barato frente a lo que cuesta un fallo en el peor momento posible.</div>
+
+    <div class="script">
+      <span class="script-label">Si dicen "160€ es mucho para un mes"</span>
+      En un mes fuerte, un solo reservado que se pierda por una web desactualizada os cuesta más que el tramo entero. Este precio no es por hacer más trabajo — es porque en ese mes cada hora cuenta el doble para vosotros, y yo tengo que estar disponible casi al segundo.
+    </div>
+  </section>
+
+  <!-- ═══════════════════ VISIÓN ANUAL ═══════════════════ -->
+  <section>
+    <h2>El coste anual real (para tenerlo tú claro)</h2>
+    <p>Un año normal de un local de temporada no son 12 meses del mismo tramo — es una mezcla. Aquí un escenario realista:</p>
+    <table class="year">
+      <thead><tr><th>Meses</th><th>Tramo</th><th>Subtotal</th></tr></thead>
+      <tbody>
+        <tr><td>6 meses (temporada baja)</td><td>Mantenimiento · 20€</td><td>120 €</td></tr>
+        <tr><td>4 meses (ritmo normal)</td><td>Con eventos · 100€</td><td>400 €</td></tr>
+        <tr><td>2 meses (Navidad, verano fuerte...)</td><td>Importantes · 160€</td><td>320 €</td></tr>
+        <tr><td colspan="2">Total anual</td><td>840 € (≈ 70€/mes de media)</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:8px">Menos de 70€/mes de media anual por tener la web siempre actualizada, las reservas gestionadas, y a alguien disponible — es una cifra que aguanta cualquier comparación con contratar a una persona, aunque sea unas horas a la semana.</p>
+  </section>
+
+  <!-- ═══════════════════ OBJECIONES RÁPIDAS ═══════════════════ -->
+  <section>
+    <h2>Objeciones rápidas — respuesta en una frase</h2>
+
+    <div class="obj">
+      <div class="obj-q">¿Por qué pagar mensualidad si la web ya está hecha y pagada?</div>
+      <div class="obj-a">Una web sin mantenimiento es un escaparate que nunca se limpia — <strong>no pagáis porque exista, pagáis porque siga vendiendo</strong>.</div>
+    </div>
+
+    <div class="obj">
+      <div class="obj-q">Mi sobrino/cuñado lo haría gratis.</div>
+      <div class="obj-a">Y seguramente lo haga bien un par de veces. La pregunta es qué pasa el finde que no puede, o cuando la web deja de funcionar y no sabe por qué. <strong>Aquí eso no pasa.</strong></div>
+    </div>
+
+    <div class="obj">
+      <div class="obj-q">¿Puedo bajar de tramo cualquier semana?</div>
+      <div class="obj-a">El tramo se pacta antes del día 25 del mes anterior. <strong>Si durante el mes pedís más actividad de la del tramo elegido, ese mes sube automáticamente</strong> — no hay manera de tener trabajo de tramo alto pagando el bajo.</div>
+    </div>
+
+  </section>
+
+  <div class="doc-foot">
+    <p>Léelo antes de cualquier llamada donde se hable de precio. No hace falta memorizarlo — con tenerlo claro en la cabeza una vez, sale solo.</p>
+  </div>
+
+</div>
+
+<button class="print-btn no-print" onclick="window.print()">Imprimir / Guardar PDF</button>
+
+<script>
+  document.getElementById('today').textContent = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+</script>
+
+</body>
+</html>
